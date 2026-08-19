@@ -594,7 +594,7 @@ struct MeetingsView: View {
     @ViewBuilder
     private func browserHeaderMeta(meetingCount: Int) -> some View {
         HStack(spacing: MuesliTheme.spacing8) {
-            Text("\(meetingCount) meeting\(meetingCount == 1 ? "" : "s")")
+            Text(String(format: String(localized: "meetings-view.meeting-count.label", defaultValue: "%d meetings", comment: "Meeting count label in browser header metadata"), meetingCount))
                 .font(MuesliTheme.callout())
                 .foregroundStyle(MuesliTheme.textSecondary)
                 .fixedSize()
