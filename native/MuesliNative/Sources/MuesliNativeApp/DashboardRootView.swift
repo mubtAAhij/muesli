@@ -57,7 +57,11 @@ struct DashboardRootView: View {
             }
         }
         .alert(
-            appState.contributionMilestonePrompt?.title ?? String(localized: "dashboard-root.contribution-milestone.title", defaultValue: "Muesli milestone", comment: "Fallback title for contribution milestone prompt"),
+            appState.contributionMilestonePrompt?.title ?? String(
+                localized: "dashboard-root.contribution-milestone.title",
+                defaultValue: "Muesli milestone",
+                comment: "Fallback title for contribution milestone prompt"
+            ),
             isPresented: Binding(
                 get: { appState.contributionMilestonePrompt != nil },
                 set: { if !$0 { controller.dismissContributionMilestonePrompt() } }
