@@ -131,7 +131,7 @@ struct SidebarView: View {
             }
         }
         .alert(
-            "Delete \"\(folderToDelete?.name ?? "")\"?",
+            String(format: String(localized: "sidebar.folder.delete.confirmation-title", defaultValue: "Delete \"%@\"?", comment: ""), "\(folderToDelete?.name ?? "")"),
             isPresented: $showDeleteConfirmation
         ) {
             Button("Cancel", role: .cancel) {
@@ -149,7 +149,7 @@ struct SidebarView: View {
                 appState.directMeetingCountsByFolder[folder.id] ?? 0
             } ?? 0
             if directCount > 0 {
-                Text("\(directCount) meeting\(directCount == 1 ? "" : "s") in this folder will be moved to Unfiled. Subfolders will be kept.")
+                Text(String(format: String(localized: "sidebar.folder.delete.move-to-unfiled.message", defaultValue: "%d meetings in this folder will be moved to Unfiled. Subfolders will be kept.", comment: "Confirmation message explaining meetings moved to Unfiled when deleting a folder"), directCount))
             } else {
                 Text("This folder will be permanently removed. Subfolders will be kept.")
             }
@@ -177,7 +177,7 @@ struct SidebarView: View {
                     .foregroundStyle(MuesliTheme.textPrimary)
             }
             if !userName.isEmpty {
-                Text("Hi, \(userName)")
+                Text(String(format: String(localized: "sidebar.greeting.user", defaultValue: "Hi, %@", comment: ""), "\(userName)"))
                     .font(MuesliTheme.caption())
                     .foregroundStyle(MuesliTheme.textTertiary)
                     .padding(.leading, 34)
