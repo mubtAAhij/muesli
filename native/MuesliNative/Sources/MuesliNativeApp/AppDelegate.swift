@@ -174,7 +174,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let editMenu = NSMenu(title: "Edit")
         editMenu.addItem(withTitle: "Undo", action: Selector(("undo:")), keyEquivalent: "z")
 
-        let redo = NSMenuItem(title: String(localized: "edit-menu.redo.title", defaultValue: "Redo", comment: ""), action: Selector(("redo:")), keyEquivalent: "z")
+        let redo = NSMenuItem(title: String(
+            localized: "edit-menu.redo.title",
+            defaultValue: "Redo",
+            comment: ""
+        ), action: Selector(("redo:")), keyEquivalent: "z")
         redo.keyEquivalentModifierMask = [.command, .shift]
         editMenu.addItem(redo)
 
@@ -197,7 +201,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         editMenuItem.submenu = editMenu
         mainMenu.addItem(editMenuItem)
 
-        let viewMenuItem = NSMenuItem(title: String(localized: "view-menu.title", defaultValue: "View", comment: ""), action: nil, keyEquivalent: "")
+        let viewMenuItem = NSMenuItem(title: String(
+            localized: "view-menu.title",
+            defaultValue: "View",
+            comment: ""
+        ), action: nil, keyEquivalent: "")
         let viewMenu = NSMenu(title: "View")
         let dictationsItem = NSMenuItem(
             title: String(localized: "view-menu.dictations.title", defaultValue: "Dictations", comment: ""),
@@ -216,7 +224,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         viewMenuItem.submenu = viewMenu
         mainMenu.addItem(viewMenuItem)
 
-        let windowMenuItem = NSMenuItem(title: String(localized: "window-menu.title", defaultValue: "Window", comment: ""), action: nil, keyEquivalent: "")
+        let windowMenuItem = NSMenuItem(title: String(
+            localized: "window-menu.title",
+            defaultValue: "Window",
+            comment: ""
+        ), action: nil, keyEquivalent: "")
         let windowMenu = NSMenu(title: "Window")
         windowMenu.addItem(
             withTitle: "Minimize",
@@ -373,7 +385,11 @@ final class SparkleUpdateDelegate: NSObject, SPUUpdaterDelegate, SPUStandardUser
         alert.messageText = "Update did not finish"
         alert.informativeText = UpdateFailureGuidance.message
         alert.alertStyle = .warning
-        alert.addButton(withTitle: String(localized: "app-update.open-download-page.button", defaultValue: "Open Download Page", comment: ""))
+        alert.addButton(withTitle: String(
+            localized: "app-update.open-download-page.button",
+            defaultValue: "Open Download Page",
+            comment: ""
+        ))
         alert.addButton(withTitle: "OK")
 
         if alert.runModal() == .alertFirstButtonReturn,
