@@ -106,7 +106,11 @@ private struct StatCard: View {
             withAnimation(reduceMotion ? nil : .easeOut(duration: 0.12)) { isHovered = hovering }
         }
         .help(accessibilityHint)
-        .accessibilityLabel(String(format: String(localized: "stats-header.metric.value-label", defaultValue: "%@ %@", comment: ""), "\(value)", "\(label)"))
+        .accessibilityLabel(String(format: String(
+            localized: "stats-header.metric.value-label",
+            defaultValue: "%@ %@",
+            comment: ""
+        ), "\(value)", "\(label)"))
         .accessibilityHint(accessibilityHint)
     }
 }
