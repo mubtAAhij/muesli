@@ -3,7 +3,7 @@
   "sourceLanguage": "en",
   "strings": {
     "dashboard-root.contribution-milestone.title": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/DashboardRootView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -11,11 +11,17 @@
             "state": "translated",
             "value": "Muesli milestone"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hito de Muesli"
+          }
         }
       }
     },
     "diagnostic-incident.report.description.recovery": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/DiagnosticIncidentReportView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -23,11 +29,17 @@
             "state": "translated",
             "value": "%@ can prepare an anonymized GitHub issue for you to review before opening it."
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ puede preparar un reporte de GitHub anonimizado para que lo revises antes de abrirlo."
+          }
         }
       }
     },
     "diagnostic-incident.report.description.hard-failure": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/DiagnosticIncidentReportView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -35,11 +47,17 @@
             "state": "translated",
             "value": "%@ detected a hard failure in %@. You can review the anonymized report before opening a GitHub issue."
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ detectó una falla grave en %@. Puedes revisar el reporte anonimizado antes de abrir un problema en GitHub."
+          }
         }
       }
     },
     "dictionary-suggestion-prompt.add-correction.title": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/DictionarySuggestionPromptController.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -47,14 +65,26 @@
             "state": "translated",
             "value": "Add correction?"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "¿Agregar corrección?"
+          }
         }
       }
     },
     "dictionary-suggestion-prompt.add-correction.message": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/DictionarySuggestionPromptController.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\"%@\" -> \"%@\""
+          }
+        },
+        "es-419": {
           "stringUnit": {
             "state": "translated",
             "value": "\"%@\" -> \"%@\""
@@ -63,7 +93,7 @@
       }
     },
     "dictionary-suggestion-prompt.add-correction.confirm": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/DictionarySuggestionPromptController.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -71,11 +101,17 @@
             "state": "translated",
             "value": "Add"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Agregar"
+          }
         }
       }
     },
     "dictionary-suggestion-prompt.add-correction.cancel": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/DictionarySuggestionPromptController.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -83,11 +119,17 @@
             "state": "translated",
             "value": "Ignore"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ignorar"
+          }
         }
       }
     },
     "feature-tour.progress.step-of-total": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/FeatureTourView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -95,14 +137,26 @@
             "state": "translated",
             "value": "%d of %d"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d de %d"
+          }
         }
       }
     },
     "feature-tour.header.version-label": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/FeatureTourView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MUESLI %@"
+          }
+        },
+        "es-419": {
           "stringUnit": {
             "state": "translated",
             "value": "MUESLI %@"
@@ -111,7 +165,7 @@
       }
     },
     "feature-tour.summary.additions-message": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/FeatureTourView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -119,14 +173,26 @@
             "state": "translated",
             "value": "See %d additions in the places where you’ll actually use them. You can replay this later from What’s New in Muesli."
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mira %d novedades en los lugares donde realmente las vas a usar. Puedes volver a ver esto más tarde desde Novedades en Muesli."
+          }
         }
       }
     },
     "meeting-participants.avatar-overflow.count": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/MeetingParticipantsView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+%d"
+          }
+        },
+        "es-419": {
           "stringUnit": {
             "state": "translated",
             "value": "+%d"
@@ -135,7 +201,7 @@
       }
     },
     "meeting-participants.show-people.button": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/MeetingParticipantsView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -143,11 +209,17 @@
             "state": "translated",
             "value": "Show %@"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mostrar %@"
+          }
         }
       }
     },
     "meeting-participants.show-people.accessibility-label": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/MeetingParticipantsView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -155,11 +227,17 @@
             "state": "translated",
             "value": "%@ in this meeting"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ en esta reunión"
+          }
         }
       }
     },
     "meeting-participants.update.error-message": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/MeetingParticipantsView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -167,11 +245,17 @@
             "state": "translated",
             "value": "The meeting's people could not be updated."
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No se pudieron actualizar los participantes de la reunión."
+          }
         }
       }
     },
     "meeting-participants.remove-person.button": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/MeetingParticipantsView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -179,35 +263,53 @@
             "state": "translated",
             "value": "Remove %@"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eliminar %@"
+          }
         }
       }
     },
     "models.delete-model.confirmation-title": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/ModelsView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Delete \"%@\"?"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "¿Eliminar \"%@\"?"
           }
         }
       }
     },
     "models.delete-post-processing-model.confirmation-title": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/ModelsView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Delete \"%@\"?"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "¿Eliminar \"%@\"?"
           }
         }
       }
     },
     "models.delete-live-caption-model.confirmation-title": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/ModelsView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -215,14 +317,26 @@
             "state": "translated",
             "value": "Delete \"%@\"?"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "¿Eliminar \"%@\"?"
+          }
         }
       }
     },
     "models.download.status.phase-and-file": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/ModelsView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@: %@"
+          }
+        },
+        "es-419": {
           "stringUnit": {
             "state": "translated",
             "value": "%@: %@"
@@ -231,7 +345,7 @@
       }
     },
     "models.download.progress.percent-downloading": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/ModelsView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -239,11 +353,17 @@
             "state": "translated",
             "value": "%d%% downloading..."
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d%% descargando..."
+          }
         }
       }
     },
     "search-results.empty.no-results-for-query": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/SearchResultsView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -251,11 +371,17 @@
             "state": "translated",
             "value": "No results for \"%@\""
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sin resultados para \"%@\""
+          }
         }
       }
     },
     "search-results.empty.no-matching-name": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/SearchResultsView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -263,11 +389,17 @@
             "state": "translated",
             "value": "No matching %@"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No hay coincidencias para %@"
+          }
         }
       }
     },
     "meeting-detail.save-notes-error.message": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/MeetingDetailView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -275,11 +407,17 @@
             "state": "translated",
             "value": "The updated meeting notes could not be saved."
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No se pudieron guardar las notas de la reunión actualizadas."
+          }
         }
       }
     },
     "meeting-detail.retranscribe-recording-error.message": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/MeetingDetailView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -287,11 +425,17 @@
             "state": "translated",
             "value": "The saved recording could not be re-transcribed."
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No se pudo volver a transcribir la grabación guardada."
+          }
         }
       }
     },
     "meeting-detail.template-selection.label": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/MeetingDetailView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -299,11 +443,17 @@
             "state": "translated",
             "value": "Template: %@"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plantilla: %@"
+          }
         }
       }
     },
     "meeting-detail.transcription-starting-soon.message": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/MeetingDetailView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -311,11 +461,17 @@
             "state": "translated",
             "value": "Meeting transcription will start shortly."
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La transcripción de la reunión comenzará en breve."
+          }
         }
       }
     },
     "meeting-detail.thread-meetings.count-label": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/MeetingDetailView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -323,11 +479,17 @@
             "state": "translated",
             "value": "Thread · %d meetings"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hilo · %d reuniones"
+          }
         }
       }
     },
     "meeting-detail.follow-ups.count-label": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/MeetingDetailView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -335,11 +497,17 @@
             "state": "translated",
             "value": "Follow-ups (%d)"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seguimientos (%d)"
+          }
         }
       }
     },
     "meeting-detail.summary-action.guidance": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/MeetingDetailView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -347,11 +515,17 @@
             "state": "translated",
             "value": "Use %@ to turn this raw transcript into AI meeting notes and a cleaned-up title."
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Usa %@ para convertir esta transcripción sin editar en notas de reunión con IA y un título mejorado."
+          }
         }
       }
     },
     "onboarding.permissions.progress-label": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/OnboardingView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -359,11 +533,17 @@
             "state": "translated",
             "value": "Permission %d of %d"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Permiso %d de %d"
+          }
         }
       }
     },
     "onboarding.model-setup.preparing-backend": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/OnboardingView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -371,11 +551,17 @@
             "state": "translated",
             "value": "Preparing %@..."
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preparando %@..."
+          }
         }
       }
     },
     "onboarding.model-download.progress-percent-complete": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/OnboardingView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -383,11 +569,17 @@
             "state": "translated",
             "value": "%d%% complete"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d%% completado"
+          }
         }
       }
     },
     "onboarding.live-transcription.placeholder": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/OnboardingView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -395,11 +587,17 @@
             "state": "translated",
             "value": "Your transcription will appear here..."
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tu transcripción aparecerá aquí..."
+          }
         }
       }
     },
     "onboarding.push-to-talk.listening-release-hint": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/OnboardingView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -407,11 +605,17 @@
             "state": "translated",
             "value": "Listening... release %@ when done"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Escuchando... suelta %@ cuando termines"
+          }
         }
       }
     },
     "onboarding.push-to-talk.hold-to-start-hint": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/OnboardingView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -419,14 +623,26 @@
             "state": "translated",
             "value": "Hold %@ to start"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mantén presionada %@ para comenzar"
+          }
         }
       }
     },
     "insights.streak.current-days.value": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/InsightsView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d"
+          }
+        },
+        "es-419": {
           "stringUnit": {
             "state": "translated",
             "value": "%d"
@@ -435,7 +651,7 @@
       }
     },
     "insights.streak.best-days.label": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/InsightsView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -443,11 +659,17 @@
             "state": "translated",
             "value": "Best: %d days"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mejor: %d días"
+          }
         }
       }
     },
     "insights.streak.active-days.label": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/InsightsView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -455,11 +677,17 @@
             "state": "translated",
             "value": "%d active days"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d días activos"
+          }
         }
       }
     },
     "insights.metric.daily-activity.title": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/InsightsView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -467,14 +695,26 @@
             "state": "translated",
             "value": "Daily %@ activity"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Actividad diaria de %@"
+          }
         }
       }
     },
     "insights.timeline.entry.accessibility-label": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/InsightsView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, %@"
+          }
+        },
+        "es-419": {
           "stringUnit": {
             "state": "translated",
             "value": "%@, %@"
@@ -483,7 +723,7 @@
       }
     },
     "insights.vocabulary.used-count.label": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/InsightsView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -491,11 +731,17 @@
             "state": "translated",
             "value": "Used %@ times"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Usado %@ veces"
+          }
         }
       }
     },
     "insights.vocabulary.word-used-count.accessibility-label": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/InsightsView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -503,11 +749,17 @@
             "state": "translated",
             "value": "%@, used %@ times"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, usado %@ veces"
+          }
         }
       }
     },
     "status-bar.menu.recent-dictations.title": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/StatusBarController.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -515,11 +767,17 @@
             "state": "translated",
             "value": "Recent Dictations"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dictados recientes"
+          }
         }
       }
     },
     "status-bar.menu.no-dictations.placeholder": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/StatusBarController.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -527,11 +785,17 @@
             "state": "translated",
             "value": "No dictations yet"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aún no hay dictados"
+          }
         }
       }
     },
     "status-bar.menu.transcription-backend.title": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/StatusBarController.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -539,14 +803,26 @@
             "state": "translated",
             "value": "Transcription Backend"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Motor de transcripción"
+          }
         }
       }
     },
     "status-bar.menu.transcription-backend.option-title": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/StatusBarController.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@%@"
+          }
+        },
+        "es-419": {
           "stringUnit": {
             "state": "translated",
             "value": "%@%@"
@@ -555,7 +831,7 @@
       }
     },
     "status-bar.menu.meetings-backend.title": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/StatusBarController.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -563,14 +839,26 @@
             "state": "translated",
             "value": "Meetings Backend"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Backend de reuniones"
+          }
         }
       }
     },
     "status-bar.menu.meetings-backend.option-title": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/StatusBarController.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@%@"
+          }
+        },
+        "es-419": {
           "stringUnit": {
             "state": "translated",
             "value": "%@%@"
@@ -579,10 +867,16 @@
       }
     },
     "status-bar.menu.recent-dictations.entry-title": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/StatusBarController.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@\n%@"
+          }
+        },
+        "es-419": {
           "stringUnit": {
             "state": "translated",
             "value": "%@\n%@"
@@ -591,7 +885,7 @@
       }
     },
     "status-bar.menu.check-for-updates.title": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/StatusBarController.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -599,11 +893,17 @@
             "state": "translated",
             "value": "Check for Updates…"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buscar actualizaciones…"
+          }
         }
       }
     },
     "muesli-controller.quit-confirmation.keep-running": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/MuesliController.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -611,11 +911,17 @@
             "state": "translated",
             "value": "Keep Muesli Running"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mantener Muesli en ejecución"
+          }
         }
       }
     },
     "muesli-controller.quit-confirmation.quit-anyway": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/MuesliController.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -623,11 +929,17 @@
             "state": "translated",
             "value": "Quit Anyway"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Salir de todos modos"
+          }
         }
       }
     },
     "muesli-controller.discard-recording.confirmation-title": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/MuesliController.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -635,11 +947,17 @@
             "state": "translated",
             "value": "Discard Recording"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Descartar grabación"
+          }
         }
       }
     },
     "muesli-controller.discard-recording.confirm-button": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/MuesliController.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -647,11 +965,17 @@
             "state": "translated",
             "value": "Discard"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Descartar"
+          }
         }
       }
     },
     "muesli-controller.discard-recording.will-delete-label": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/MuesliController.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -659,11 +983,17 @@
             "state": "translated",
             "value": "Will delete:"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Se eliminará:"
+          }
         }
       }
     },
     "muesli-controller.discard-recording.item.recording-audio": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/MuesliController.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -671,11 +1001,17 @@
             "state": "translated",
             "value": "Recording audio"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grabación de audio"
+          }
         }
       }
     },
     "muesli-controller.discard-recording.item.manual-notes": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/MuesliController.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -683,11 +1019,17 @@
             "state": "translated",
             "value": "Manual notes"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notas manuales"
+          }
         }
       }
     },
     "muesli-controller.save-recording.confirmation-title": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/MuesliController.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -695,11 +1037,17 @@
             "state": "translated",
             "value": "Save Recording"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Guardar grabación"
+          }
         }
       }
     },
     "muesli-controller.save-recording.dont-save-button": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/MuesliController.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -707,11 +1055,17 @@
             "state": "translated",
             "value": "Don't Save"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No guardar"
+          }
         }
       }
     },
     "settings.safety.confirm-destructive-action.title": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/SettingsView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -719,11 +1073,17 @@
             "state": "translated",
             "value": "Confirm Destructive Action"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Confirma la acción destructiva"
+          }
         }
       }
     },
     "settings.sync.last-synced.label": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/SettingsView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -731,11 +1091,17 @@
             "state": "translated",
             "value": "Last synced: %@"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Última sincronización: %@"
+          }
         }
       }
     },
     "settings.live-captions.nemotron35.same-model-label": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/SettingsView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -743,11 +1109,17 @@
             "state": "translated",
             "value": "%@ (same model)"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ (mismo modelo)"
+          }
         }
       }
     },
     "settings.computer-use.timeout-seconds.label": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/SettingsView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -755,11 +1127,17 @@
             "state": "translated",
             "value": "%d seconds"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d segundos"
+          }
         }
       }
     },
     "settings.calendars.group.subtitle-count.label": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/SettingsView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -767,11 +1145,17 @@
             "state": "translated",
             "value": "%@ • %d calendars"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ • %d calendarios"
+          }
         }
       }
     },
     "settings.google-calendars.load-failed.message": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/SettingsView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -779,11 +1163,17 @@
             "state": "translated",
             "value": "Failed to load Google calendars: %@"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Error al cargar calendarios de Google: %@"
+          }
         }
       }
     },
     "settings.export.destination-folder.missing": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/SettingsView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -791,11 +1181,17 @@
             "state": "translated",
             "value": "No destination folder selected"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No hay ninguna carpeta de destino seleccionada"
+          }
         }
       }
     },
     "settings.hooks.script.missing": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/SettingsView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -803,11 +1199,17 @@
             "state": "translated",
             "value": "No hook script selected"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No hay ningún script de hook seleccionado"
+          }
         }
       }
     },
     "settings.meeting-hooks.timeout-seconds.label": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/SettingsView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -815,11 +1217,17 @@
             "state": "translated",
             "value": "%d seconds"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d segundos"
+          }
         }
       }
     },
     "app-menu.settings.title": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/AppDelegate.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -827,11 +1235,17 @@
             "state": "translated",
             "value": "Settings…"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Configuración…"
+          }
         }
       }
     },
     "app-menu.whats-new.title": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/AppDelegate.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -839,11 +1253,17 @@
             "state": "translated",
             "value": "What's New in Muesli"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Novedades de Muesli"
+          }
         }
       }
     },
     "app-menu.hide-others.title": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/AppDelegate.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -851,11 +1271,17 @@
             "state": "translated",
             "value": "Hide Others"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ocultar otras"
+          }
         }
       }
     },
     "edit-menu.redo.title": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/AppDelegate.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -863,11 +1289,17 @@
             "state": "translated",
             "value": "Redo"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rehacer"
+          }
         }
       }
     },
     "edit-menu.find.title": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/AppDelegate.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -875,11 +1307,17 @@
             "state": "translated",
             "value": "Find"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buscar"
+          }
         }
       }
     },
     "view-menu.title": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/AppDelegate.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -887,11 +1325,17 @@
             "state": "translated",
             "value": "View"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Visualización"
+          }
         }
       }
     },
     "view-menu.dictations.title": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/AppDelegate.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -899,11 +1343,17 @@
             "state": "translated",
             "value": "Dictations"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dictados"
+          }
         }
       }
     },
     "window-menu.title": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/AppDelegate.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -911,11 +1361,17 @@
             "state": "translated",
             "value": "Window"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ventana"
+          }
         }
       }
     },
     "app-update.open-download-page.button": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/AppDelegate.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -923,11 +1379,17 @@
             "state": "translated",
             "value": "Open Download Page"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abrir página de descarga"
+          }
         }
       }
     },
     "post-install.install-to-applications.title": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/PostInstallChecker.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -935,11 +1397,17 @@
             "state": "translated",
             "value": "Install %@ to Applications?"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "¿Instalar %@ en Aplicaciones?"
+          }
         }
       }
     },
     "post-install.install-to-applications.message": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/PostInstallChecker.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -947,11 +1415,17 @@
             "state": "translated",
             "value": "%@ will copy itself to your Applications folder and relaunch automatically."
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ se copiará a tu carpeta Aplicaciones y se reiniciará automáticamente."
+          }
         }
       }
     },
     "post-install.install-to-applications.install-button": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/PostInstallChecker.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -959,11 +1433,17 @@
             "state": "translated",
             "value": "Install"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Instalar"
+          }
         }
       }
     },
     "post-install.install-to-applications.cancel-button": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/PostInstallChecker.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -971,11 +1451,17 @@
             "state": "translated",
             "value": "Cancel"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancelar"
+          }
         }
       }
     },
     "post-install.replace-existing.title": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/PostInstallChecker.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -983,11 +1469,17 @@
             "state": "translated",
             "value": "Replace existing %@?"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "¿Reemplazar %@ existente?"
+          }
         }
       }
     },
     "post-install.replace-existing.message": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/PostInstallChecker.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -995,11 +1487,17 @@
             "state": "translated",
             "value": "An older version of %@ is already in Applications. Replace it?"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ya hay una versión anterior de %@ en Applications. ¿Quieres reemplazarla?"
+          }
         }
       }
     },
     "post-install.replace-existing.replace-button": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/PostInstallChecker.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1007,11 +1505,17 @@
             "state": "translated",
             "value": "Replace"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reemplazo"
+          }
         }
       }
     },
     "post-install.replace-existing.cancel-button": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/PostInstallChecker.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1019,11 +1523,17 @@
             "state": "translated",
             "value": "Cancel"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancelar"
+          }
         }
       }
     },
     "post-install.progress.installing": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/PostInstallChecker.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1031,11 +1541,17 @@
             "state": "translated",
             "value": "Installing %@"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Instalando %@"
+          }
         }
       }
     },
     "post-install.progress.copying-to-applications": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/PostInstallChecker.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1043,11 +1559,17 @@
             "state": "translated",
             "value": "Copying %@ to Applications..."
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copiando %@ a Aplicaciones..."
+          }
         }
       }
     },
     "post-install.error.installation-failed": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/PostInstallChecker.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1055,11 +1577,17 @@
             "state": "translated",
             "value": "Installation failed."
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La instalación falló."
+          }
         }
       }
     },
     "post-install.cleanup.eject-installer-disk.title": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/PostInstallChecker.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1067,11 +1595,17 @@
             "state": "translated",
             "value": "Eject %@ installer disk?"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "¿Quieres expulsar el disco del instalador %@?"
+          }
         }
       }
     },
     "post-install.cleanup.eject-installer-disk.message": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/PostInstallChecker.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1079,11 +1613,17 @@
             "state": "translated",
             "value": "%@ is already installed. It can eject the installer disk and move the downloaded DMG to Trash."
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ ya está instalado. Puede expulsar el disco del instalador y mover el DMG descargado a la Papelera."
+          }
         }
       }
     },
     "post-install.cleanup.keep-button": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/PostInstallChecker.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1091,11 +1631,17 @@
             "state": "translated",
             "value": "Keep"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Conservar"
+          }
         }
       }
     },
     "post-install.cleanup.eject-and-trash-dmg-button": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/PostInstallChecker.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1103,11 +1649,17 @@
             "state": "translated",
             "value": "Eject and Trash DMG"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Expulsar y mover DMG a la Papelera"
+          }
         }
       }
     },
     "meeting-exporter.format.label": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/MeetingExporter.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1115,11 +1667,17 @@
             "state": "translated",
             "value": "Format:"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Formato:"
+          }
         }
       }
     },
     "meeting-preparation-banner.transcription-starting-soon.message": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/MeetingPreparationBanner.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1127,14 +1685,26 @@
             "state": "translated",
             "value": "Meeting transcription will start shortly."
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La transcripción de la reunión comenzará en breve."
+          }
         }
       }
     },
     "meeting-recording-player.time-progress.label": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/MeetingRecordingPlayerView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ / %@"
+          }
+        },
+        "es-419": {
           "stringUnit": {
             "state": "translated",
             "value": "%@ / %@"
@@ -1143,7 +1713,7 @@
       }
     },
     "meeting-templates-manager.delete-template.confirmation-title": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/MeetingTemplatesManagerView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1151,11 +1721,17 @@
             "state": "translated",
             "value": "Delete \"%@\"?"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "¿Eliminar \"%@\"?"
+          }
         }
       }
     },
     "meetings-view.meeting-count.label": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/MeetingsView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1163,11 +1739,17 @@
             "state": "translated",
             "value": "%d meetings"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d reuniones"
+          }
         }
       }
     },
     "new-meeting-contact.save-error.message": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/NewMeetingContactView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1175,11 +1757,17 @@
             "state": "translated",
             "value": "The contact could not be saved."
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No se pudo guardar el contacto."
+          }
         }
       }
     },
     "shortcuts.hold-threshold.range-label": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/ShortcutsView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1187,14 +1775,26 @@
             "state": "translated",
             "value": "Hold threshold: %d-%d ms"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Umbral de mantener presionado: %d-%d ms"
+          }
         }
       }
     },
     "stats-header.metric.value-label": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/StatsHeaderView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ %@"
+          }
+        },
+        "es-419": {
           "stringUnit": {
             "state": "translated",
             "value": "%@ %@"
@@ -1203,7 +1803,7 @@
       }
     },
     "transcript-cleanup-prompts.delete-prompt.confirmation-title": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/TranscriptCleanupPromptsManagerView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1211,14 +1811,26 @@
             "state": "translated",
             "value": "Delete \"%@\"?"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "¿Eliminar \"%@\"?"
+          }
         }
       }
     },
     "dictionary.metric.percentage.value": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/DictionaryView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d%%"
+          }
+        },
+        "es-419": {
           "stringUnit": {
             "state": "translated",
             "value": "%d%%"
@@ -1227,7 +1839,7 @@
       }
     },
     "meeting-notification.action.join-only": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/MeetingNotificationController.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1235,11 +1847,17 @@
             "state": "translated",
             "value": "Join Only"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unirte solamente"
+          }
         }
       }
     },
     "meeting-notification.action.record-only": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/MeetingNotificationController.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1247,11 +1865,17 @@
             "state": "translated",
             "value": "Record Only"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Solo grabar"
+          }
         }
       }
     },
     "sidebar.folder.delete.confirmation-title": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/SidebarView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1259,11 +1883,17 @@
             "state": "translated",
             "value": "Delete \"%@\"?"
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "¿Eliminar \"%@\"?"
+          }
         }
       }
     },
     "sidebar.folder.delete.move-to-unfiled.message": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/SidebarView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1271,17 +1901,29 @@
             "state": "translated",
             "value": "%d meetings in this folder will be moved to Unfiled. Subfolders will be kept."
           }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Se moverán %d reuniones de esta carpeta a Sin carpeta. Las subcarpetas se conservarán."
+          }
         }
       }
     },
     "sidebar.greeting.user": {
-      "comment": "Localized string",
+      "comment": "native/MuesliNative/Sources/MuesliNativeApp/SidebarView.swift",
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Hi, %@"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hola, %@"
           }
         }
       }
