@@ -422,7 +422,7 @@ private class ExportFormatAccessory: NSObject {
 
         let container = NSView(frame: NSRect(x: 0, y: 0, width: 260, height: 32))
 
-        let label = NSTextField(labelWithString: "Format:")
+        let label = NSTextField(labelWithString: String(localized: "meeting-exporter.format.label", defaultValue: "Format:", comment: ""))
         label.font = .systemFont(ofSize: 13)
         label.frame = NSRect(x: 0, y: 6, width: 55, height: 20)
 
