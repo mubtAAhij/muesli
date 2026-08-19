@@ -75,7 +75,11 @@ struct NewMeetingContactView: View {
                 errorMessage = nil
             }
         } message: {
-            Text(errorMessage ?? String(localized: "new-meeting-contact.save-error.message", defaultValue: "The contact could not be saved.", comment: ""))
+            Text(errorMessage ?? String(
+                localized: "new-meeting-contact.save-error.message",
+                defaultValue: "The contact could not be saved.",
+                comment: ""
+            ))
         }
     }
 
