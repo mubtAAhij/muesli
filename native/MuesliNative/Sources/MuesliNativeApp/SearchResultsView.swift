@@ -135,7 +135,7 @@ struct SearchResultsView: View {
             Image(systemName: "magnifyingglass")
                 .font(.system(size: 32))
                 .foregroundStyle(MuesliTheme.textTertiary)
-            Text("No results for \"\(appState.searchQuery)\"")
+            Text(String(format: String(localized: "search-results.empty.no-results-for-query", defaultValue: "No results for \"%@\"", comment: ""), "\(appState.searchQuery)"))
                 .font(MuesliTheme.body())
                 .foregroundStyle(MuesliTheme.textSecondary)
         }
@@ -145,7 +145,7 @@ struct SearchResultsView: View {
     @ViewBuilder
     private func noResultsForTab(_ name: String) -> some View {
         VStack(spacing: MuesliTheme.spacing8) {
-            Text("No matching \(name)")
+            Text(String(format: String(localized: "search-results.empty.no-matching-name", defaultValue: "No matching %@", comment: ""), "\(name)"))
                 .font(MuesliTheme.body())
                 .foregroundStyle(MuesliTheme.textSecondary)
         }
