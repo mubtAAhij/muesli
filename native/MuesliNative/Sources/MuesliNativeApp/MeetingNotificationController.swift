@@ -415,11 +415,19 @@ final class MeetingNotificationController {
 
     @objc private func handleChevronClick(_ sender: NSButton) {
         let menu = NSMenu()
-        let joinOnlyItem = NSMenuItem(title: String(localized: "meeting-notification.action.join-only", defaultValue: "Join Only", comment: ""), action: #selector(handleJoinOnly), keyEquivalent: "")
+        let joinOnlyItem = NSMenuItem(title: String(
+            localized: "meeting-notification.action.join-only",
+            defaultValue: "Join Only",
+            comment: ""
+        ), action: #selector(handleJoinOnly), keyEquivalent: "")
         joinOnlyItem.target = self
         menu.addItem(joinOnlyItem)
 
-        let recordOnlyItem = NSMenuItem(title: String(localized: "meeting-notification.action.record-only", defaultValue: "Record Only", comment: ""), action: #selector(handleStartRecording), keyEquivalent: "")
+        let recordOnlyItem = NSMenuItem(title: String(
+            localized: "meeting-notification.action.record-only",
+            defaultValue: "Record Only",
+            comment: ""
+        ), action: #selector(handleStartRecording), keyEquivalent: "")
         recordOnlyItem.target = self
         menu.addItem(recordOnlyItem)
 
