@@ -130,14 +130,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let appMenuItem = NSMenuItem()
         let appMenu = NSMenu()
         let settingsItem = NSMenuItem(
-            title: "Settings…",
+            title: String(localized: "app-menu.settings.title", defaultValue: "Settings…", comment: ""),
             action: #selector(AppDelegate.openPreferences(_:)),
             keyEquivalent: ","
         )
         settingsItem.target = self
         appMenu.addItem(settingsItem)
         let whatsNewItem = NSMenuItem(
-            title: "What's New in Muesli",
+            title: String(localized: "app-menu.whats-new.title", defaultValue: "What's New in Muesli", comment: ""),
             action: #selector(AppDelegate.showWhatsNew(_:)),
             keyEquivalent: ""
         )
@@ -150,7 +150,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             keyEquivalent: "h"
         )
         let hideOthersItem = NSMenuItem(
-            title: "Hide Others",
+            title: String(localized: "app-menu.hide-others.title", defaultValue: "Hide Others", comment: ""),
             action: #selector(NSApplication.hideOtherApplications(_:)),
             keyEquivalent: "h"
         )
@@ -174,7 +174,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let editMenu = NSMenu(title: "Edit")
         editMenu.addItem(withTitle: "Undo", action: Selector(("undo:")), keyEquivalent: "z")
 
-        let redo = NSMenuItem(title: "Redo", action: Selector(("redo:")), keyEquivalent: "z")
+        let redo = NSMenuItem(title: String(localized: "edit-menu.redo.title", defaultValue: "Redo", comment: ""), action: Selector(("redo:")), keyEquivalent: "z")
         redo.keyEquivalentModifierMask = [.command, .shift]
         editMenu.addItem(redo)
 
@@ -187,7 +187,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         editMenu.addItem(withTitle: "Select All", action: #selector(NSText.selectAll(_:)), keyEquivalent: "a")
         editMenu.addItem(.separator())
         let findItem = NSMenuItem(
-            title: "Find",
+            title: String(localized: "edit-menu.find.title", defaultValue: "Find", comment: ""),
             action: #selector(AppDelegate.focusSearch(_:)),
             keyEquivalent: "f"
         )
@@ -197,10 +197,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         editMenuItem.submenu = editMenu
         mainMenu.addItem(editMenuItem)
 
-        let viewMenuItem = NSMenuItem(title: "View", action: nil, keyEquivalent: "")
+        let viewMenuItem = NSMenuItem(title: String(localized: "view-menu.title", defaultValue: "View", comment: ""), action: nil, keyEquivalent: "")
         let viewMenu = NSMenu(title: "View")
         let dictationsItem = NSMenuItem(
-            title: "Dictations",
+            title: String(localized: "view-menu.dictations.title", defaultValue: "Dictations", comment: ""),
             action: #selector(AppDelegate.showDictations(_:)),
             keyEquivalent: "1"
         )
@@ -216,7 +216,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         viewMenuItem.submenu = viewMenu
         mainMenu.addItem(viewMenuItem)
 
-        let windowMenuItem = NSMenuItem(title: "Window", action: nil, keyEquivalent: "")
+        let windowMenuItem = NSMenuItem(title: String(localized: "window-menu.title", defaultValue: "Window", comment: ""), action: nil, keyEquivalent: "")
         let windowMenu = NSMenu(title: "Window")
         windowMenu.addItem(
             withTitle: "Minimize",
@@ -373,7 +373,7 @@ final class SparkleUpdateDelegate: NSObject, SPUUpdaterDelegate, SPUStandardUser
         alert.messageText = "Update did not finish"
         alert.informativeText = UpdateFailureGuidance.message
         alert.alertStyle = .warning
-        alert.addButton(withTitle: "Open Download Page")
+        alert.addButton(withTitle: String(localized: "app-update.open-download-page.button", defaultValue: "Open Download Page", comment: ""))
         alert.addButton(withTitle: "OK")
 
         if alert.runModal() == .alertFirstButtonReturn,
