@@ -15,7 +15,7 @@ struct MeetingPreparationBanner: View {
                 Text("Preparing transcription")
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundStyle(MuesliTheme.textPrimary)
-                Text(status ?? "Meeting transcription will start shortly.")
+                Text(status ?? String(localized: "meeting-preparation-banner.transcription-starting-soon.message", defaultValue: "Meeting transcription will start shortly.", comment: ""))
                     .font(MuesliTheme.caption())
                     .foregroundStyle(MuesliTheme.textSecondary)
                     .lineLimit(2)
