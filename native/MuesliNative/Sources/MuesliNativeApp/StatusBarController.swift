@@ -121,11 +121,11 @@ final class StatusBarController: NSObject, NSMenuDelegate {
         }
         menu.addItem(.separator())
 
-        let recentItem = NSMenuItem(title: "Recent Dictations", action: nil, keyEquivalent: "")
+        let recentItem = NSMenuItem(title: String(localized: "status-bar.menu.recent-dictations.title", defaultValue: "Recent Dictations", comment: ""), action: nil, keyEquivalent: "")
         let recentMenu = NSMenu()
         let recentRows = controller.recentDictations()
         if recentRows.isEmpty {
-            let empty = NSMenuItem(title: "No dictations yet", action: nil, keyEquivalent: "")
+            let empty = NSMenuItem(title: String(localized: "status-bar.menu.no-dictations.placeholder", defaultValue: "No dictations yet", comment: ""), action: nil, keyEquivalent: "")
             empty.isEnabled = false
             recentMenu.addItem(empty)
         } else {
@@ -139,11 +139,11 @@ final class StatusBarController: NSObject, NSMenuDelegate {
         menu.setSubmenu(recentMenu, for: recentItem)
         menu.addItem(recentItem)
 
-        let backendItem = NSMenuItem(title: "Transcription Backend", action: nil, keyEquivalent: "")
+        let backendItem = NSMenuItem(title: String(localized: "status-bar.menu.transcription-backend.title", defaultValue: "Transcription Backend", comment: ""), action: nil, keyEquivalent: "")
         let backendMenu = NSMenu()
         for option in BackendOption.downloaded {
             let prefix = controller.selectedBackend == option ? "✓ " : ""
-            let item = NSMenuItem(title: "\(prefix)\(option.label)", action: #selector(MuesliController.selectBackendFromMenu(_:)), keyEquivalent: "")
+            let item = NSMenuItem(title: String(format: String(localized: "status-bar.menu.transcription-backend.option-title", defaultValue: "%@%@", comment: ""), "\(prefix)", "\(option.label)"), action: #selector(MuesliController.selectBackendFromMenu(_:)), keyEquivalent: "")
             item.target = controller
             item.representedObject = option.label
             backendMenu.addItem(item)
@@ -151,12 +151,12 @@ final class StatusBarController: NSObject, NSMenuDelegate {
         menu.setSubmenu(backendMenu, for: backendItem)
         menu.addItem(backendItem)
 
-        let meetingBackendItem = NSMenuItem(title: "Meetings Backend", action: nil, keyEquivalent: "")
+        let meetingBackendItem = NSMenuItem(title: String(localized: "status-bar.menu.meetings-backend.title", defaultValue: "Meetings Backend", comment: ""), action: nil, keyEquivalent: "")
         let meetingBackendMenu = NSMenu()
         for option in MeetingSummaryBackendOption.all {
             let prefix = controller.selectedMeetingSummaryBackend == option ? "✓ " : ""
             let item = NSMenuItem(
-                title: "\(prefix)\(option.label)",
+                title: String(format: String(localized: "status-bar.menu.meetings-backend.option-title", defaultValue: "%@%@", comment: ""), "\(prefix)", "\(option.label)"),
                 action: #selector(MuesliController.selectMeetingSummaryBackendFromMenu(_:)),
                 keyEquivalent: ""
             )
@@ -230,7 +230,7 @@ final class StatusBarController: NSObject, NSMenuDelegate {
         for event in displayedEvents {
             let timeStr = "\(timeFormatter.string(from: event.startDate)) – \(timeFormatter.string(from: event.endDate))"
             let item = NSMenuItem(
-                title: "\(event.title)\n\(timeStr)",
+                title: String(format: String(localized: "status-bar.menu.recent-dictations.entry-title", defaultValue: "%@\n%@", comment: ""), "\(event.title)", "\(timeStr)"),
                 action: #selector(MuesliController.startMeetingFromCalendarMenuItem(_:)),
                 keyEquivalent: ""
             )
@@ -284,7 +284,7 @@ final class StatusBarController: NSObject, NSMenuDelegate {
 
     private func checkForUpdatesItem() -> NSMenuItem {
         let item = NSMenuItem(
-            title: "Check for Updates…",
+            title: String(localized: "status-bar.menu.check-for-updates.title", defaultValue: "Check for Updates…", comment: ""),
             action: #selector(MuesliController.checkForUpdates),
             keyEquivalent: ""
         )
