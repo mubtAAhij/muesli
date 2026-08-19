@@ -153,14 +153,22 @@ struct MeetingDetailView: View {
                 summaryErrorMessage = nil
             }
         } message: {
-            Text(summaryErrorMessage ?? String(localized: "meeting-detail.save-notes-error.message", defaultValue: "The updated meeting notes could not be saved.", comment: ""))
+            Text(summaryErrorMessage ?? String(
+                localized: "meeting-detail.save-notes-error.message",
+                defaultValue: "The updated meeting notes could not be saved.",
+                comment: ""
+            ))
         }
         .alert("Couldn't Re-transcribe Meeting", isPresented: retranscriptionErrorBinding) {
             Button("OK", role: .cancel) {
                 retranscriptionErrorMessage = nil
             }
         } message: {
-            Text(retranscriptionErrorMessage ?? String(localized: "meeting-detail.retranscribe-recording-error.message", defaultValue: "The saved recording could not be re-transcribed.", comment: ""))
+            Text(retranscriptionErrorMessage ?? String(
+                localized: "meeting-detail.retranscribe-recording-error.message",
+                defaultValue: "The saved recording could not be re-transcribed.",
+                comment: ""
+            ))
         }
         .alert("Re-summarize Notes?", isPresented: transcriptResummaryPromptBinding) {
             Button("Re-summarize") {
@@ -895,7 +903,11 @@ struct MeetingDetailView: View {
                 templateMenuItems(for: meeting, appliedTemplate: appliedTemplate)
             } label: {
                 Label(
-                    String(format: String(localized: "meeting-detail.template-selection.label", defaultValue: "Template: %@", comment: ""), "\(labelForSelection(on: meeting, appliedTemplate: appliedTemplate))"),
+                    String(format: String(
+                        localized: "meeting-detail.template-selection.label",
+                        defaultValue: "Template: %@",
+                        comment: ""
+                    ), "\(labelForSelection(on: meeting, appliedTemplate: appliedTemplate))"),
                     systemImage: iconName(forSelectionOn: meeting, appliedTemplate: appliedTemplate)
                 )
             }
@@ -995,7 +1007,11 @@ struct MeetingDetailView: View {
                 .controlSize(.small)
                 .frame(width: 14, height: 14)
                 .accessibilityLabel("Preparing transcription")
-            Text(appState.meetingStartStatus ?? String(localized: "meeting-detail.transcription-starting-soon.message", defaultValue: "Meeting transcription will start shortly.", comment: ""))
+            Text(appState.meetingStartStatus ?? String(
+                localized: "meeting-detail.transcription-starting-soon.message",
+                defaultValue: "Meeting transcription will start shortly.",
+                comment: ""
+            ))
                 .font(.system(size: 12, weight: .semibold))
                 .foregroundStyle(MuesliTheme.textSecondary)
                 .lineLimit(1)
@@ -1144,7 +1160,11 @@ struct MeetingDetailView: View {
                         targetID: predecessor.id
                     )
                 }
-                Text(String(format: String(localized: "meeting-detail.thread-meetings.count-label", defaultValue: "Thread · %d meetings", comment: ""), threadContext.count))
+                Text(String(format: String(
+                    localized: "meeting-detail.thread-meetings.count-label",
+                    defaultValue: "Thread · %d meetings",
+                    comment: ""
+                ), threadContext.count))
                     .font(.system(size: 11, weight: .medium))
                     .foregroundStyle(MuesliTheme.textTertiary)
                 switch threadContext.successors.count {
@@ -1160,7 +1180,11 @@ struct MeetingDetailView: View {
                     }
                 default:
                     VStack(alignment: .leading, spacing: 3) {
-                        Text(String(format: String(localized: "meeting-detail.follow-ups.count-label", defaultValue: "Follow-ups (%d)", comment: ""), threadContext.successors.count))
+                        Text(String(format: String(
+                            localized: "meeting-detail.follow-ups.count-label",
+                            defaultValue: "Follow-ups (%d)",
+                            comment: ""
+                        ), threadContext.successors.count))
                             .font(.system(size: 11, weight: .medium))
                             .foregroundStyle(MuesliTheme.textTertiary)
                         ForEach(threadContext.successors) { successor in
@@ -1286,7 +1310,11 @@ struct MeetingDetailView: View {
             if hasApiKey {
                 Image(systemName: "sparkles")
                     .foregroundStyle(MuesliTheme.accent)
-                Text(String(format: String(localized: "meeting-detail.summary-action.guidance", defaultValue: "Use %@ to turn this raw transcript into AI meeting notes and a cleaned-up title.", comment: ""), "\(primarySummaryActionLabel)"))
+                Text(String(format: String(
+                    localized: "meeting-detail.summary-action.guidance",
+                    defaultValue: "Use %@ to turn this raw transcript into AI meeting notes and a cleaned-up title.",
+                    comment: ""
+                ), "\(primarySummaryActionLabel)"))
                     .font(MuesliTheme.callout())
                     .foregroundStyle(MuesliTheme.textSecondary)
             } else {
