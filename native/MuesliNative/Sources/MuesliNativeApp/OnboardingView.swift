@@ -862,7 +862,7 @@ struct OnboardingView: View {
                 let isConfirmingGrant = recentlyGrantedPermissionName == step.name
 
                 VStack(spacing: MuesliTheme.spacing8) {
-                    Text("Permission \(displayIndex + 1) of \(total)")
+                    Text(String(format: String(localized: "onboarding.permissions.progress-label", defaultValue: "Permission %d of %d", comment: ""), displayIndex + 1, total))
                         .font(.system(size: 11, weight: .semibold))
                         .foregroundStyle(MuesliTheme.textTertiary)
                         .textCase(.uppercase)
@@ -1314,7 +1314,7 @@ struct OnboardingView: View {
                     if isModelPreparingAfterDownload {
                         IndeterminatePreparationBar()
                             .frame(width: 260, height: 7)
-                        Text(modelDownloadStatus ?? "Preparing \(selectedBackend.label)...")
+                        Text(modelDownloadStatus ?? String(format: String(localized: "onboarding.model-setup.preparing-backend", defaultValue: "Preparing %@...", comment: ""), "\(selectedBackend.label)"))
                             .font(.system(size: 11, weight: .medium, design: .rounded))
                             .foregroundStyle(MuesliTheme.textTertiary)
                         Text("This usually takes 20-60 seconds the first time.")
@@ -1325,13 +1325,13 @@ struct OnboardingView: View {
                     } else if let modelDownloadProgress {
                         ProgressView(value: modelDownloadProgress, total: 1.0)
                             .frame(width: 260)
-                        Text(modelDownloadStatus ?? "\(Int((modelDownloadProgress * 100).rounded()))% complete")
+                        Text(modelDownloadStatus ?? String(format: String(localized: "onboarding.model-download.progress-percent-complete", defaultValue: "%d%% complete", comment: ""), Int((modelDownloadProgress * 100).rounded())))
                             .font(.system(size: 11, weight: .medium, design: .rounded))
                             .foregroundStyle(MuesliTheme.textTertiary)
                     } else {
                         ProgressView()
                             .controlSize(.regular)
-                        Text(modelDownloadStatus ?? "Preparing \(selectedBackend.label)...")
+                        Text(modelDownloadStatus ?? String(format: String(localized: "onboarding.model-setup.preparing-backend", defaultValue: "Preparing %@...", comment: ""), "\(selectedBackend.label)"))
                             .font(.system(size: 11, weight: .medium, design: .rounded))
                             .foregroundStyle(MuesliTheme.textTertiary)
                     }
@@ -1358,7 +1358,7 @@ struct OnboardingView: View {
                 }
             } else {
                 VStack(spacing: MuesliTheme.spacing16) {
-                    Text(dictationTestResult ?? "Your transcription will appear here...")
+                    Text(dictationTestResult ?? String(localized: "onboarding.live-transcription.placeholder", defaultValue: "Your transcription will appear here...", comment: ""))
                         .font(dictationTestResult != nil ? .system(size: 14, design: .monospaced) : .system(size: 13, design: .rounded))
                         .foregroundStyle(dictationTestResult != nil ? MuesliTheme.textPrimary : MuesliTheme.textTertiary)
                         .italic(dictationTestResult == nil)
@@ -1375,7 +1375,7 @@ struct OnboardingView: View {
                         HStack(spacing: 8) {
                             ProgressView()
                                 .controlSize(.small)
-                            Text("Listening... release \(selectedHotkey.label) when done")
+                            Text(String(format: String(localized: "onboarding.push-to-talk.listening-release-hint", defaultValue: "Listening... release %@ when done", comment: ""), "\(selectedHotkey.label)"))
                                 .font(MuesliTheme.caption())
                                 .foregroundStyle(MuesliTheme.textSecondary)
                         }
@@ -1383,7 +1383,7 @@ struct OnboardingView: View {
                         HStack(spacing: 6) {
                             Image(systemName: "keyboard")
                                 .font(.system(size: 14))
-                            Text("Hold \(selectedHotkey.label) to start")
+                            Text(String(format: String(localized: "onboarding.push-to-talk.hold-to-start-hint", defaultValue: "Hold %@ to start", comment: ""), "\(selectedHotkey.label)"))
                                 .font(MuesliTheme.body())
                         }
                         .foregroundStyle(MuesliTheme.textTertiary)
