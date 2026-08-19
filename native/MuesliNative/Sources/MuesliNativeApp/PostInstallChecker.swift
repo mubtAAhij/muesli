@@ -77,13 +77,29 @@ enum PostInstallChecker {
 
     private static func offerInstall(from bundlePath: String, bundleName: String, appName: String) {
         guard runAlert(
-            message: String(format: String(localized: "post-install.install-to-applications.title", defaultValue: "Install %@ to Applications?", comment: ""),
+            message: String(format: String(
+                localized: "post-install.install-to-applications.title",
+                defaultValue: "Install %@ to Applications?",
+                comment: ""
+            ),
                 appName),
-            info: String(format: String(localized: "post-install.install-to-applications.message", defaultValue: "%@ will copy itself to your Applications folder and relaunch automatically.", comment: ""),
+            info: String(format: String(
+                localized: "post-install.install-to-applications.message",
+                defaultValue: "%@ will copy itself to your Applications folder and relaunch automatically.",
+                comment: ""
+            ),
                 appName),
             buttons: [
-                String(localized: "post-install.install-to-applications.install-button", defaultValue: "Install", comment: ""),
-                String(localized: "post-install.install-to-applications.cancel-button", defaultValue: "Cancel", comment: ""),
+                String(
+                    localized: "post-install.install-to-applications.install-button",
+                    defaultValue: "Install",
+                    comment: ""
+                ),
+                String(
+                    localized: "post-install.install-to-applications.cancel-button",
+                    defaultValue: "Cancel",
+                    comment: ""
+                ),
             ]
         ) == .alertFirstButtonReturn else { return }
 
@@ -93,13 +109,29 @@ enum PostInstallChecker {
         var isDir: ObjCBool = false
         if FileManager.default.fileExists(atPath: destinationURL.path, isDirectory: &isDir), isDir.boolValue {
             guard runAlert(
-                message: String(format: String(localized: "post-install.replace-existing.title", defaultValue: "Replace existing %@?", comment: ""),
+                message: String(format: String(
+                    localized: "post-install.replace-existing.title",
+                    defaultValue: "Replace existing %@?",
+                    comment: ""
+                ),
                     appName),
-                info: String(format: String(localized: "post-install.replace-existing.message", defaultValue: "An older version of %@ is already in Applications. Replace it?", comment: ""),
+                info: String(format: String(
+                    localized: "post-install.replace-existing.message",
+                    defaultValue: "An older version of %@ is already in Applications. Replace it?",
+                    comment: ""
+                ),
                     appName),
                 buttons: [
-                    String(localized: "post-install.replace-existing.replace-button", defaultValue: "Replace", comment: ""),
-                    String(localized: "post-install.replace-existing.cancel-button", defaultValue: "Cancel", comment: ""),
+                    String(
+                        localized: "post-install.replace-existing.replace-button",
+                        defaultValue: "Replace",
+                        comment: ""
+                    ),
+                    String(
+                        localized: "post-install.replace-existing.cancel-button",
+                        defaultValue: "Cancel",
+                        comment: ""
+                    ),
                 ]
             ) == .alertFirstButtonReturn else { return }
 
@@ -292,14 +324,22 @@ enum PostInstallChecker {
             backing: .buffered,
             defer: false
         )
-        window.title = String(format: String(localized: "post-install.progress.installing", defaultValue: "Installing %@", comment: ""), appName)
+        window.title = String(format: String(
+            localized: "post-install.progress.installing",
+            defaultValue: "Installing %@",
+            comment: ""
+        ), appName)
         window.isReleasedWhenClosed = false
         window.level = .floating
 
         let content = NSView(frame: window.contentView?.bounds ?? .zero)
         content.translatesAutoresizingMaskIntoConstraints = false
 
-        let label = NSTextField(labelWithString: String(format: String(localized: "post-install.progress.copying-to-applications", defaultValue: "Copying %@ to Applications...", comment: ""), appName))
+        let label = NSTextField(labelWithString: String(format: String(
+            localized: "post-install.progress.copying-to-applications",
+            defaultValue: "Copying %@ to Applications...",
+            comment: ""
+        ), appName))
         label.font = .systemFont(ofSize: 13)
         label.alignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -336,7 +376,11 @@ enum PostInstallChecker {
     private static func showInstallError(_ description: String) {
         fputs("[PostInstallChecker] install failed: \(description)\n", stderr)
         let alert = NSAlert()
-        alert.messageText = String(localized: "post-install.error.installation-failed", defaultValue: "Installation failed.", comment: "")
+        alert.messageText = String(
+            localized: "post-install.error.installation-failed",
+            defaultValue: "Installation failed.",
+            comment: ""
+        )
         alert.informativeText = description
         alert.runModal()
     }
@@ -384,13 +428,25 @@ enum PostInstallChecker {
         }
 
         return runAlert(
-            message: String(format: String(localized: "post-install.cleanup.eject-installer-disk.title", defaultValue: "Eject %@ installer disk?", comment: ""),
+            message: String(format: String(
+                localized: "post-install.cleanup.eject-installer-disk.title",
+                defaultValue: "Eject %@ installer disk?",
+                comment: ""
+            ),
                 appName),
-            info: String(format: String(localized: "post-install.cleanup.eject-installer-disk.message", defaultValue: "%@ is already installed. It can eject the installer disk and move the downloaded DMG to Trash.", comment: ""),
+            info: String(format: String(
+                localized: "post-install.cleanup.eject-installer-disk.message",
+                defaultValue: "%@ is already installed. It can eject the installer disk and move the downloaded DMG to Trash.",
+                comment: ""
+            ),
                 appName),
             buttons: [
                 String(localized: "post-install.cleanup.keep-button", defaultValue: "Keep", comment: ""),
-                String(localized: "post-install.cleanup.eject-and-trash-dmg-button", defaultValue: "Eject and Trash DMG", comment: ""),
+                String(
+                    localized: "post-install.cleanup.eject-and-trash-dmg-button",
+                    defaultValue: "Eject and Trash DMG",
+                    comment: ""
+                ),
             ]
         ) == .alertSecondButtonReturn
     }
