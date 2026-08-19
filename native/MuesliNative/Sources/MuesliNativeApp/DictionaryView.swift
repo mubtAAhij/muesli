@@ -707,7 +707,11 @@ private struct ThresholdSlider: View {
         .frame(height: thumbSize)
         .accessibilityElement()
         .accessibilityLabel("Matching threshold")
-        .accessibilityValue(String(format: String(localized: "dictionary.metric.percentage.value", defaultValue: "%d%%", comment: ""), Int(round(value * 100))))
+        .accessibilityValue(String(format: String(
+            localized: "dictionary.metric.percentage.value",
+            defaultValue: "%d%%",
+            comment: ""
+        ), Int(round(value * 100))))
         .accessibilityAdjustableAction { direction in
             switch direction {
             case .increment:
