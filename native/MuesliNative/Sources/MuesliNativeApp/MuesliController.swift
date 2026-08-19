@@ -5163,8 +5163,8 @@ public final class MuesliController: NSObject {
         alert.alertStyle = .warning
         alert.messageText = messageText
         alert.informativeText = informativeText
-        alert.addButton(withTitle: "Keep Muesli Running")
-        alert.addButton(withTitle: "Quit Anyway")
+        alert.addButton(withTitle: String(localized: "muesli-controller.quit-confirmation.keep-running", defaultValue: "Keep Muesli Running", comment: ""))
+        alert.addButton(withTitle: String(localized: "muesli-controller.quit-confirmation.quit-anyway", defaultValue: "Quit Anyway", comment: ""))
 
         isPresentingMeetingTerminationConfirmation = true
         let didPresent = presentAlert(alert, fallbackLogContext: "meeting termination confirmation") { [weak self] response in
@@ -6169,7 +6169,7 @@ public final class MuesliController: NSObject {
             let accessory = Self.makeDiscardMeetingAccessoryView()
             manualNotesCheckbox = accessory.manualNotesCheckbox
             alert.accessoryView = accessory.view
-            alert.addButton(withTitle: "Discard Recording")
+            alert.addButton(withTitle: String(localized: "muesli-controller.discard-recording.confirmation-title", defaultValue: "Discard Recording", comment: ""))
             alert.addButton(withTitle: "Cancel")
             alert.buttons.first?.hasDestructiveAction = true
             let titleUpdater = MeetingDiscardButtonTitleUpdater(discardButton: alert.buttons.first)
@@ -6178,7 +6178,7 @@ public final class MuesliController: NSObject {
             (accessory.view as? MeetingDiscardAccessoryView)?.titleUpdater = titleUpdater
         } else {
             alert.informativeText = "This will stop the meeting recording and delete all captured audio. This cannot be undone."
-            alert.addButton(withTitle: "Discard")
+            alert.addButton(withTitle: String(localized: "muesli-controller.discard-recording.confirm-button", defaultValue: "Discard", comment: ""))
             alert.addButton(withTitle: "Cancel")
             alert.buttons.first?.hasDestructiveAction = true
         }
@@ -6186,15 +6186,15 @@ public final class MuesliController: NSObject {
     }
 
     private static func makeDiscardMeetingAccessoryView() -> MeetingDiscardAccessory {
-        let label = NSTextField(labelWithString: "Will delete:")
+        let label = NSTextField(labelWithString: String(localized: "muesli-controller.discard-recording.will-delete-label", defaultValue: "Will delete:", comment: ""))
         label.font = .systemFont(ofSize: NSFont.systemFontSize)
         label.textColor = .secondaryLabelColor
 
-        let recordingCheckbox = NSButton(checkboxWithTitle: "Recording audio", target: nil, action: nil)
+        let recordingCheckbox = NSButton(checkboxWithTitle: String(localized: "muesli-controller.discard-recording.item.recording-audio", defaultValue: "Recording audio", comment: ""), target: nil, action: nil)
         recordingCheckbox.state = .on
         recordingCheckbox.isEnabled = false
 
-        let notesCheckbox = NSButton(checkboxWithTitle: "Manual notes", target: nil, action: nil)
+        let notesCheckbox = NSButton(checkboxWithTitle: String(localized: "muesli-controller.discard-recording.item.manual-notes", defaultValue: "Manual notes", comment: ""), target: nil, action: nil)
         notesCheckbox.state = .off
 
         let container = MeetingDiscardAccessoryView(frame: NSRect(x: 0, y: 0, width: 230, height: 76))
@@ -7082,8 +7082,8 @@ public final class MuesliController: NSObject {
         alert.messageText = "Save meeting recording?"
         alert.informativeText = "Keep a merged audio file for \"\(title)\" so you can inspect it later in Finder."
         alert.alertStyle = .informational
-        alert.addButton(withTitle: "Save Recording")
-        alert.addButton(withTitle: "Don't Save")
+        alert.addButton(withTitle: String(localized: "muesli-controller.save-recording.confirmation-title", defaultValue: "Save Recording", comment: ""))
+        alert.addButton(withTitle: String(localized: "muesli-controller.save-recording.dont-save-button", defaultValue: "Don't Save", comment: ""))
         guard let window = alertPresentationWindow(showHistoryIfNeeded: true) else {
             fputs("[muesli-native] no window available for recording save prompt; saving recording by default\n", stderr)
             return true
