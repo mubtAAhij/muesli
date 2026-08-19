@@ -1,0 +1,1290 @@
+{
+  "version": "1.0",
+  "sourceLanguage": "en",
+  "strings": {
+    "dashboard-root.contribution-milestone.title": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Muesli milestone"
+          }
+        }
+      }
+    },
+    "diagnostic-incident.report.description.recovery": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ can prepare an anonymized GitHub issue for you to review before opening it."
+          }
+        }
+      }
+    },
+    "diagnostic-incident.report.description.hard-failure": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ detected a hard failure in %@. You can review the anonymized report before opening a GitHub issue."
+          }
+        }
+      }
+    },
+    "dictionary-suggestion-prompt.add-correction.title": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add correction?"
+          }
+        }
+      }
+    },
+    "dictionary-suggestion-prompt.add-correction.message": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\"%@\" -> \"%@\""
+          }
+        }
+      }
+    },
+    "dictionary-suggestion-prompt.add-correction.confirm": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add"
+          }
+        }
+      }
+    },
+    "dictionary-suggestion-prompt.add-correction.cancel": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ignore"
+          }
+        }
+      }
+    },
+    "feature-tour.progress.step-of-total": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d of %d"
+          }
+        }
+      }
+    },
+    "feature-tour.header.version-label": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MUESLI %@"
+          }
+        }
+      }
+    },
+    "feature-tour.summary.additions-message": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "See %d additions in the places where you’ll actually use them. You can replay this later from What’s New in Muesli."
+          }
+        }
+      }
+    },
+    "meeting-participants.avatar-overflow.count": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+%d"
+          }
+        }
+      }
+    },
+    "meeting-participants.show-people.button": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show %@"
+          }
+        }
+      }
+    },
+    "meeting-participants.show-people.accessibility-label": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ in this meeting"
+          }
+        }
+      }
+    },
+    "meeting-participants.update.error-message": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The meeting's people could not be updated."
+          }
+        }
+      }
+    },
+    "meeting-participants.remove-person.button": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove %@"
+          }
+        }
+      }
+    },
+    "models.delete-model.confirmation-title": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete \"%@\"?"
+          }
+        }
+      }
+    },
+    "models.delete-post-processing-model.confirmation-title": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete \"%@\"?"
+          }
+        }
+      }
+    },
+    "models.delete-live-caption-model.confirmation-title": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete \"%@\"?"
+          }
+        }
+      }
+    },
+    "models.download.status.phase-and-file": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@: %@"
+          }
+        }
+      }
+    },
+    "models.download.progress.percent-downloading": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d%% downloading..."
+          }
+        }
+      }
+    },
+    "search-results.empty.no-results-for-query": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No results for \"%@\""
+          }
+        }
+      }
+    },
+    "search-results.empty.no-matching-name": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No matching %@"
+          }
+        }
+      }
+    },
+    "meeting-detail.save-notes-error.message": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The updated meeting notes could not be saved."
+          }
+        }
+      }
+    },
+    "meeting-detail.retranscribe-recording-error.message": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The saved recording could not be re-transcribed."
+          }
+        }
+      }
+    },
+    "meeting-detail.template-selection.label": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Template: %@"
+          }
+        }
+      }
+    },
+    "meeting-detail.transcription-starting-soon.message": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Meeting transcription will start shortly."
+          }
+        }
+      }
+    },
+    "meeting-detail.thread-meetings.count-label": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thread · %d meetings"
+          }
+        }
+      }
+    },
+    "meeting-detail.follow-ups.count-label": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Follow-ups (%d)"
+          }
+        }
+      }
+    },
+    "meeting-detail.summary-action.guidance": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use %@ to turn this raw transcript into AI meeting notes and a cleaned-up title."
+          }
+        }
+      }
+    },
+    "onboarding.permissions.progress-label": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Permission %d of %d"
+          }
+        }
+      }
+    },
+    "onboarding.model-setup.preparing-backend": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preparing %@..."
+          }
+        }
+      }
+    },
+    "onboarding.model-download.progress-percent-complete": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d%% complete"
+          }
+        }
+      }
+    },
+    "onboarding.live-transcription.placeholder": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your transcription will appear here..."
+          }
+        }
+      }
+    },
+    "onboarding.push-to-talk.listening-release-hint": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Listening... release %@ when done"
+          }
+        }
+      }
+    },
+    "onboarding.push-to-talk.hold-to-start-hint": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hold %@ to start"
+          }
+        }
+      }
+    },
+    "insights.streak.current-days.value": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d"
+          }
+        }
+      }
+    },
+    "insights.streak.best-days.label": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Best: %d days"
+          }
+        }
+      }
+    },
+    "insights.streak.active-days.label": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d active days"
+          }
+        }
+      }
+    },
+    "insights.metric.daily-activity.title": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Daily %@ activity"
+          }
+        }
+      }
+    },
+    "insights.timeline.entry.accessibility-label": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, %@"
+          }
+        }
+      }
+    },
+    "insights.vocabulary.used-count.label": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Used %@ times"
+          }
+        }
+      }
+    },
+    "insights.vocabulary.word-used-count.accessibility-label": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, used %@ times"
+          }
+        }
+      }
+    },
+    "status-bar.menu.recent-dictations.title": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recent Dictations"
+          }
+        }
+      }
+    },
+    "status-bar.menu.no-dictations.placeholder": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No dictations yet"
+          }
+        }
+      }
+    },
+    "status-bar.menu.transcription-backend.title": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transcription Backend"
+          }
+        }
+      }
+    },
+    "status-bar.menu.transcription-backend.option-title": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@%@"
+          }
+        }
+      }
+    },
+    "status-bar.menu.meetings-backend.title": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Meetings Backend"
+          }
+        }
+      }
+    },
+    "status-bar.menu.meetings-backend.option-title": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@%@"
+          }
+        }
+      }
+    },
+    "status-bar.menu.recent-dictations.entry-title": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@\n%@"
+          }
+        }
+      }
+    },
+    "status-bar.menu.check-for-updates.title": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check for Updates…"
+          }
+        }
+      }
+    },
+    "muesli-controller.quit-confirmation.keep-running": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep Muesli Running"
+          }
+        }
+      }
+    },
+    "muesli-controller.quit-confirmation.quit-anyway": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quit Anyway"
+          }
+        }
+      }
+    },
+    "muesli-controller.discard-recording.confirmation-title": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Discard Recording"
+          }
+        }
+      }
+    },
+    "muesli-controller.discard-recording.confirm-button": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Discard"
+          }
+        }
+      }
+    },
+    "muesli-controller.discard-recording.will-delete-label": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Will delete:"
+          }
+        }
+      }
+    },
+    "muesli-controller.discard-recording.item.recording-audio": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recording audio"
+          }
+        }
+      }
+    },
+    "muesli-controller.discard-recording.item.manual-notes": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Manual notes"
+          }
+        }
+      }
+    },
+    "muesli-controller.save-recording.confirmation-title": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save Recording"
+          }
+        }
+      }
+    },
+    "muesli-controller.save-recording.dont-save-button": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Don't Save"
+          }
+        }
+      }
+    },
+    "settings.safety.confirm-destructive-action.title": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Confirm Destructive Action"
+          }
+        }
+      }
+    },
+    "settings.sync.last-synced.label": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Last synced: %@"
+          }
+        }
+      }
+    },
+    "settings.live-captions.nemotron35.same-model-label": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ (same model)"
+          }
+        }
+      }
+    },
+    "settings.computer-use.timeout-seconds.label": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d seconds"
+          }
+        }
+      }
+    },
+    "settings.calendars.group.subtitle-count.label": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ • %d calendars"
+          }
+        }
+      }
+    },
+    "settings.google-calendars.load-failed.message": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Failed to load Google calendars: %@"
+          }
+        }
+      }
+    },
+    "settings.export.destination-folder.missing": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No destination folder selected"
+          }
+        }
+      }
+    },
+    "settings.hooks.script.missing": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No hook script selected"
+          }
+        }
+      }
+    },
+    "settings.meeting-hooks.timeout-seconds.label": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d seconds"
+          }
+        }
+      }
+    },
+    "app-menu.settings.title": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings…"
+          }
+        }
+      }
+    },
+    "app-menu.whats-new.title": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What's New in Muesli"
+          }
+        }
+      }
+    },
+    "app-menu.hide-others.title": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hide Others"
+          }
+        }
+      }
+    },
+    "edit-menu.redo.title": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Redo"
+          }
+        }
+      }
+    },
+    "edit-menu.find.title": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Find"
+          }
+        }
+      }
+    },
+    "view-menu.title": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "View"
+          }
+        }
+      }
+    },
+    "view-menu.dictations.title": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dictations"
+          }
+        }
+      }
+    },
+    "window-menu.title": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Window"
+          }
+        }
+      }
+    },
+    "app-update.open-download-page.button": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Download Page"
+          }
+        }
+      }
+    },
+    "post-install.install-to-applications.title": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Install %@ to Applications?"
+          }
+        }
+      }
+    },
+    "post-install.install-to-applications.message": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ will copy itself to your Applications folder and relaunch automatically."
+          }
+        }
+      }
+    },
+    "post-install.install-to-applications.install-button": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Install"
+          }
+        }
+      }
+    },
+    "post-install.install-to-applications.cancel-button": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
+          }
+        }
+      }
+    },
+    "post-install.replace-existing.title": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Replace existing %@?"
+          }
+        }
+      }
+    },
+    "post-install.replace-existing.message": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "An older version of %@ is already in Applications. Replace it?"
+          }
+        }
+      }
+    },
+    "post-install.replace-existing.replace-button": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Replace"
+          }
+        }
+      }
+    },
+    "post-install.replace-existing.cancel-button": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
+          }
+        }
+      }
+    },
+    "post-install.progress.installing": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Installing %@"
+          }
+        }
+      }
+    },
+    "post-install.progress.copying-to-applications": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copying %@ to Applications..."
+          }
+        }
+      }
+    },
+    "post-install.error.installation-failed": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Installation failed."
+          }
+        }
+      }
+    },
+    "post-install.cleanup.eject-installer-disk.title": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eject %@ installer disk?"
+          }
+        }
+      }
+    },
+    "post-install.cleanup.eject-installer-disk.message": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ is already installed. It can eject the installer disk and move the downloaded DMG to Trash."
+          }
+        }
+      }
+    },
+    "post-install.cleanup.keep-button": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep"
+          }
+        }
+      }
+    },
+    "post-install.cleanup.eject-and-trash-dmg-button": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eject and Trash DMG"
+          }
+        }
+      }
+    },
+    "meeting-exporter.format.label": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Format:"
+          }
+        }
+      }
+    },
+    "meeting-preparation-banner.transcription-starting-soon.message": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Meeting transcription will start shortly."
+          }
+        }
+      }
+    },
+    "meeting-recording-player.time-progress.label": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ / %@"
+          }
+        }
+      }
+    },
+    "meeting-templates-manager.delete-template.confirmation-title": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete \"%@\"?"
+          }
+        }
+      }
+    },
+    "meetings-view.meeting-count.label": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d meetings"
+          }
+        }
+      }
+    },
+    "new-meeting-contact.save-error.message": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The contact could not be saved."
+          }
+        }
+      }
+    },
+    "shortcuts.hold-threshold.range-label": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hold threshold: %d-%d ms"
+          }
+        }
+      }
+    },
+    "stats-header.metric.value-label": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ %@"
+          }
+        }
+      }
+    },
+    "transcript-cleanup-prompts.delete-prompt.confirmation-title": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete \"%@\"?"
+          }
+        }
+      }
+    },
+    "dictionary.metric.percentage.value": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d%%"
+          }
+        }
+      }
+    },
+    "meeting-notification.action.join-only": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Join Only"
+          }
+        }
+      }
+    },
+    "meeting-notification.action.record-only": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Record Only"
+          }
+        }
+      }
+    },
+    "sidebar.folder.delete.confirmation-title": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete \"%@\"?"
+          }
+        }
+      }
+    },
+    "sidebar.folder.delete.move-to-unfiled.message": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d meetings in this folder will be moved to Unfiled. Subfolders will be kept."
+          }
+        }
+      }
+    },
+    "sidebar.greeting.user": {
+      "comment": "Localized string",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hi, %@"
+          }
+        }
+      }
+    }
+  }
+}
