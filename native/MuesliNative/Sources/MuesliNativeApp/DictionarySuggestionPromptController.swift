@@ -366,12 +366,12 @@ private final class DictionarySuggestionPromptView: NSView {
         let addX = ignoreX - buttonGap - buttonWidth
         let textWidth = cardFrame.width - textX - 14
 
-        let title = label("Add correction?", font: .systemFont(ofSize: 13, weight: .semibold), color: .white)
+        let title = label(String(localized: "dictionary-suggestion-prompt.add-correction.title", defaultValue: "Add correction?", comment: ""), font: .systemFont(ofSize: 13, weight: .semibold), color: .white)
         title.frame = NSRect(x: textX, y: 66, width: textWidth, height: 18)
         cardView.addSubview(title)
 
         let detail = label(
-            "\"\(suggestion.observed)\" -> \"\(suggestion.replacement)\"",
+            String(format: String(localized: "dictionary-suggestion-prompt.add-correction.message", defaultValue: "\"%@\" -> \"%@\"", comment: ""), "\(suggestion.observed)", "\(suggestion.replacement)"),
             font: .systemFont(ofSize: 13),
             color: NSColor.white.withAlphaComponent(0.72),
             lineBreakMode: .byTruncatingMiddle
@@ -380,11 +380,11 @@ private final class DictionarySuggestionPromptView: NSView {
         detail.frame = NSRect(x: textX, y: 43, width: textWidth, height: 18)
         cardView.addSubview(detail)
 
-        let add = button(title: "Add", action: #selector(addTapped), isPrimary: true)
+        let add = button(title: String(localized: "dictionary-suggestion-prompt.add-correction.confirm", defaultValue: "Add", comment: ""), action: #selector(addTapped), isPrimary: true)
         add.frame = NSRect(x: addX, y: buttonY, width: buttonWidth, height: buttonHeight)
         cardView.addSubview(add)
 
-        let ignore = button(title: "Ignore", action: #selector(ignoreTapped), isPrimary: false)
+        let ignore = button(title: String(localized: "dictionary-suggestion-prompt.add-correction.cancel", defaultValue: "Ignore", comment: ""), action: #selector(ignoreTapped), isPrimary: false)
         ignore.frame = NSRect(x: ignoreX, y: buttonY, width: buttonWidth, height: buttonHeight)
         cardView.addSubview(ignore)
     }
