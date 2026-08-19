@@ -116,7 +116,7 @@ struct ModelsView: View {
             syncSelectionsFromActiveBackend()
         }
         .alert(
-            "Delete \"\(modelToDelete?.label ?? "")\"?",
+            String(format: String(localized: "models.delete-model.confirmation-title", defaultValue: "Delete \"%@\"?", comment: ""), "\(modelToDelete?.label ?? "")"),
             isPresented: Binding(
                 get: { modelToDelete != nil },
                 set: { if !$0 { modelToDelete = nil } }
@@ -134,7 +134,7 @@ struct ModelsView: View {
             Text("The downloaded model files will be removed from this Mac. You can download the model again later.")
         }
         .alert(
-            "Delete \"\(postProcModelToDelete?.label ?? "")\"?",
+            String(format: String(localized: "models.delete-post-processing-model.confirmation-title", defaultValue: "Delete \"%@\"?", comment: ""), "\(postProcModelToDelete?.label ?? "")"),
             isPresented: Binding(
                 get: { postProcModelToDelete != nil },
                 set: { if !$0 { postProcModelToDelete = nil } }
@@ -152,7 +152,7 @@ struct ModelsView: View {
             Text("The downloaded model files will be removed from this Mac. You can download the model again later.")
         }
         .alert(
-            "Delete \"\(MeetingLiveCaptionModelStore.label)\"?",
+            String(format: String(localized: "models.delete-live-caption-model.confirmation-title", defaultValue: "Delete \"%@\"?", comment: ""), "\(MeetingLiveCaptionModelStore.label)"),
             isPresented: $showDeleteLiveCaptionModelConfirmation
         ) {
             Button("Cancel", role: .cancel) {}
@@ -897,7 +897,7 @@ struct ModelsView: View {
                 }
 
                 if let currentFile = snapshot.currentFile?.split(separator: "/").last.map(String.init), !currentFile.isEmpty {
-                    Text("\(downloadPhaseLabel(snapshot.phase)): \(currentFile)")
+                    Text(String(format: String(localized: "models.download.status.phase-and-file", defaultValue: "%@: %@", comment: ""), "\(downloadPhaseLabel(snapshot.phase))", "\(currentFile)"))
                         .font(.system(size: 11, weight: .medium))
                         .foregroundStyle(MuesliTheme.textSecondary)
                 } else {
@@ -916,7 +916,7 @@ struct ModelsView: View {
             VStack(alignment: .leading, spacing: 4) {
                 ProgressView(value: fallbackProgress)
                     .tint(MuesliTheme.accent)
-                Text(fallbackMessage ?? "\(Int(fallbackProgress * 100))% downloading...")
+                Text(fallbackMessage ?? String(format: String(localized: "models.download.progress.percent-downloading", defaultValue: "%d%% downloading...", comment: ""), Int(fallbackProgress * 100)))
                     .font(.system(size: 11))
                     .foregroundStyle(MuesliTheme.textTertiary)
             }
