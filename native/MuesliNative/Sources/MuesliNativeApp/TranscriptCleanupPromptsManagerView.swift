@@ -62,7 +62,11 @@ struct TranscriptCleanupPromptsManagerView: View {
         .frame(minWidth: 760, minHeight: 560)
         .background(MuesliTheme.backgroundBase)
         .alert(
-            String(format: String(localized: "transcript-cleanup-prompts.delete-prompt.confirmation-title", defaultValue: "Delete \"%@\"?", comment: ""), "\(promptToDelete?.name ?? "")"),
+            String(format: String(
+                localized: "transcript-cleanup-prompts.delete-prompt.confirmation-title",
+                defaultValue: "Delete \"%@\"?",
+                comment: ""
+            ), "\(promptToDelete?.name ?? "")"),
             isPresented: Binding(
                 get: { promptToDelete != nil },
                 set: { if !$0 { promptToDelete = nil } }
