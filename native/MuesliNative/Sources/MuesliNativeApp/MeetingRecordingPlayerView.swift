@@ -369,7 +369,11 @@ struct MeetingRecordingPlayerView: View {
             }
             .frame(height: 44)
 
-            Text(String(format: String(localized: "meeting-recording-player.time-progress.label", defaultValue: "%@ / %@", comment: ""), "\(formatTime(currentTime))", "\(formatTime(duration))"))
+            Text(String(format: String(
+                localized: "meeting-recording-player.time-progress.label",
+                defaultValue: "%@ / %@",
+                comment: ""
+            ), "\(formatTime(currentTime))", "\(formatTime(duration))"))
                 .font(.system(size: 12, weight: .medium, design: .monospaced))
                 .foregroundStyle(MuesliTheme.textSecondary)
                 .frame(minWidth: 88, alignment: .trailing)
