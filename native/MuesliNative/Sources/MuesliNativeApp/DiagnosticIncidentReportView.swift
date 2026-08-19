@@ -19,7 +19,26 @@ struct DiagnosticIncidentReportView: View {
                     Text(isManualReport ? "Report a Problem" : "Diagnostic Failure Detected")
                         .font(MuesliTheme.title3())
                         .foregroundStyle(MuesliTheme.textPrimary)
-                    Text(isManualReport ? "\(AppIdentity.displayName) can prepare an anonymized GitHub issue for you to review before opening it." : "\(AppIdentity.displayName) detected a hard failure in \(incident.stage.rawValue). You can review the anonymized report before opening a GitHub issue.")
+                    Text(
+                        isManualReport
+                            ? String(
+                                format: String(
+                                    localized: "diagnostic-incident.report.description.recovery",
+                                    defaultValue: "%@ can prepare an anonymized GitHub issue for you to review before opening it.",
+                                    comment: "Description for recoverable diagnostic incident report"
+                                ),
+                                AppIdentity.displayName
+                            )
+                            : String(
+                                format: String(
+                                    localized: "diagnostic-incident.report.description.hard-failure",
+                                    defaultValue: "%@ detected a hard failure in %@. You can review the anonymized report before opening a GitHub issue.",
+                                    comment: "Description for hard failure diagnostic incident report"
+                                ),
+                                AppIdentity.displayName,
+                                incident.stage.rawValue
+                            )
+                    )
                         .font(MuesliTheme.callout())
                         .foregroundStyle(MuesliTheme.textSecondary)
                         .fixedSize(horizontal: false, vertical: true)
