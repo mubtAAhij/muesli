@@ -72,7 +72,7 @@ struct MeetingTemplatesManagerView: View {
         .frame(minWidth: 760, minHeight: 520)
         .background(MuesliTheme.backgroundBase)
         .alert(
-            "Delete \"\(templateToDelete?.name ?? "")\"?",
+            String(format: String(localized: "meeting-templates-manager.delete-template.confirmation-title", defaultValue: "Delete \"%@\"?", comment: ""), "\(templateToDelete?.name ?? "")"),
             isPresented: Binding(
                 get: { templateToDelete != nil },
                 set: { if !$0 { templateToDelete = nil } }
