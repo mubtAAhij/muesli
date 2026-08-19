@@ -277,7 +277,11 @@ struct InsightsView: View {
     private func streakPanel(_ data: InsightsSnapshot) -> some View {
         HStack(spacing: 28) {
             VStack(alignment: .leading, spacing: 4) {
-                Text(String(format: String(localized: "insights.streak.current-days.value", defaultValue: "%d", comment: ""), data.currentStreakDays))
+                Text(String(format: String(
+                    localized: "insights.streak.current-days.value",
+                    defaultValue: "%d",
+                    comment: ""
+                ), data.currentStreakDays))
                     .font(.system(size: 70, weight: .bold, design: .rounded))
                     .tracking(-3)
                     .monospacedDigit()
@@ -292,8 +296,16 @@ struct InsightsView: View {
                     .foregroundStyle(InsightsPalette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
                 HStack(spacing: 18) {
-                    Label(String(format: String(localized: "insights.streak.best-days.label", defaultValue: "Best: %d days", comment: ""), data.longestStreakDays), systemImage: "flag.checkered")
-                    Label(String(format: String(localized: "insights.streak.active-days.label", defaultValue: "%d active days", comment: ""), data.activeDaysInRange), systemImage: "calendar.badge.checkmark")
+                    Label(String(format: String(
+                        localized: "insights.streak.best-days.label",
+                        defaultValue: "Best: %d days",
+                        comment: ""
+                    ), data.longestStreakDays), systemImage: "flag.checkered")
+                    Label(String(format: String(
+                        localized: "insights.streak.active-days.label",
+                        defaultValue: "%d active days",
+                        comment: ""
+                    ), data.activeDaysInRange), systemImage: "calendar.badge.checkmark")
                 }
                 .font(.system(size: 12, weight: .semibold))
                 .foregroundStyle(InsightsPalette.tertiaryText)
@@ -600,7 +612,11 @@ private struct ActivityHeatmap: View {
             }
             .onAppear { scrollToLatest(proxy) }
             .onChange(of: activity.last?.date) { _, _ in scrollToLatest(proxy) }
-            .accessibilityLabel(String(format: String(localized: "insights.metric.daily-activity.title", defaultValue: "Daily %@ activity", comment: ""), "\(metric.label.lowercased())"))
+            .accessibilityLabel(String(format: String(
+                localized: "insights.metric.daily-activity.title",
+                defaultValue: "Daily %@ activity",
+                comment: ""
+            ), "\(metric.label.lowercased())"))
         }
     }
 
@@ -696,7 +712,11 @@ private struct ActivityHeatmapCell: View {
             }
             .focusable(true)
             .accessibilityElement()
-            .accessibilityLabel(String(format: String(localized: "insights.timeline.entry.accessibility-label", defaultValue: "%@, %@", comment: ""), "\(dateText)", "\(countText)"))
+            .accessibilityLabel(String(format: String(
+                localized: "insights.timeline.entry.accessibility-label",
+                defaultValue: "%@, %@",
+                comment: ""
+            ), "\(dateText)", "\(countText)"))
     }
 }
 
@@ -726,8 +746,16 @@ private struct WordCloudPanel: View {
                                 design: .rounded
                             ))
                             .foregroundStyle(wordColor(item))
-                            .help(String(format: String(localized: "insights.vocabulary.used-count.label", defaultValue: "Used %@ times", comment: ""), "\(item.count.formatted())"))
-                            .accessibilityLabel(String(format: String(localized: "insights.vocabulary.word-used-count.accessibility-label", defaultValue: "%@, used %@ times", comment: ""), "\(item.word)", "\(item.count.formatted())"))
+                            .help(String(format: String(
+                                localized: "insights.vocabulary.used-count.label",
+                                defaultValue: "Used %@ times",
+                                comment: ""
+                            ), "\(item.count.formatted())"))
+                            .accessibilityLabel(String(format: String(
+                                localized: "insights.vocabulary.word-used-count.accessibility-label",
+                                defaultValue: "%@, used %@ times",
+                                comment: ""
+                            ), "\(item.word)", "\(item.count.formatted())"))
                     }
                 }
                 .frame(maxWidth: .infinity, minHeight: 150, alignment: .topLeading)
