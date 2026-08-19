@@ -269,7 +269,7 @@ struct ShortcutsView: View {
                 .font(MuesliTheme.caption())
                 .foregroundStyle(MuesliTheme.textSecondary)
         }
-        .help("Hold threshold: \(HotkeyTriggerTiming.minThresholdMilliseconds)-\(HotkeyTriggerTiming.maxThresholdMilliseconds) ms")
+        .help(String(format: String(localized: "shortcuts.hold-threshold.range-label", defaultValue: "Hold threshold: %d-%d ms", comment: ""), HotkeyTriggerTiming.minThresholdMilliseconds, HotkeyTriggerTiming.maxThresholdMilliseconds))
     }
 
     private func shortcutMessage(_ message: String) -> some View {
