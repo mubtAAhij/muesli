@@ -303,7 +303,7 @@ struct SettingsView: View {
                 }
             }
             .alert(
-                pendingDataDestruction?.title ?? "Confirm Destructive Action",
+                pendingDataDestruction?.title ?? String(localized: "settings.safety.confirm-destructive-action.title", defaultValue: "Confirm Destructive Action", comment: ""),
                 isPresented: Binding(
                     get: { pendingDataDestruction != nil },
                     set: { if !$0 { pendingDataDestruction = nil } }
@@ -591,7 +591,7 @@ struct SettingsView: View {
                             .foregroundStyle(MuesliTheme.textPrimary)
                             .fixedSize(horizontal: false, vertical: true)
                         if let lastSyncedText = syncLastSyncedText {
-                            Text("Last synced: \(lastSyncedText)")
+                            Text(String(format: String(localized: "settings.sync.last-synced.label", defaultValue: "Last synced: %@", comment: ""), "\(lastSyncedText)"))
                                 .font(MuesliTheme.caption())
                                 .foregroundStyle(MuesliTheme.textTertiary)
                         }
@@ -777,7 +777,7 @@ struct SettingsView: View {
             Divider().background(MuesliTheme.surfaceBorder)
             settingsRow("Final transcript", controlWidth: meetingControlWidth) {
                 if usesUnifiedMeetingTranscript {
-                    Text("\(MeetingLiveCaptionBackend.nemotron35.label) (same model)")
+                    Text(String(format: String(localized: "settings.live-captions.nemotron35.same-model-label", defaultValue: "%@ (same model)", comment: ""), "\(MeetingLiveCaptionBackend.nemotron35.label)"))
                         .font(MuesliTheme.body())
                         .foregroundStyle(MuesliTheme.textSecondary)
                         .frame(width: meetingControlWidth, alignment: .trailing)
@@ -1300,7 +1300,7 @@ struct SettingsView: View {
                         in: 1...600,
                         step: 15
                     ) {
-                        Text("\(max(appState.config.computerUseTimeoutSeconds, 1)) seconds")
+                        Text(String(format: String(localized: "settings.computer-use.timeout-seconds.label", defaultValue: "%d seconds", comment: ""), max(appState.config.computerUseTimeoutSeconds, 1)))
                             .font(MuesliTheme.body())
                             .foregroundStyle(MuesliTheme.textPrimary)
                     }
@@ -2551,7 +2551,11 @@ struct SettingsView: View {
                         .foregroundStyle(MuesliTheme.textPrimary)
                         .lineLimit(1)
 
-                    Text("\(group.subtitle) • \(group.items.count) \(group.items.count == 1 ? "calendar" : "calendars")")
+                    Text(String(format: String(
+                        localized: "settings.calendars.group.subtitle-count.label",
+                        defaultValue: "%@ • %d calendars",
+                        comment: ""
+                    ), "\(group.subtitle)", group.items.count))
                         .font(.system(size: 11))
                         .foregroundStyle(MuesliTheme.textTertiary)
                         .lineLimit(1)
@@ -2640,7 +2644,7 @@ struct SettingsView: View {
                 .foregroundStyle(MuesliTheme.textTertiary)
         case .failed(let message):
             HStack(spacing: 8) {
-                Text("Failed to load Google calendars: \(message)")
+                Text(String(format: String(localized: "settings.google-calendars.load-failed.message", defaultValue: "Failed to load Google calendars: %@", comment: ""), "\(message)"))
                     .font(MuesliTheme.caption())
                     .foregroundStyle(MuesliTheme.textTertiary)
                 Button("Retry") {
@@ -2705,7 +2709,7 @@ struct SettingsView: View {
                 RoundedRectangle(cornerRadius: MuesliTheme.cornerSmall)
                     .strokeBorder(MuesliTheme.surfaceBorder, lineWidth: 1)
             )
-            .help(appState.config.autoExportMarkdownFolderPath.isEmpty ? "No destination folder selected" : appState.config.autoExportMarkdownFolderPath)
+            .help(appState.config.autoExportMarkdownFolderPath.isEmpty ? String(localized: "settings.export.destination-folder.missing", defaultValue: "No destination folder selected", comment: "") : appState.config.autoExportMarkdownFolderPath)
 
             if !appState.config.autoExportMarkdownFolderPath.isEmpty {
                 Button {
@@ -2779,7 +2783,7 @@ struct SettingsView: View {
                     .strokeBorder(MuesliTheme.surfaceBorder, lineWidth: 1)
             )
             .frame(maxWidth: .infinity)
-            .help(appState.config.meetingHookPath.isEmpty ? "No hook script selected" : appState.config.meetingHookPath)
+            .help(appState.config.meetingHookPath.isEmpty ? String(localized: "settings.hooks.script.missing", defaultValue: "No hook script selected", comment: "") : appState.config.meetingHookPath)
 
             if !appState.config.meetingHookPath.isEmpty {
                 Button {
@@ -2830,7 +2834,7 @@ struct SettingsView: View {
             ),
             in: 1...600
         ) {
-            Text("\(max(appState.config.meetingHookTimeoutSeconds, 1)) seconds")
+            Text(String(format: String(localized: "settings.meeting-hooks.timeout-seconds.label", defaultValue: "%d seconds", comment: ""), max(appState.config.meetingHookTimeoutSeconds, 1)))
                 .font(MuesliTheme.body())
                 .foregroundStyle(MuesliTheme.textPrimary)
                 .monospacedDigit()
