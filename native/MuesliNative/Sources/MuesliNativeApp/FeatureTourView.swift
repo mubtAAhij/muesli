@@ -272,7 +272,11 @@ struct FeatureTourOverlay: View {
                 .fixedSize(horizontal: false, vertical: true)
 
             HStack(spacing: MuesliTheme.spacing12) {
-                Text(String(format: String(localized: "feature-tour.progress.step-of-total", defaultValue: "%d of %d", comment: ""), stepIndex + 1, tour.steps.count))
+                Text(String(format: String(
+                    localized: "feature-tour.progress.step-of-total",
+                    defaultValue: "%d of %d",
+                    comment: ""
+                ), stepIndex + 1, tour.steps.count))
                     .font(MuesliTheme.caption())
                     .monospacedDigit()
                     .foregroundStyle(MuesliTheme.textTertiary)
@@ -337,7 +341,11 @@ struct FeatureTourInvitationView: View {
                         .frame(width: 26, height: 26)
 
                     VStack(alignment: .leading, spacing: 5) {
-                        Text(String(format: String(localized: "feature-tour.header.version-label", defaultValue: "MUESLI %@", comment: ""), "\(tour.displayVersion)"))
+                        Text(String(format: String(
+                            localized: "feature-tour.header.version-label",
+                            defaultValue: "MUESLI %@",
+                            comment: ""
+                        ), "\(tour.displayVersion)"))
                             .font(.system(size: 10, weight: .bold))
                             .foregroundStyle(MuesliTheme.accent)
                         Text("Want a quick tour of what’s new?")
@@ -358,7 +366,11 @@ struct FeatureTourInvitationView: View {
                     .accessibilityLabel("Skip walkthrough")
                 }
 
-                Text(String(format: String(localized: "feature-tour.summary.additions-message", defaultValue: "See %d additions in the places where you’ll actually use them. You can replay this later from What’s New in Muesli.", comment: ""), tour.steps.count))
+                Text(String(format: String(
+                    localized: "feature-tour.summary.additions-message",
+                    defaultValue: "See %d additions in the places where you’ll actually use them. You can replay this later from What’s New in Muesli.",
+                    comment: ""
+                ), tour.steps.count))
                     .font(MuesliTheme.body())
                     .foregroundStyle(MuesliTheme.textSecondary)
                     .lineSpacing(2)
