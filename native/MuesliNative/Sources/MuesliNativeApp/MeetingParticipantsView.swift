@@ -42,7 +42,7 @@ struct MeetingParticipantsView: View {
                         .truncationMode(.tail)
 
                     if participants.count > 1 {
-                        Text("+\(participants.count - 1)")
+                        Text(String(format: String(localized: "meeting-participants.avatar-overflow.count", defaultValue: "+%d", comment: ""), participants.count - 1))
                             .foregroundStyle(MuesliTheme.textTertiary)
                     }
                 } else {
@@ -64,9 +64,9 @@ struct MeetingParticipantsView: View {
         .buttonStyle(.plain)
         .fixedSize(horizontal: false, vertical: true)
         .featureTourTarget(.meetingPeople)
-        .help(participants.isEmpty ? "Add people to this meeting" : "Show \(peopleDescription)")
+        .help(participants.isEmpty ? "Add people to this meeting" : String(format: String(localized: "meeting-participants.show-people.button", defaultValue: "Show %@", comment: ""), "\(peopleDescription)"))
         .accessibilityLabel(
-            participants.isEmpty ? "Add people to this meeting" : "\(peopleDescription) in this meeting"
+            participants.isEmpty ? "Add people to this meeting" : String(format: String(localized: "meeting-participants.show-people.accessibility-label", defaultValue: "%@ in this meeting", comment: ""), "\(peopleDescription)")
         )
         .popover(isPresented: $isPeoplePopoverPresented, arrowEdge: .bottom) {
             peoplePopover
@@ -93,7 +93,7 @@ struct MeetingParticipantsView: View {
                 errorMessage = nil
             }
         } message: {
-            Text(errorMessage ?? "The meeting's people could not be updated.")
+            Text(errorMessage ?? String(localized: "meeting-participants.update.error-message", defaultValue: "The meeting's people could not be updated.", comment: ""))
         }
     }
 
@@ -203,7 +203,7 @@ struct MeetingParticipantsView: View {
                     .frame(width: 24, height: 24)
             }
             .buttonStyle(.plain)
-            .help("Remove \(displayName)")
+            .help(String(format: String(localized: "meeting-participants.remove-person.button", defaultValue: "Remove %@", comment: ""), "\(displayName)"))
         }
     }
 
