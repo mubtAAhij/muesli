@@ -9,11 +9,11 @@ public enum DictationStoreError: Error, LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .dictationNotFound(let id):
-            return "Dictation \(id) no longer exists."
+            return String(format: String(localized: "errors.dictation.no_longer_exists", defaultValue: "Dictation %@ no longer exists.", comment: "Error shown when a requested dictation record no longer exists"), "\(id)")
         case .meetingNotFound(let id):
-            return "Meeting \(id) no longer exists."
+            return String(format: String(localized: "errors.meeting.no_longer_exists", defaultValue: "Meeting %@ no longer exists.", comment: "Error shown when a requested meeting record no longer exists"), "\(id)")
         case .invalidParticipantIdentifier:
-            return "That meeting participant could not be identified."
+            return String(localized: "errors.meeting.participant_not_identified", defaultValue: "That meeting participant could not be identified.", comment: "Error shown when a meeting participant cannot be identified")
         }
     }
 }
@@ -2544,13 +2544,14 @@ public final class DictationStore {
         }
 
         let manualNotes = try manualNotesForMeeting(id: id, db: db)
-        let formattedNotes = """
-        ## Raw Transcript
-
-        Recovered from live transcript checkpoints after the meeting did not finalize normally. This fallback may be incomplete and may not include final diarization or reconciliation.
-
-        \(transcript)
-        """
+        let formattedNotes = String(
+            format: String(
+                localized: "meetings.fallback.raw_transcript_notes",
+                defaultValue: "## Raw Transcript\n\n        Recovered from live transcript checkpoints after the meeting did not finalize normally. This fallback may be incomplete and may not include final diarization or reconciliation.\n\n        %@",
+                comment: "Fallback meeting notes body when recovering from transcript checkpoints"
+            ),
+            transcript
+        )
         let wordCount = Self.countWords(in: transcript) + Self.countWords(in: manualNotes)
         let durationSeconds = try liveTranscriptCheckpointDuration(meetingID: id, db: db)
         let endTime = try liveMeetingFallbackEndTime(meetingID: id, durationSeconds: durationSeconds, db: db)
@@ -2994,17 +2995,18 @@ public final class DictationStore {
         let trimmedNew = new.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedNew.isEmpty else { return prior }
         guard !trimmedPrior.isEmpty else { return new }
-        return prior + "\n\n— Resumed —\n\n" + new
+        return prior + "\n\n" + String(localized: "meetings.transcript.resumed_separator", defaultValue: "— Resumed —", comment: "Separator inserted in transcript when a meeting session is resumed") + "\n\n" + new
     }
 
     private func resumedRecoveryNotes(priorNotes: String, combinedTranscript: String) -> String {
-        let recoveryNotes = """
-        ## Raw Transcript
-
-        Recovered from live transcript checkpoints after a resumed meeting did not finalize normally. This fallback may be incomplete and may not include final diarization or reconciliation.
-
-        \(combinedTranscript)
-        """
+        let recoveryNotes = String(
+            format: String(
+                localized: "meetings.recovery.notes.raw_transcript_resumed",
+                defaultValue: "## Raw Transcript\n\n        Recovered from live transcript checkpoints after a resumed meeting did not finalize normally. This fallback may be incomplete and may not include final diarization or reconciliation.\n\n        %@",
+                comment: "Recovery notes body for resumed meetings reconstructed from transcript checkpoints"
+            ),
+            combinedTranscript
+        )
         let trimmedPriorNotes = priorNotes.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedPriorNotes.isEmpty else { return recoveryNotes }
         return trimmedPriorNotes + "\n\n" + recoveryNotes
