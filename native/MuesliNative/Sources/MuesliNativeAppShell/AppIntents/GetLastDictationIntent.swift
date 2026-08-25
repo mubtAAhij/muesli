@@ -2,8 +2,8 @@ import AppIntents
 
 @available(macOS 13.0, *)
 struct GetLastDictationIntent: AppIntent {
-    static var title: LocalizedStringResource = "Get Last Dictation"
-    static var description = IntentDescription("Returns the text of your most recent Muesli dictation.")
+    static var title: LocalizedStringResource = String(localized: "app_intents.get_last_dictation.title", defaultValue: "Get Last Dictation", comment: "")
+    static var description = IntentDescription(String(localized: "app_intents.get_last_dictation.description", defaultValue: "Returns the text of your most recent Muesli dictation.", comment: ""))
 
     func perform() async throws -> some IntentResult & ReturnsValue<String> {
         let store = try MuesliShortcutsStore.open()
