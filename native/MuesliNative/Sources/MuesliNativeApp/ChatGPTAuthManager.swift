@@ -15,13 +15,13 @@ enum ChatGPTAuthError: Error, LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .notAuthenticated: return "Not signed in to ChatGPT"
-        case .callbackTimeout: return "Sign-in timed out — no response from browser"
-        case .callbackMissingCode: return "OAuth callback missing authorization code"
-        case .callbackStateMismatch: return "OAuth state mismatch — possible CSRF attack"
-        case .tokenExchangeFailed(let msg): return "Token exchange failed: \(msg)"
-        case .refreshFailed(let msg): return "Token refresh failed: \(msg)"
-        case .portInUse: return "Callback port 1455 is already in use"
+        case .notAuthenticated: return String(localized: "chatgpt_auth.error.not_signed_in", defaultValue: "Not signed in to ChatGPT", comment: "Error shown when user is not signed in to ChatGPT")
+        case .callbackTimeout: return String(localized: "chatgpt_auth.error.signin_timed_out", defaultValue: "Sign-in timed out — no response from browser", comment: "Error shown when browser sign-in callback times out")
+        case .callbackMissingCode: return String(localized: "chatgpt_auth.error.callback_missing_code", defaultValue: "OAuth callback missing authorization code", comment: "Error shown when OAuth callback lacks authorization code")
+        case .callbackStateMismatch: return String(localized: "chatgpt_auth.error.state_mismatch", defaultValue: "OAuth state mismatch — possible CSRF attack", comment: "Error shown when OAuth state validation fails")
+        case .tokenExchangeFailed(let msg): return String(format: String(localized: "chatgpt_auth.error.token_exchange_failed", defaultValue: "Token exchange failed: %@", comment: "Error shown when OAuth token exchange fails with details"), "\(msg)")
+        case .refreshFailed(let msg): return String(format: String(localized: "chatgpt_auth.error.token_refresh_failed", defaultValue: "Token refresh failed: %@", comment: "Error shown when OAuth token refresh fails with details"), "\(msg)")
+        case .portInUse: return String(localized: "chatgpt_auth.error.callback_port_in_use", defaultValue: "Callback port 1455 is already in use", comment: "Error shown when local OAuth callback port is already occupied")
         }
     }
 }
