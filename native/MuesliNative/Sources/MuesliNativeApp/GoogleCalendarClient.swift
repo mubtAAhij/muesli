@@ -76,9 +76,20 @@ enum GoogleCalendarClientError: Error, LocalizedError {
     var errorDescription: String? {
         switch self {
         case .requestFailed(let message):
-            return "Google Calendar request failed: \(message)"
+            return String(
+                format: String(
+                    localized: "google_calendar.error.request_failed",
+                    defaultValue: "Google Calendar request failed: %@",
+                    comment: "Error shown when Google Calendar request fails"
+                ),
+                message
+            )
         case .staleRequest:
-            return "Google Calendar request was superseded"
+            return String(
+                localized: "google_calendar.error.request_superseded",
+                defaultValue: "Google Calendar request was superseded",
+                comment: "Error shown when a Google Calendar request is superseded by a newer request"
+            )
         }
     }
 }
@@ -175,7 +186,11 @@ final class GoogleCalendarClient {
                 // directly so users with read-only access at least see something.
                 cachedCalendarList = [GoogleCalendarSummary(
                     id: Self.primaryCalendarID,
-                    summary: "Primary",
+                    summary: String(
+                        localized: "google_calendar.summary.primary",
+                        defaultValue: "Primary",
+                        comment: "Fallback display name for the user's primary calendar"
+                    ),
                     isPrimary: true,
                     colorHex: nil
                 )]
