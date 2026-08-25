@@ -147,7 +147,7 @@ enum Qwen3PostProcessorOutputCleaner {
         let normalized = text
             .replacingOccurrences(of: "…", with: "...")
             .trimmingCharacters(in: .whitespacesAndNewlines)
-        if normalized == "..." || normalized == ". . ." {
+        if normalized == String(localized: "common.ellipsis", defaultValue: "...") || normalized == ". . ." {
             return true
         }
         let punctuationOnly = normalized.allSatisfy { character in
@@ -284,7 +284,7 @@ private actor Qwen3PostProcessorManager {
             if Qwen3PostProcessorOutputCleaner.shouldFallbackToInput(cleaned: cleaned, input: text) {
                 Qwen3PostProcessorLogging.logVerbose("Qwen3 GGUF output rejected; falling back to deterministic cleanup")
                 throw NSError(domain: "Qwen3PostProcessor", code: 4, userInfo: [
-                    NSLocalizedDescriptionKey: "Qwen3 GGUF output was rejected by transcript safety checks",
+                    NSLocalizedDescriptionKey: String(localized: "qwen3_post_processor.error.transcript_rejected_safety_checks", defaultValue: "Qwen3 GGUF output was rejected by transcript safety checks", comment: ""),
                 ])
             } else {
                 result = cleaned
@@ -311,7 +311,7 @@ private actor Qwen3PostProcessorManager {
             maxTokenCount: Qwen3PostProcessorConfig.maxContextTokens
         ) else {
             throw NSError(domain: "Qwen3PostProcessor", code: 2, userInfo: [
-                NSLocalizedDescriptionKey: "Failed to load Qwen3 GGUF model at \(modelURL.path)",
+                NSLocalizedDescriptionKey: String(format: String(localized: "qwen3_post_processor.error.failed_to_load_model_at_path", defaultValue: "Failed to load Qwen3 GGUF model at %@", comment: ""), "\(modelURL.path)"),
             ])
         }
         loaded.useResolvedTemplate(systemPrompt: systemPrompt)
@@ -376,7 +376,7 @@ actor Qwen3PostProcessor {
         let task = Task<Qwen3PostProcessorManager, Error> {
             guard FileManager.default.fileExists(atPath: url.path) else {
                 throw NSError(domain: "Qwen3PostProcessor", code: 1, userInfo: [
-                    NSLocalizedDescriptionKey: "Post-processor model not found at \(url.path). Download it from the Models tab.",
+                    NSLocalizedDescriptionKey: String(format: String(localized: "qwen3_post_processor.error.model_not_found_download_from_models_tab", defaultValue: "Post-processor model not found at %@. Download it from the Models tab.", comment: ""), "\(url.path)"),
                 ])
             }
             let manager = Qwen3PostProcessorManager(modelURL: url, systemPrompt: prompt)
