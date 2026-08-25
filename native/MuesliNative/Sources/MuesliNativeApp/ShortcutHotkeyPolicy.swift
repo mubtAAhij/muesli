@@ -28,8 +28,8 @@ enum ShortcutHotkeyUpdateResult: Equatable {
 }
 
 struct ShortcutHotkeyPolicy {
-    static let conflictMessage = "These shortcuts need different keys."
-    static let commonGlobalShortcutWarning = "This shortcut is commonly used by other apps. Muesli listens globally, so choose a less common combination if it conflicts with your workflow."
+    static let conflictMessage = String(localized: "shortcut_hotkey_policy.conflict_message", defaultValue: "These shortcuts need different keys.", comment: "")
+    static let commonGlobalShortcutWarning = String(localized: "shortcut_hotkey_policy.common_global_shortcut_warning", defaultValue: "This shortcut is commonly used by other apps. Muesli listens globally, so choose a less common combination if it conflicts with your workflow.", comment: "")
 
     static func hotkeysConflict(_ a: HotkeyConfig, _ b: HotkeyConfig) -> Bool {
         if a.isCombination != b.isCombination { return false }
@@ -117,7 +117,7 @@ struct ShortcutHotkeyPolicy {
 
         if hotkeysConflict(resolved, dictationHotkey) {
             resolved = HotkeyConfig.computerUseDefault(avoiding: dictationHotkey)
-            notice = "Computer Use Command moved to \(resolved.label) to avoid matching Push to Talk."
+            notice = String(format: String(localized: "shortcut_hotkey_policy.resolution.computer_use_avoids_push_to_talk", defaultValue: "Computer Use Command moved to %@ to avoid matching Push to Talk.", comment: ""), "\(resolved.label)")
         }
         if isMeetingRecordingEnabled && hotkeysConflict(resolved, meetingRecordingHotkey) {
             let fallback = HotkeyConfig.computerUseDefault(avoiding: dictationHotkey)
@@ -126,7 +126,7 @@ struct ShortcutHotkeyPolicy {
                 return (currentHotkey, .conflict(message: conflictMessage))
             }
             resolved = fallback
-            notice = "Computer Use Command moved to \(resolved.label) to avoid matching Meeting Recording."
+            notice = String(format: String(localized: "shortcut_hotkey_policy.resolution.computer_use_avoids_meeting_recording", defaultValue: "Computer Use Command moved to %@ to avoid matching Meeting Recording.", comment: ""), "\(resolved.label)")
         }
         return (resolved, .updated(notice: notice))
     }
