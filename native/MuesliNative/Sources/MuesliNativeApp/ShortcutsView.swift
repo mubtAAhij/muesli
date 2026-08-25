@@ -15,11 +15,11 @@ struct ShortcutsView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: MuesliTheme.spacing24) {
-                Text("Shortcuts")
+                Text(String(localized: "shortcuts.title", defaultValue: "Shortcuts", comment: ""))
                     .font(MuesliTheme.title1())
                     .foregroundStyle(MuesliTheme.textPrimary)
 
-                Text("Choose your preferred shortcuts for dictation and computer use commands.")
+                Text(String(localized: "shortcuts.subtitle", defaultValue: "Choose your preferred shortcuts for dictation and computer use commands.", comment: ""))
                     .font(MuesliTheme.body())
                     .foregroundStyle(MuesliTheme.textSecondary)
 
@@ -51,10 +51,10 @@ struct ShortcutsView: View {
         VStack(alignment: .leading, spacing: MuesliTheme.spacing16) {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: MuesliTheme.spacing4) {
-                    Text("Push to Talk")
+                    Text(String(localized: "shortcuts.dictation.push_to_talk.title", defaultValue: "Push to Talk", comment: ""))
                         .font(MuesliTheme.headline())
                         .foregroundStyle(MuesliTheme.textPrimary)
-                    Text("Hold to record, release to transcribe")
+                    Text(String(localized: "shortcuts.dictation.push_to_talk.description", defaultValue: "Hold to record, release to transcribe", comment: ""))
                         .font(MuesliTheme.caption())
                         .foregroundStyle(MuesliTheme.textSecondary)
                 }
@@ -89,10 +89,10 @@ struct ShortcutsView: View {
         VStack(alignment: .leading, spacing: MuesliTheme.spacing16) {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: MuesliTheme.spacing4) {
-                    Text("Computer Use Command")
+                    Text(String(localized: "shortcuts.computer_use_command.title", defaultValue: "Computer Use Command", comment: ""))
                         .font(MuesliTheme.headline())
                         .foregroundStyle(MuesliTheme.textPrimary)
-                    Text("Hold to record a command, release to plan and run it")
+                    Text(String(localized: "shortcuts.computer_use_command.description", defaultValue: "Hold to record a command, release to plan and run it", comment: ""))
                         .font(MuesliTheme.caption())
                         .foregroundStyle(MuesliTheme.textSecondary)
                 }
@@ -143,10 +143,10 @@ struct ShortcutsView: View {
         VStack(alignment: .leading, spacing: MuesliTheme.spacing16) {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: MuesliTheme.spacing4) {
-                    Text("Meeting Recording")
+                    Text(String(localized: "shortcuts.meeting_recording.title", defaultValue: "Meeting Recording", comment: ""))
                         .font(MuesliTheme.headline())
                         .foregroundStyle(MuesliTheme.textPrimary)
-                    Text("Toggle meeting recording on/off")
+                    Text(String(localized: "shortcuts.meeting_recording.description", defaultValue: "Toggle meeting recording on/off", comment: ""))
                         .font(MuesliTheme.caption())
                         .foregroundStyle(MuesliTheme.textSecondary)
                 }
@@ -239,7 +239,7 @@ struct ShortcutsView: View {
 
     private func thresholdInput(value: Int, onChange: @escaping (Int) -> Void) -> some View {
         HStack(spacing: MuesliTheme.spacing8) {
-            Text("Hold")
+            Text(String(localized: "shortcuts.threshold.hold_label", defaultValue: "Hold", comment: ""))
                 .font(MuesliTheme.caption())
                 .foregroundStyle(MuesliTheme.textSecondary)
 
@@ -269,7 +269,7 @@ struct ShortcutsView: View {
                 .font(MuesliTheme.caption())
                 .foregroundStyle(MuesliTheme.textSecondary)
         }
-        .help("Hold threshold: \(HotkeyTriggerTiming.minThresholdMilliseconds)-\(HotkeyTriggerTiming.maxThresholdMilliseconds) ms")
+        .help(String(format: String(localized: "shortcuts.threshold.range_label", defaultValue: "Hold threshold: %d-%d ms", comment: ""), HotkeyTriggerTiming.minThresholdMilliseconds, HotkeyTriggerTiming.maxThresholdMilliseconds))
     }
 
     private func shortcutMessage(_ message: String) -> some View {
@@ -286,7 +286,7 @@ struct ShortcutsView: View {
                 startRecording(target)
             }
         } label: {
-            Text(recordingTarget == target ? recordingPrompt(for: target) : "Change Shortcut")
+            Text(recordingTarget == target ? recordingPrompt(for: target) : String(localized: "shortcuts.change_shortcut", defaultValue: "Change Shortcut", comment: ""))
                 .font(MuesliTheme.body())
                 .foregroundStyle(recordingTarget == target ? MuesliTheme.accent : MuesliTheme.textPrimary)
         }
@@ -304,9 +304,9 @@ struct ShortcutsView: View {
     private func recordingPrompt(for target: ShortcutTarget) -> String {
         switch target {
         case .meetingRecording:
-            return "Press a key or modifier..."
+            return String(localized: "shortcuts.recording_prompt.key_or_modifier", defaultValue: "Press a key or modifier...", comment: "")
         case .dictation, .computerUse:
-            return "Press a modifier key..."
+            return String(localized: "shortcuts.recording_prompt.modifier_only", defaultValue: "Press a modifier key...", comment: "")
         }
     }
 
@@ -314,10 +314,10 @@ struct ShortcutsView: View {
         VStack(alignment: .leading, spacing: MuesliTheme.spacing16) {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: MuesliTheme.spacing4) {
-                    Text("Hands-Free Mode")
+                    Text(String(localized: "shortcuts.hands_free_mode.title", defaultValue: "Hands-Free Mode", comment: ""))
                         .font(MuesliTheme.headline())
                         .foregroundStyle(MuesliTheme.textPrimary)
-                    Text("Double-tap dictation or CUA to start, tap again to stop")
+                    Text(String(localized: "shortcuts.hands_free_mode.description", defaultValue: "Double-tap dictation or CUA to start, tap again to stop", comment: ""))
                         .font(MuesliTheme.caption())
                         .foregroundStyle(MuesliTheme.textSecondary)
                 }
@@ -349,7 +349,7 @@ struct ShortcutsView: View {
             computerUseShortcutMessage = nil
             meetingRecordingShortcutMessage = nil
         } label: {
-            Text("Reset to Defaults")
+            Text(String(localized: "shortcuts.reset_to_defaults", defaultValue: "Reset to Defaults", comment: ""))
                 .font(MuesliTheme.body())
                 .foregroundStyle(MuesliTheme.textSecondary)
         }
