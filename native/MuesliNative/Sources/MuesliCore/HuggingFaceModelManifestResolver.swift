@@ -42,15 +42,15 @@ public enum HuggingFaceModelManifestError: Error, LocalizedError, Sendable {
     public var errorDescription: String? {
         switch self {
         case .invalidRepository(let repository):
-            return "Invalid Hugging Face repository: \(repository)"
+            return String(format: String(localized: "huggingface_manifest.error.invalid_repository", defaultValue: "Invalid Hugging Face repository: %@", comment: "Error when a Hugging Face repository identifier is invalid"), "\(repository)")
         case .invalidResponse(let path):
-            return "Hugging Face returned invalid model metadata for \(path)"
+            return String(format: String(localized: "huggingface_manifest.error.invalid_model_metadata", defaultValue: "Hugging Face returned invalid model metadata for %@", comment: "Error when Hugging Face model metadata cannot be parsed for a path"), "\(path)")
         case .invalidHTTPStatus(let status, let path):
-            return "Hugging Face returned HTTP \(status) while listing \(path)"
+            return String(format: String(localized: "huggingface_manifest.error.http_status_listing_path", defaultValue: "Hugging Face returned HTTP %d while listing %@", comment: "Error when Hugging Face returns a non-success HTTP status while listing files at a path"), status, "\(path)")
         case .emptySelection(let path):
-            return "No downloadable files were found for \(path)"
+            return String(format: String(localized: "huggingface_manifest.error.no_downloadable_files", defaultValue: "No downloadable files were found for %@", comment: "Error when no downloadable files are found in a Hugging Face path"), "\(path)")
         case .conflictingDestination(let path):
-            return "More than one Hugging Face file maps to \(path)"
+            return String(format: String(localized: "huggingface_manifest.error.multiple_files_map_to_path", defaultValue: "More than one Hugging Face file maps to %@", comment: "Error when multiple Hugging Face files resolve to the same expected path"), "\(path)")
         }
     }
 }
