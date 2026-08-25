@@ -6,7 +6,15 @@ enum ChatGPTResponsesError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case let .backendFailed(statusCode, message):
-            return "ChatGPT failed with status \(statusCode). \(message)"
+            return String(
+                format: String(
+                    localized: "chatgpt_responses_client.error.http_status",
+                    defaultValue: "ChatGPT failed with status %d. %@",
+                    comment: "Error shown when ChatGPT backend returns non-200 status"
+                ),
+                statusCode,
+                message
+            )
         }
     }
 }
@@ -45,7 +53,11 @@ enum ChatGPTResponsesClient {
             for try await byte in bytes { errorData.append(byte) }
             let message = extractErrorMessage(from: errorData)
                 ?? String(data: errorData, encoding: .utf8)
-                ?? "(unknown)"
+                ?? String(
+                    localized: "chatgpt_responses_client.error.unknown_message",
+                    defaultValue: "(unknown)",
+                    comment: "Fallback message when backend error body has no readable text"
+                )
             fputs("[\(logCategory)] ChatGPT WHAM: HTTP \(httpStatus): \(String(message.prefix(500)))\n", stderr)
             throw ChatGPTResponsesError.backendFailed(statusCode: httpStatus, message: message)
         }
@@ -113,7 +125,11 @@ enum ChatGPTResponsesClient {
         else {
             throw ChatGPTResponsesError.backendFailed(
                 statusCode: httpStatus,
-                message: "Malformed ChatGPT stream payload."
+                message: String(
+                    localized: "chatgpt_responses_client.error.malformed_stream_payload",
+                    defaultValue: "Malformed ChatGPT stream payload.",
+                    comment: "Error when streamed response payload is not valid JSON"
+                )
             )
         }
         return json
