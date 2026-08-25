@@ -25,9 +25,9 @@ struct TimelineView: View {
         return entriesByDay.keys.sorted(by: >).map { day in
             let header: String
             if day == today {
-                header = "TODAY"
+                header = String(localized: "timeline.section.today", defaultValue: "TODAY", comment: "")
             } else if day == yesterday {
-                header = "YESTERDAY"
+                header = String(localized: "timeline.section.yesterday", defaultValue: "YESTERDAY", comment: "")
             } else {
                 header = day.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated)).uppercased()
             }
@@ -132,7 +132,7 @@ struct TimelineView: View {
             Text(emptyStateTitle)
                 .font(MuesliTheme.title3())
                 .foregroundStyle(MuesliTheme.textSecondary)
-            Text("Try another source, app, or time range")
+            Text(String(localized: "timeline.empty_state.try_another_source", defaultValue: "Try another source, app, or time range", comment: ""))
                 .font(MuesliTheme.callout())
                 .foregroundStyle(MuesliTheme.textTertiary)
             Spacer()
@@ -142,12 +142,12 @@ struct TimelineView: View {
 
     private var emptyStateTitle: String {
         if let application = appState.timelineApplicationFilter {
-            return "No dictations for \(application.name)"
+            return String(format: String(localized: "timeline.empty_state.no_dictations_for_app", defaultValue: "No dictations for %@", comment: ""), "\(application.name)")
         }
         switch appState.timelineOriginFilter {
-        case .all: return "No activity yet"
-        case .thisMac: return "No activity from this Mac"
-        case .fromIPhone: return "No activity from iPhone"
+        case .all: return String(localized: "timeline.empty_state.no_activity_yet", defaultValue: "No activity yet", comment: "")
+        case .thisMac: return String(localized: "timeline.empty_state.no_activity_this_mac", defaultValue: "No activity from this Mac", comment: "")
+        case .fromIPhone: return String(localized: "timeline.empty_state.no_activity_iphone", defaultValue: "No activity from iPhone", comment: "")
         }
     }
 
@@ -244,7 +244,7 @@ private struct TimelineMeetingRow: View {
                     Image(systemName: "person.2.fill")
                         .font(.system(size: 11, weight: .semibold))
                         .foregroundStyle(MuesliTheme.accent)
-                        .accessibilityLabel("Meeting")
+                        .accessibilityLabel(String(localized: "timeline.meeting.accessibility_label", defaultValue: "Meeting", comment: ""))
 
                     Text(record.title)
                         .font(.system(size: 14, weight: .semibold))
@@ -262,7 +262,7 @@ private struct TimelineMeetingRow: View {
                     if let label = SyncOriginDisplay.badgeLabel(forMeetingSource: record.source) {
                         SyncOriginBadge(label: label)
                     } else {
-                        SyncOriginBadge(label: "Mac", help: "Recorded on this Mac")
+                        SyncOriginBadge(label: String(localized: "timeline.sync_origin.mac.title", defaultValue: "Mac", comment: ""), help: String(localized: "timeline.sync_origin.mac.subtitle", defaultValue: "Recorded on this Mac", comment: ""))
                     }
 
                     Spacer(minLength: 0)
@@ -289,7 +289,7 @@ private struct TimelineMeetingRow: View {
         .onTapGesture(perform: onSelect)
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(.isButton)
-        .accessibilityHint("Open meeting")
+        .accessibilityHint(String(localized: "timeline.meeting.accessibility_hint.open", defaultValue: "Open meeting", comment: ""))
     }
 
     private var previewText: String {
@@ -303,20 +303,20 @@ private struct TimelineMeetingRow: View {
             content = record.rawTranscript
         }
         let preview = MeetingPreviewText.snippet(from: content)
-        return preview.isEmpty ? "No transcript or notes yet" : preview
+        return preview.isEmpty ? String(localized: "timeline.preview.no_transcript_or_notes", defaultValue: "No transcript or notes yet", comment: "") : preview
     }
 
     private static func formatDuration(_ seconds: Double) -> String {
         let rounded = max(0, Int(seconds.rounded()))
         if rounded >= 3600 {
-            return "\(rounded / 3600)h \((rounded % 3600) / 60)m"
+            return String(format: String(localized: "timeline.duration.hours_minutes", defaultValue: "%dh %dm", comment: ""), rounded / 3600, (rounded % 3600) / 60)
         }
         if rounded >= 60 {
             let minutes = rounded / 60
             let remainingSeconds = rounded % 60
-            return remainingSeconds == 0 ? "\(minutes)m" : "\(minutes)m \(remainingSeconds)s"
+            return remainingSeconds == 0 ? String(format: String(localized: "timeline.duration.minutes_only", defaultValue: "%dm", comment: ""), minutes) : String(format: String(localized: "timeline.duration.minutes_seconds", defaultValue: "%dm %ds", comment: ""), minutes, remainingSeconds)
         }
-        return "\(rounded)s"
+        return String(format: String(localized: "timeline.duration.seconds_only", defaultValue: "%ds", comment: ""), rounded)
     }
 
 }
