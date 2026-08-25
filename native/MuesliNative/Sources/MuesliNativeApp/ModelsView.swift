@@ -69,15 +69,15 @@ struct ModelsView: View {
         ScrollViewReader { proxy in
             ScrollView {
                 VStack(alignment: .leading, spacing: MuesliTheme.spacing24) {
-                    Text("Models")
+                    Text(String(localized: "models.title", defaultValue: "Models", comment: ""))
                         .font(MuesliTheme.title1())
                         .foregroundStyle(MuesliTheme.textPrimary)
 
-                    Text("Choose the transcription and cleanup models that fit how you speak and work.")
+                    Text(String(localized: "models.subtitle.description", defaultValue: "Choose the transcription and cleanup models that fit how you speak and work.", comment: ""))
                         .font(MuesliTheme.body())
                         .foregroundStyle(MuesliTheme.textSecondary)
 
-                    Picker("Model category", selection: modelsCategorySelection) {
+                    Picker(String(localized: "models.picker.category_label", defaultValue: "Model category", comment: ""), selection: modelsCategorySelection) {
                         ForEach(ModelsCategory.allCases) { category in
                             Text(category.title).tag(category)
                         }
@@ -116,51 +116,51 @@ struct ModelsView: View {
             syncSelectionsFromActiveBackend()
         }
         .alert(
-            "Delete \"\(modelToDelete?.label ?? "")\"?",
+            String(format: String(localized: "models.delete_confirmation.model_title", defaultValue: "Delete \"%@\"?", comment: ""), "\(modelToDelete?.label ?? "")"),
             isPresented: Binding(
                 get: { modelToDelete != nil },
                 set: { if !$0 { modelToDelete = nil } }
             )
         ) {
-            Button("Cancel", role: .cancel) {
+            Button(String(localized: "common.actions.cancel", defaultValue: "Cancel", comment: ""), role: .cancel) {
                 modelToDelete = nil
             }
-            Button("Delete", role: .destructive) {
+            Button(String(localized: "common.actions.delete", defaultValue: "Delete", comment: ""), role: .destructive) {
                 guard let option = modelToDelete else { return }
                 deleteModel(option)
                 modelToDelete = nil
             }
         } message: {
-            Text("The downloaded model files will be removed from this Mac. You can download the model again later.")
+            Text(String(localized: "models.delete_confirmation.message", defaultValue: "The downloaded model files will be removed from this Mac. You can download the model again later.", comment: ""))
         }
         .alert(
-            "Delete \"\(postProcModelToDelete?.label ?? "")\"?",
+            String(format: String(localized: "models.delete_confirmation.cleanup_model_title", defaultValue: "Delete \"%@\"?", comment: ""), "\(postProcModelToDelete?.label ?? "")"),
             isPresented: Binding(
                 get: { postProcModelToDelete != nil },
                 set: { if !$0 { postProcModelToDelete = nil } }
             )
         ) {
-            Button("Cancel", role: .cancel) {
+            Button(String(localized: "common.actions.cancel", defaultValue: "Cancel", comment: ""), role: .cancel) {
                 postProcModelToDelete = nil
             }
-            Button("Delete", role: .destructive) {
+            Button(String(localized: "common.actions.delete", defaultValue: "Delete", comment: ""), role: .destructive) {
                 guard let option = postProcModelToDelete else { return }
                 deletePostProcModel(option)
                 postProcModelToDelete = nil
             }
         } message: {
-            Text("The downloaded model files will be removed from this Mac. You can download the model again later.")
+            Text(String(localized: "models.delete_confirmation.message", defaultValue: "The downloaded model files will be removed from this Mac. You can download the model again later.", comment: ""))
         }
         .alert(
-            "Delete \"\(MeetingLiveCaptionModelStore.label)\"?",
+            String(format: String(localized: "models.delete_confirmation.live_meeting_model_title", defaultValue: "Delete \"%@\"?", comment: ""), "\(MeetingLiveCaptionModelStore.label)"),
             isPresented: $showDeleteLiveCaptionModelConfirmation
         ) {
-            Button("Cancel", role: .cancel) {}
-            Button("Delete", role: .destructive) {
+            Button(String(localized: "common.actions.cancel", defaultValue: "Cancel", comment: ""), role: .cancel) {}
+            Button(String(localized: "common.actions.delete", defaultValue: "Delete", comment: ""), role: .destructive) {
                 deleteLiveCaptionModel()
             }
         } message: {
-            Text("Live meetings will fall back to standard chunk-by-chunk captions until this model is downloaded again.")
+            Text(String(localized: "models.live_meetings.fallback_warning", defaultValue: "Live meetings will fall back to standard chunk-by-chunk captions until this model is downloaded again.", comment: ""))
         }
     }
 
@@ -182,16 +182,16 @@ struct ModelsView: View {
                 modelCard(
                     option: option,
                     logo: logoForBackend(option),
-                    downloadedLabel: "Available"
+                    downloadedLabel: String(localized: "models.status.available", defaultValue: "Available", comment: "")
                 )
                 .id(featureTourTarget?.rawValue ?? option.model)
                 .featureTourTarget(featureTourTarget)
             }
 
             familyCard(
-                title: "Parakeet Family",
-                subtitle: "The most responsive choices for everyday dictation, with multilingual and English-only options.",
-                defaultBadge: "Default: v3",
+                title: String(localized: "models.family.parakeet.title", defaultValue: "Parakeet Family", comment: ""),
+                subtitle: String(localized: "models.family.parakeet.description", defaultValue: "The most responsive choices for everyday dictation, with multilingual and English-only options.", comment: ""),
+                defaultBadge: String(localized: "models.family.default_v3", defaultValue: "Default: v3", comment: ""),
                 logo: "nvidia-logo",
                 selection: $selectedParakeetModel,
                 options: BackendOption.parakeetFamily
@@ -200,9 +200,9 @@ struct ModelsView: View {
             modelCard(option: .qwen3Asr, logo: "qwen-logo")
 
             familyCard(
-                title: "Whisper",
-                subtitle: "Dependable alternatives when you prefer Whisper's transcription style or need broader multilingual coverage.",
-                defaultBadge: "Default: Small",
+                title: String(localized: "models.family.whisper.title", defaultValue: "Whisper", comment: ""),
+                subtitle: String(localized: "models.family.whisper.description", defaultValue: "Dependable alternatives when you prefer Whisper's transcription style or need broader multilingual coverage.", comment: ""),
+                defaultBadge: String(localized: "models.family.default_small", defaultValue: "Default: Small", comment: ""),
                 logo: "openai-logo",
                 selection: $selectedWhisperModel,
                 options: BackendOption.whisperFamily
@@ -222,7 +222,7 @@ struct ModelsView: View {
     private var comingSoonSection: some View {
         if !BackendOption.comingSoon.isEmpty {
             VStack(alignment: .leading, spacing: MuesliTheme.spacing8) {
-                Text("COMING SOON")
+                Text(String(localized: "models.coming_soon.section_title", defaultValue: "COMING SOON", comment: ""))
                     .font(.system(size: 11, weight: .semibold))
                     .foregroundStyle(MuesliTheme.textTertiary)
                     .textCase(.uppercase)
@@ -270,11 +270,11 @@ struct ModelsView: View {
     private var streamingSection: some View {
         VStack(alignment: .leading, spacing: MuesliTheme.spacing12) {
             VStack(alignment: .leading, spacing: MuesliTheme.spacing4) {
-                Text("LIVE MEETINGS")
+                Text(String(localized: "models.live_meetings.section_title", defaultValue: "LIVE MEETINGS", comment: ""))
                     .font(.system(size: 11, weight: .semibold))
                     .foregroundStyle(MuesliTheme.textTertiary)
 
-                Text("Choose how words appear while a meeting is in progress. Nemotron also creates the saved transcript; Parakeet prioritizes a faster English preview.")
+                Text(String(localized: "models.streaming.description", defaultValue: "Choose how words appear while a meeting is in progress. Nemotron also creates the saved transcript; Parakeet prioritizes a faster English preview.", comment: ""))
                     .font(MuesliTheme.caption())
                     .foregroundStyle(MuesliTheme.textSecondary)
             }
@@ -323,7 +323,7 @@ struct ModelsView: View {
                             .foregroundStyle(MuesliTheme.textTertiary)
                     }
 
-                    Text("Fast English captions while a meeting is in progress. They are a provisional preview; your regular meeting model creates the transcript you keep.")
+                    Text(String(localized: "models.live_caption.description", defaultValue: "Fast English captions while a meeting is in progress. They are a provisional preview; your regular meeting model creates the transcript you keep.", comment: ""))
                         .font(MuesliTheme.caption())
                         .foregroundStyle(MuesliTheme.textSecondary)
                 }
@@ -331,7 +331,7 @@ struct ModelsView: View {
                 Spacer()
 
                 if isActive {
-                    Text("Active")
+                    Text(String(localized: "models.status.active", defaultValue: "Active", comment: ""))
                         .font(.system(size: 11, weight: .semibold))
                         .foregroundStyle(MuesliTheme.success)
                         .padding(.horizontal, 8)
@@ -339,7 +339,7 @@ struct ModelsView: View {
                         .background(MuesliTheme.success.opacity(0.15))
                         .clipShape(RoundedRectangle(cornerRadius: 4))
                 } else if isLiveCaptionModelDownloaded {
-                    Text("Ready")
+                    Text(String(localized: "models.status.ready", defaultValue: "Ready", comment: ""))
                         .font(.system(size: 11, weight: .medium))
                         .foregroundStyle(MuesliTheme.textTertiary)
                         .padding(.horizontal, 8)
@@ -358,7 +358,7 @@ struct ModelsView: View {
 
             HStack(spacing: MuesliTheme.spacing8) {
                 if isDownloadingLiveCaptionModel {
-                    Button(isCancellingLiveCaptionModelDownload ? "Pausing…" : "Cancel") {
+                    Button(isCancellingLiveCaptionModelDownload ? String(localized: "models.actions.pausing", defaultValue: "Pausing…", comment: "") : String(localized: "common.actions.cancel", defaultValue: "Cancel", comment: "")) {
                         guard !isCancellingLiveCaptionModelDownload else { return }
                         let task = liveCaptionDownloadTask
                         task?.cancel()
@@ -385,7 +385,7 @@ struct ModelsView: View {
                         if let snapshot = downloadSnapshots[MeetingLiveCaptionModelStore.modelID] {
                             downloadSnapshots[MeetingLiveCaptionModelStore.modelID] = snapshot.replacing(
                                 phase: .paused,
-                                message: "Paused — select Download to resume"
+                                message: String(localized: "models.live_caption.paused_resume_hint", defaultValue: "Paused — select Download to resume", comment: "")
                             )
                         }
                     }
@@ -395,7 +395,7 @@ struct ModelsView: View {
                     .foregroundStyle(MuesliTheme.textSecondary)
                 } else if isLiveCaptionModelDownloaded {
                     if !isActive {
-                        Button("Set Active") {
+                        Button(String(localized: "models.actions.set_active", defaultValue: "Set Active", comment: "")) {
                             controller.updateConfig {
                                 $0.meetingLiveCaptionBackend = MeetingLiveCaptionBackend.parakeetRealtimeEOU.rawValue
                                 $0.enableLiveStreamingPartials = true
@@ -419,9 +419,9 @@ struct ModelsView: View {
                             .frame(width: 20, height: 20)
                     }
                     .buttonStyle(.plain)
-                    .help("Delete live caption model")
+                    .help(String(localized: "models.live_caption.delete_help", defaultValue: "Delete live caption model", comment: ""))
                 } else {
-                    Button("Download") {
+                    Button(String(localized: "common.actions.download", defaultValue: "Download", comment: "")) {
                         startLiveCaptionModelDownload()
                     }
                     .buttonStyle(.plain)
@@ -510,12 +510,12 @@ struct ModelsView: View {
                                 .font(.system(size: 9, weight: .semibold))
                                 .foregroundStyle(MuesliTheme.textTertiary)
 
-                            Text("Experimental")
+                            Text(String(localized: "models.experimental.title", defaultValue: "Experimental", comment: ""))
                                 .font(.system(size: 14, weight: .semibold))
                                 .foregroundStyle(MuesliTheme.textSecondary)
                         }
 
-                        Text("Early models for specific languages and evaluation. Expect less consistent transcripts, and try them with your own voice before relying on them.")
+                        Text(String(localized: "models.experimental.description", defaultValue: "Early models for specific languages and evaluation. Expect less consistent transcripts, and try them with your own voice before relying on them.", comment: ""))
                             .font(.system(size: 12, weight: .medium))
                             .foregroundStyle(MuesliTheme.textPrimary)
                             .opacity(0.8)
@@ -523,7 +523,7 @@ struct ModelsView: View {
 
                     Spacer()
 
-                    Text("Early access")
+                    Text(String(localized: "models.experimental.badge_early_access", defaultValue: "Early access", comment: ""))
                         .font(.system(size: 10, weight: .semibold))
                         .foregroundStyle(MuesliTheme.textTertiary)
                         .padding(.horizontal, 8)
@@ -543,8 +543,8 @@ struct ModelsView: View {
                             modelCard(
                                 option: option,
                                 logo: logoForBackend(option),
-                                downloadedLabel: "Used for Cleanup",
-                                activationDisabledReason: "Unavailable while Gemma 4 is selected for cleanup. Choose another cleanup backend first."
+                                downloadedLabel: String(localized: "models.experimental.used_for_cleanup", defaultValue: "Used for Cleanup", comment: ""),
+                                activationDisabledReason: String(localized: "models.experimental.unavailable_due_to_cleanup_selection", defaultValue: "Unavailable while Gemma 4 is selected for cleanup. Choose another cleanup backend first.", comment: "")
                             )
                         } else {
                             modelCard(option: option, logo: logoForBackend(option))
@@ -603,13 +603,13 @@ struct ModelsView: View {
     private var postProcessorSection: some View {
         VStack(alignment: .leading, spacing: MuesliTheme.spacing12) {
             VStack(alignment: .leading, spacing: MuesliTheme.spacing4) {
-                Text("CLEANUP")
+                Text(String(localized: "models.cleanup.title", defaultValue: "CLEANUP", comment: ""))
                     .font(.system(size: 11, weight: .semibold))
                     .foregroundStyle(MuesliTheme.textTertiary)
                     .textCase(.uppercase)
                     .padding(.leading, 2)
 
-                Text("Optional cleanup after transcription. Use it to remove filler words, follow spoken corrections, format lists, and fix obvious dictation errors.")
+                Text(String(localized: "models.cleanup.description", defaultValue: "Optional cleanup after transcription. Use it to remove filler words, follow spoken corrections, format lists, and fix obvious dictation errors.", comment: ""))
                     .font(.system(size: 12, weight: .medium))
                     .foregroundStyle(MuesliTheme.textSecondary)
                     .padding(.leading, 2)
@@ -639,13 +639,13 @@ struct ModelsView: View {
             onSetActive: {
                 controller.selectPostProcessorBackend(.gemma4LiteRT)
             },
-            description: "An experimental local option for filler removal, formatting, and obvious transcript errors. It uses the same download as Gemma 4 dictation.",
-            activeLabel: "Cleanup Active",
-            downloadedLabel: isCompatible ? "Downloaded" : "Used for Dictation",
-            actionTitle: "Use for Cleanup",
+            description: String(localized: "models.cleanup.gemma.description", defaultValue: "An experimental local option for filler removal, formatting, and obvious transcript errors. It uses the same download as Gemma 4 dictation.", comment: ""),
+            activeLabel: String(localized: "models.cleanup.status.active", defaultValue: "Cleanup Active", comment: ""),
+            downloadedLabel: isCompatible ? String(localized: "models.status.downloaded", defaultValue: "Downloaded", comment: "") : String(localized: "models.cleanup.used_for_dictation", defaultValue: "Used for Dictation", comment: ""),
+            actionTitle: String(localized: "models.cleanup.action_use_for_cleanup", defaultValue: "Use for Cleanup", comment: ""),
             activationDisabledReason: isCompatible
                 ? nil
-                : "Unavailable while Gemma 4 is selected for dictation. Choose another dictation model first."
+                : String(localized: "models.cleanup.unavailable_due_to_dictation_selection", defaultValue: "Unavailable while Gemma 4 is selected for dictation. Choose another dictation model first.", comment: "")
         )
     }
 
@@ -678,7 +678,7 @@ struct ModelsView: View {
                 Spacer()
 
                 if isActive {
-                    Text("Active")
+                    Text(String(localized: "models.status.active", defaultValue: "Active", comment: ""))
                         .font(.system(size: 11, weight: .semibold))
                         .foregroundStyle(MuesliTheme.success)
                         .padding(.horizontal, 8)
@@ -686,7 +686,7 @@ struct ModelsView: View {
                         .background(MuesliTheme.success.opacity(0.15))
                         .clipShape(RoundedRectangle(cornerRadius: 4))
                 } else if isDownloaded {
-                    Text("Downloaded")
+                    Text(String(localized: "models.status.downloaded", defaultValue: "Downloaded", comment: ""))
                         .font(.system(size: 11, weight: .medium))
                         .foregroundStyle(MuesliTheme.textTertiary)
                         .padding(.horizontal, 8)
@@ -706,7 +706,7 @@ struct ModelsView: View {
 
             HStack(spacing: MuesliTheme.spacing8) {
                 if isDownloading {
-                    Button("Pause") {
+                    Button(String(localized: "models.post_processing.pause_button", defaultValue: "Pause", comment: "")) {
                         cancelPostProcDownload(option)
                     }
                     .buttonStyle(.plain)
@@ -718,7 +718,7 @@ struct ModelsView: View {
                     .clipShape(RoundedRectangle(cornerRadius: MuesliTheme.cornerSmall))
                 } else if isDownloaded {
                     if !isActive {
-                        Button("Set Active") {
+                        Button(String(localized: "models.actions.set_active", defaultValue: "Set Active", comment: "")) {
                             controller.selectPostProcessor(option)
                         }
                         .buttonStyle(.plain)
@@ -740,7 +740,7 @@ struct ModelsView: View {
                     }
                     .buttonStyle(.plain)
                 } else {
-                    Button("Download") {
+                    Button(String(localized: "common.actions.download", defaultValue: "Download", comment: "")) {
                         startPostProcDownload(option)
                     }
                     .buttonStyle(.plain)
@@ -806,7 +806,7 @@ struct ModelsView: View {
             }
 
             HStack(alignment: .center, spacing: MuesliTheme.spacing12) {
-                Text("Variant")
+                Text(String(localized: "models.family.variant_label", defaultValue: "Variant", comment: ""))
                     .font(MuesliTheme.caption())
                     .foregroundStyle(MuesliTheme.textTertiary)
                     .frame(width: 52, alignment: .leading)
@@ -831,7 +831,7 @@ struct ModelsView: View {
 
             if selectedOption.supportsWhisperLanguageSelection {
                 HStack(alignment: .center, spacing: MuesliTheme.spacing12) {
-                    Text("Language")
+                    Text(String(localized: "models.family.language_label", defaultValue: "Language", comment: ""))
                         .font(MuesliTheme.caption())
                         .foregroundStyle(MuesliTheme.textTertiary)
                         .frame(width: 64, alignment: .leading)
@@ -869,7 +869,7 @@ struct ModelsView: View {
     @ViewBuilder
     private func familyStatusBadge(isActive: Bool, isDownloaded: Bool) -> some View {
         if isActive {
-            Text("Active")
+            Text(String(localized: "models.status.active", defaultValue: "Active", comment: ""))
                 .font(.system(size: 11, weight: .semibold))
                 .foregroundStyle(MuesliTheme.success)
                 .padding(.horizontal, 8)
@@ -877,7 +877,7 @@ struct ModelsView: View {
                 .background(MuesliTheme.success.opacity(0.15))
                 .clipShape(RoundedRectangle(cornerRadius: 4))
         } else if isDownloaded {
-            Text("Downloaded")
+            Text(String(localized: "models.status.downloaded", defaultValue: "Downloaded", comment: ""))
                 .font(.system(size: 11, weight: .medium))
                 .foregroundStyle(MuesliTheme.textTertiary)
                 .padding(.horizontal, 8)
@@ -916,7 +916,7 @@ struct ModelsView: View {
             VStack(alignment: .leading, spacing: 4) {
                 ProgressView(value: fallbackProgress)
                     .tint(MuesliTheme.accent)
-                Text(fallbackMessage ?? "\(Int(fallbackProgress * 100))% downloading...")
+                Text(fallbackMessage ?? String(format: String(localized: "models.download.progress.percent_downloading", defaultValue: "%d%% downloading...", comment: ""), Int(fallbackProgress * 100)))
                     .font(.system(size: 11))
                     .foregroundStyle(MuesliTheme.textTertiary)
             }
@@ -925,11 +925,11 @@ struct ModelsView: View {
 
     private func downloadPhaseLabel(_ phase: ModelDownloadPhase) -> String {
         switch phase {
-        case .downloading: return "Downloading"
-        case .preparing: return "Preparing"
-        case .ready: return "Ready"
-        case .paused: return "Download paused"
-        case .failed: return "Failed"
+        case .downloading: return String(localized: "models.download.phase.downloading", defaultValue: "Downloading", comment: "")
+        case .preparing: return String(localized: "models.download.phase.preparing", defaultValue: "Preparing", comment: "")
+        case .ready: return String(localized: "models.download.phase.ready", defaultValue: "Ready", comment: "")
+        case .paused: return String(localized: "models.download.phase.paused", defaultValue: "Download paused", comment: "")
+        case .failed: return String(localized: "models.download.phase.failed", defaultValue: "Failed", comment: "")
         }
     }
 
@@ -938,20 +938,20 @@ struct ModelsView: View {
         if snapshot.totalFileCount > 0 {
             let completed = min(max(snapshot.completedFileCount, 0), snapshot.totalFileCount)
             let remaining = snapshot.totalFileCount - completed
-            details.append("\(completed) of \(snapshot.totalFileCount) \(downloadFileNoun(snapshot.totalFileCount))")
+            details.append(String(format: String(localized: "models.download.detail.files_completed", defaultValue: "%d of %d %@", comment: ""), completed, snapshot.totalFileCount, "\(downloadFileNoun(snapshot.totalFileCount))"))
             if remaining > 0 {
-                details.append("\(remaining) \(downloadFileNoun(remaining)) left")
+                details.append(String(format: String(localized: "models.download.detail.files_remaining", defaultValue: "%d %@ left", comment: ""), remaining, "\(downloadFileNoun(remaining))"))
             }
         }
         if let total = snapshot.totalBytes, total > 0 {
             details.append("\(ModelDownloadDisplayFormatting.bytes(snapshot.completedBytes)) / \(ModelDownloadDisplayFormatting.bytes(total))")
             if snapshot.completedBytes < total {
-                details.append("\(ModelDownloadDisplayFormatting.bytes(total - snapshot.completedBytes)) left")
+                details.append(String(format: String(localized: "models.download.detail.bytes_remaining", defaultValue: "%@ left", comment: ""), "\(ModelDownloadDisplayFormatting.bytes(total - snapshot.completedBytes))"))
             }
         } else if let currentTotal = snapshot.currentFileTotalBytes, currentTotal > 0 {
             details.append("\(ModelDownloadDisplayFormatting.bytes(snapshot.currentFileCompletedBytes)) / \(ModelDownloadDisplayFormatting.bytes(currentTotal))")
             if snapshot.currentFileCompletedBytes < currentTotal {
-                details.append("\(ModelDownloadDisplayFormatting.bytes(currentTotal - snapshot.currentFileCompletedBytes)) left in file")
+                details.append(String(format: String(localized: "models.download.detail.current_file_remaining", defaultValue: "%@ left in file", comment: ""), "\(ModelDownloadDisplayFormatting.bytes(currentTotal - snapshot.currentFileCompletedBytes))"))
             }
         }
         if snapshot.phase == .downloading {
@@ -960,10 +960,10 @@ struct ModelsView: View {
             }
             if let eta = snapshot.estimatedSecondsRemaining,
                let formattedETA = ModelDownloadDisplayFormatting.eta(eta) {
-                details.append("\(formattedETA) left")
+                details.append(String(format: String(localized: "models.download.detail.eta_left", defaultValue: "%@ left", comment: ""), "\(formattedETA)"))
             }
             if snapshot.retryCount > 0 {
-                details.append("retry \(snapshot.retryCount)/3")
+                details.append(String(format: String(localized: "models.download.detail.retry_count", defaultValue: "retry %d/3", comment: ""), snapshot.retryCount))
             }
         } else if let message = snapshot.message, !message.isEmpty {
             details.append(message)
@@ -972,7 +972,7 @@ struct ModelsView: View {
     }
 
     private func downloadFileNoun(_ count: Int) -> String {
-        count == 1 ? "file" : "files"
+        count == 1 ? String(localized: "models.download.noun.file_singular", defaultValue: "file", comment: "") : String(localized: "models.download.noun.file_plural", defaultValue: "files", comment: "")
     }
 
     private func shouldShowDownloadStatus(for modelID: String, isDownloading: Bool) -> Bool {
@@ -1024,13 +1024,13 @@ struct ModelsView: View {
         isActive: Bool,
         isDownloaded: Bool,
         isDownloading: Bool,
-        actionTitle: String = "Set Active",
+        actionTitle: String = String(localized: "models.actions.set_active", defaultValue: "Set Active", comment: ""),
         activationDisabledReason: String? = nil,
         onSetActive: (() -> Void)? = nil
     ) -> some View {
         HStack(spacing: MuesliTheme.spacing8) {
             if isDownloading {
-                Button("Pause") {
+                Button(String(localized: "models.actions.pause", defaultValue: "Pause", comment: "")) {
                     cancelDownload(option)
                 }
                 .buttonStyle(.plain)
@@ -1072,7 +1072,7 @@ struct ModelsView: View {
                     .buttonStyle(.plain)
                 }
             } else {
-                Button("Download") {
+                Button(String(localized: "common.actions.download", defaultValue: "Download", comment: "")) {
                     startDownload(option)
                 }
                 .buttonStyle(.plain)
@@ -1092,9 +1092,9 @@ struct ModelsView: View {
         isActive activeOverride: Bool? = nil,
         onSetActive: (() -> Void)? = nil,
         description: String? = nil,
-        activeLabel: String = "Active",
-        downloadedLabel: String = "Downloaded",
-        actionTitle: String = "Set Active",
+        activeLabel: String = String(localized: "models.status.active", defaultValue: "Active", comment: ""),
+        downloadedLabel: String = String(localized: "models.status.downloaded", defaultValue: "Downloaded", comment: ""),
+        actionTitle: String = String(localized: "models.actions.set_active", defaultValue: "Set Active", comment: ""),
         activationDisabledReason: String? = nil
     ) -> some View {
         let isActive = activeOverride ?? (appState.selectedBackend == option)
@@ -1113,7 +1113,7 @@ struct ModelsView: View {
                             .foregroundStyle(MuesliTheme.textPrimary)
 
                         if option.recommended {
-                            Text("Recommended")
+                            Text(String(localized: "models.badge.recommended", defaultValue: "Recommended", comment: ""))
                                 .font(.system(size: 10, weight: .semibold))
                                 .foregroundStyle(.white)
                                 .padding(.horizontal, 6)
@@ -1156,7 +1156,7 @@ struct ModelsView: View {
 
             if option.backend == BackendOption.cohereTranscribe.backend {
                 HStack(alignment: .center, spacing: MuesliTheme.spacing12) {
-                    Text("Language")
+                    Text(String(localized: "models.language_label", defaultValue: "Language", comment: ""))
                         .font(MuesliTheme.caption())
                         .foregroundStyle(MuesliTheme.textTertiary)
                         .frame(width: 64, alignment: .leading)
@@ -1174,7 +1174,7 @@ struct ModelsView: View {
 
             if option.backend == BackendOption.indicASR.backend {
                 HStack(alignment: .center, spacing: MuesliTheme.spacing12) {
-                    Text("Language")
+                    Text(String(localized: "models.language_label", defaultValue: "Language", comment: ""))
                         .font(MuesliTheme.caption())
                         .foregroundStyle(MuesliTheme.textTertiary)
                         .frame(width: 64, alignment: .leading)
@@ -1192,7 +1192,7 @@ struct ModelsView: View {
 
             if option.backend == BackendOption.appleSpeechAnalyzer.backend {
                 HStack(alignment: .center, spacing: MuesliTheme.spacing12) {
-                    Text("Language")
+                    Text(String(localized: "models.language_label", defaultValue: "Language", comment: ""))
                         .font(MuesliTheme.caption())
                         .foregroundStyle(MuesliTheme.textTertiary)
                         .frame(width: 64, alignment: .leading)
@@ -1210,7 +1210,7 @@ struct ModelsView: View {
 
             if option.supportsWhisperLanguageSelection {
                 HStack(alignment: .center, spacing: MuesliTheme.spacing12) {
-                    Text("Language")
+                    Text(String(localized: "models.language_label", defaultValue: "Language", comment: ""))
                         .font(MuesliTheme.caption())
                         .foregroundStyle(MuesliTheme.textTertiary)
                         .frame(width: 64, alignment: .leading)
@@ -1228,7 +1228,7 @@ struct ModelsView: View {
 
             if option.backend == BackendOption.nemotron35Multilingual.backend {
                 HStack(alignment: .center, spacing: MuesliTheme.spacing12) {
-                    Text("Language")
+                    Text(String(localized: "models.language_label", defaultValue: "Language", comment: ""))
                         .font(MuesliTheme.caption())
                         .foregroundStyle(MuesliTheme.textTertiary)
                         .frame(width: 64, alignment: .leading)
@@ -1248,10 +1248,10 @@ struct ModelsView: View {
                         Image(systemName: "arrow.triangle.2.circlepath")
                             .font(.system(size: 11))
                             .foregroundStyle(MuesliTheme.accent)
-                        Text("A newer model build is available.")
+                        Text(String(localized: "models.update_available.message", defaultValue: "A newer model build is available.", comment: ""))
                             .font(MuesliTheme.caption())
                             .foregroundStyle(MuesliTheme.textSecondary)
-                        Button("Update") { updateNemotron35(option) }
+                        Button(String(localized: "common.actions.update", defaultValue: "Update", comment: "")) { updateNemotron35(option) }
                             .buttonStyle(.plain)
                             .font(.system(size: 12, weight: .medium))
                             .foregroundStyle(MuesliTheme.accent)
@@ -1302,7 +1302,7 @@ struct ModelsView: View {
                             .font(MuesliTheme.headline())
                             .foregroundStyle(MuesliTheme.textTertiary)
 
-                        Text("Coming soon")
+                        Text(String(localized: "models.coming_soon.card_title", defaultValue: "Coming soon", comment: ""))
                             .font(.system(size: 10, weight: .semibold))
                             .foregroundStyle(MuesliTheme.textTertiary)
                             .padding(.horizontal, 6)
@@ -1376,7 +1376,7 @@ struct ModelsView: View {
                         downloadingPostProcModels.remove(option.id)
                         downloadProgressPostProc.removeValue(forKey: option.id)
                         downloadMessages[option.id] = isCancelled
-                            ? "Paused — select Download to resume"
+                            ? String(localized: "models.download.paused_resume_hint", defaultValue: "Paused — select Download to resume", comment: "")
                             : error.localizedDescription
                         if let snapshot = downloadSnapshots[option.id] {
                             downloadSnapshots[option.id] = snapshot.replacing(
@@ -1427,7 +1427,7 @@ struct ModelsView: View {
         let header = try fh.read(upToCount: 4) ?? Data()
         guard header == Data([0x47, 0x47, 0x55, 0x46]) else {
             throw NSError(domain: "PostProcDownload", code: 1, userInfo: [
-                NSLocalizedDescriptionKey: "Downloaded post-processor file is not a GGUF model",
+                NSLocalizedDescriptionKey: String(localized: "models.errors.invalid_gguf_model", defaultValue: "Downloaded post-processor file is not a GGUF model", comment: ""),
             ])
         }
     }
@@ -1446,7 +1446,7 @@ struct ModelsView: View {
                     downloadMessages.removeValue(forKey: option.id)
                     downloadSnapshots.removeValue(forKey: option.id)
                 } else {
-                    downloadMessages[option.id] = "Paused — select Download to resume"
+                    downloadMessages[option.id] = String(localized: "models.download.paused_resume_hint", defaultValue: "Paused — select Download to resume", comment: "")
                 }
                 downloadGenerations.removeValue(forKey: option.id)
             }
@@ -1459,7 +1459,7 @@ struct ModelsView: View {
             // the file can refresh the card immediately.
             downloadGenerations[option.id] = cancellationGeneration
             if let snapshot = downloadSnapshots[option.id] {
-                downloadSnapshots[option.id] = snapshot.replacing(phase: .paused, message: "Paused — select Download to resume")
+                downloadSnapshots[option.id] = snapshot.replacing(phase: .paused, message: String(localized: "models.download.paused_resume_hint", defaultValue: "Paused — select Download to resume", comment: ""))
             }
             downloadTasksPostProc.removeValue(forKey: option.id)
         }
@@ -1528,11 +1528,11 @@ struct ModelsView: View {
                         withAnimation {
                             downloadingModels.remove(option.model)
                             downloadProgress.removeValue(forKey: option.model)
-                            downloadMessages[option.model] = "Paused — select Download to resume"
+                            downloadMessages[option.model] = String(localized: "models.download.paused_resume_hint", defaultValue: "Paused — select Download to resume", comment: "")
                             if let snapshot = downloadSnapshots[option.model] {
                                 downloadSnapshots[option.model] = snapshot.replacing(
                                     phase: .paused,
-                                    message: "Paused — select Download to resume"
+                                    message: String(localized: "models.download.paused_resume_hint", defaultValue: "Paused — select Download to resume", comment: "")
                                 )
                             }
                             downloadGenerations.removeValue(forKey: option.model)
@@ -1545,7 +1545,7 @@ struct ModelsView: View {
                     throw NSError(
                         domain: "MuesliModelDownload",
                         code: 1,
-                        userInfo: [NSLocalizedDescriptionKey: "\(option.label) was not downloaded successfully."]
+                        userInfo: [NSLocalizedDescriptionKey: String(format: String(localized: "models.errors.download_failed_with_label", defaultValue: "%@ was not downloaded successfully.", comment: ""), "\(option.label)")]
                     )
                 }
                 guard !Task.isCancelled else {
@@ -1554,11 +1554,11 @@ struct ModelsView: View {
                         withAnimation {
                             downloadingModels.remove(option.model)
                             downloadProgress.removeValue(forKey: option.model)
-                            downloadMessages[option.model] = "Paused — select Download to resume"
+                            downloadMessages[option.model] = String(localized: "models.download.paused_resume_hint", defaultValue: "Paused — select Download to resume", comment: "")
                             if let snapshot = downloadSnapshots[option.model] {
                                 downloadSnapshots[option.model] = snapshot.replacing(
                                     phase: .paused,
-                                    message: "Paused — select Download to resume"
+                                    message: String(localized: "models.download.paused_resume_hint", defaultValue: "Paused — select Download to resume", comment: "")
                                 )
                             }
                             downloadGenerations.removeValue(forKey: option.model)
@@ -1595,7 +1595,7 @@ struct ModelsView: View {
                             if let snapshot = downloadSnapshots[option.model] {
                                 downloadSnapshots[option.model] = snapshot.replacing(
                                     phase: .paused,
-                                    message: "Paused — select Download to resume"
+                                    message: String(localized: "models.download.paused_resume_hint", defaultValue: "Paused — select Download to resume", comment: "")
                                 )
                             }
                         } else {
@@ -1644,7 +1644,7 @@ struct ModelsView: View {
         withAnimation {
             downloadingModels.remove(modelID)
             downloadProgress.removeValue(forKey: modelID)
-            downloadMessages[modelID] = "Paused — select Download to resume"
+            downloadMessages[modelID] = String(localized: "models.download.paused_resume_hint", defaultValue: "Paused — select Download to resume", comment: "")
             // Keep a cancellation generation until the caller task has fully
             // unwound. If a replacement starts first, this generation changes
             // and the old cancellation must not stop the replacement transfer.
@@ -1653,7 +1653,7 @@ struct ModelsView: View {
             if let snapshot = downloadSnapshots[modelID] {
                 downloadSnapshots[modelID] = snapshot.replacing(
                     phase: .paused,
-                    message: "Paused — select Download to resume"
+                    message: String(localized: "models.download.paused_resume_hint", defaultValue: "Paused — select Download to resume", comment: "")
                 )
             }
         }
