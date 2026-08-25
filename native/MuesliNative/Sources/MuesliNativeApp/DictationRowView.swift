@@ -93,7 +93,7 @@ struct DictationRowView: View {
                                 .foregroundStyle(MuesliTheme.textTertiary)
                         }
                         .buttonStyle(.plain)
-                        .help("Copy CUA trace")
+                        .help(String(localized: "dictation_row.copy_cua_trace.help", defaultValue: "Copy CUA trace", comment: "Help text for action that copies the CUA trace"))
                     }
 
                     Button(action: onCopy) {
@@ -132,11 +132,11 @@ struct DictationRowView: View {
                 onCopy()
             }
         }
-        .alert("Delete Dictation", isPresented: $showDeleteConfirmation) {
-            Button("Delete", role: .destructive) { onDelete?() }
-            Button("Cancel", role: .cancel) {}
+        .alert(String(localized: "dictation_row.delete_dictation.alert_title", defaultValue: "Delete Dictation", comment: "Alert title when confirming dictation deletion"), isPresented: $showDeleteConfirmation) {
+            Button(String(localized: "dictation_row.delete_dictation.confirm_button", defaultValue: "Delete", comment: "Confirmation button title for deleting a dictation"), role: .destructive) { onDelete?() }
+            Button(String(localized: "dictation_row.delete_dictation.cancel_button", defaultValue: "Cancel", comment: "Cancel button title for dictation deletion alert"), role: .cancel) {}
         } message: {
-            Text("Are you sure you want to delete this dictation? This cannot be undone.")
+            Text(String(localized: "dictation_row.delete_dictation.alert_message", defaultValue: "Are you sure you want to delete this dictation? This cannot be undone.", comment: "Alert message warning about permanent dictation deletion"))
         }
     }
 
@@ -150,7 +150,7 @@ struct DictationRowView: View {
                 ForEach(trace.events) { event in
                     VStack(alignment: .leading, spacing: MuesliTheme.spacing4) {
                         HStack(spacing: MuesliTheme.spacing8) {
-                            Text(event.step.map { "Step \($0)" } ?? "Run")
+                            Text(event.step.map { String(format: String(localized: "dictation_row.computer_use_trace.step_title", defaultValue: "Step %@", comment: "Title for a specific step in the computer use trace"), "\($0)") } ?? String(localized: "dictation_row.computer_use_trace.run_label", defaultValue: "Run", comment: "Fallback label used for the computer use trace run"))
                                 .font(.system(size: 11, weight: .medium, design: .monospaced))
                                 .foregroundStyle(MuesliTheme.textTertiary)
                                 .frame(width: 48, alignment: .leading)
@@ -200,13 +200,13 @@ struct DictationRowView: View {
         case "done":
             return "Done"
         case "timed_out", "timedout":
-            return "Timed out"
+            return String(localized: "dictation_row.status.timed_out", defaultValue: "Timed out", comment: "Status label indicating dictation action timed out")
         case "failed", "fail":
-            return "Failed"
+            return String(localized: "dictation_row.status.failed", defaultValue: "Failed", comment: "Status label indicating dictation action failed")
         case "confirm", "needsconfirmation", "needs_confirmation":
             return "Confirm"
         case "cancelled", "canceled":
-            return "Cancelled"
+            return String(localized: "dictation_row.status.cancelled", defaultValue: "Cancelled", comment: "Status label indicating dictation action was cancelled")
         default:
             return status.capitalized
         }
