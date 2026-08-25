@@ -34,7 +34,7 @@ struct RuntimePaths {
         }
 
         throw NSError(domain: "MuesliRuntime", code: 1, userInfo: [
-            NSLocalizedDescriptionKey: "Could not locate app bundle or repo root.",
+            NSLocalizedDescriptionKey: String(localized: "runtime_paths.error.could_not_locate_bundle_or_repo", defaultValue: "Could not locate app bundle or repo root.", comment: "Error when runtime cannot locate app bundle or repository root"),
         ])
     }
 }
