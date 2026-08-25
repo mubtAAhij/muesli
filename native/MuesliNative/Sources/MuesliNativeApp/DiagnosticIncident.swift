@@ -14,16 +14,16 @@ enum DiagnosticIncidentKind: String, Codable, CaseIterable, Sendable {
 
     var title: String {
         switch self {
-        case .manualReport: return "Manual problem report"
-        case .dictationAudioFailed: return "Dictation audio capture failed"
-        case .dictationTranscriptionFailed: return "Dictation transcription failed"
-        case .streamingDictationStartFailed: return "Streaming dictation failed to start"
-        case .streamingDictationRuntimeFailed: return "Streaming dictation failed"
-        case .meetingStartFailed: return "Meeting recording failed to start"
-        case .meetingMicrophoneCaptureFailed: return "Meeting microphone capture failed"
-        case .meetingSystemAudioCaptureFailed: return "Meeting system audio capture failed"
-        case .meetingProcessingFailed: return "Meeting processing failed"
-        case .meetingRecordingSaveFailed: return "Meeting recording save failed"
+        case .manualReport: return String(localized: "diagnostic_incident.title.manual_report", defaultValue: "Manual problem report", comment: "Incident title for manually submitted diagnostic reports")
+        case .dictationAudioFailed: return String(localized: "diagnostic_incident.title.dictation_audio_failed", defaultValue: "Dictation audio capture failed", comment: "Incident title when dictation audio capture fails")
+        case .dictationTranscriptionFailed: return String(localized: "diagnostic_incident.title.dictation_transcription_failed", defaultValue: "Dictation transcription failed", comment: "Incident title when dictation transcription fails")
+        case .streamingDictationStartFailed: return String(localized: "diagnostic_incident.title.streaming_dictation_start_failed", defaultValue: "Streaming dictation failed to start", comment: "Incident title when streaming dictation cannot start")
+        case .streamingDictationRuntimeFailed: return String(localized: "diagnostic_incident.title.streaming_dictation_runtime_failed", defaultValue: "Streaming dictation failed", comment: "Incident title when streaming dictation fails during runtime")
+        case .meetingStartFailed: return String(localized: "diagnostic_incident.title.meeting_start_failed", defaultValue: "Meeting recording failed to start", comment: "Incident title when meeting recording cannot start")
+        case .meetingMicrophoneCaptureFailed: return String(localized: "diagnostic_incident.title.meeting_microphone_capture_failed", defaultValue: "Meeting microphone capture failed", comment: "Incident title when meeting microphone capture fails")
+        case .meetingSystemAudioCaptureFailed: return String(localized: "diagnostic_incident.title.meeting_system_audio_capture_failed", defaultValue: "Meeting system audio capture failed", comment: "Incident title when meeting system audio capture fails")
+        case .meetingProcessingFailed: return String(localized: "diagnostic_incident.title.meeting_processing_failed", defaultValue: "Meeting processing failed", comment: "Incident title when meeting processing fails")
+        case .meetingRecordingSaveFailed: return String(localized: "diagnostic_incident.title.meeting_recording_save_failed", defaultValue: "Meeting recording save failed", comment: "Incident title when saving meeting recording fails")
         }
     }
 
@@ -194,37 +194,35 @@ struct DiagnosticIncident: Codable, Equatable, Identifiable, Sendable {
     }
 
     var issueTitle: String {
-        "[Diagnostic] \(kind.title)"
+        String(format: String(localized: "diagnostic.report.issue_title", defaultValue: "[Diagnostic] %@", comment: "Generated diagnostic report issue title containing incident type title"), "\(kind.title)")
     }
 
     var issueBody: String {
-        """
-        ### What happened?
-        Please describe what you were trying to do and what you expected to happen.
-
-        ### Privacy
-        This report was generated from an allowlisted diagnostic summary. It does not include transcripts, audio, meeting titles, calendar titles, clipboard contents, screen/OCR text, API keys, auth tokens, local file paths, raw error messages, raw logs, or database contents.
-
-        ### Anonymized diagnostics
-        - Incident: \(kind.rawValue)
-        - Severity: \(severity.rawValue)
-        - User impact: \(userImpact.rawValue)
-        - Stage: \(stage.rawValue)
-        - App: \(metadata.displayName)
-        - Version: \(metadata.appVersion)
-        - Build: \(metadata.buildNumber)
-        - Bundle ID: \(metadata.bundleID)
-        - macOS: \(metadata.macOSVersion)
-        - Architecture: \(metadata.architecture)
-        - Backend: \(backend)
-        - Model: \(model)
-        - Error signature: \(errorFingerprint.signature)
-        - Error domain: \(errorDomain)
-        - Error code: \(errorCode)
-        - Error meaning: \(errorFingerprint.summary)
-        - Diagnostic area: \(errorFingerprint.area)
-        - Incident ID: \(id.uuidString)
-        """
+        String(
+            format: String(
+                localized: "diagnostic.report.issue_body_template",
+                defaultValue: "### What happened?\n        Please describe what you were trying to do and what you expected to happen.\n\n        ### Privacy\n        This report was generated from an allowlisted diagnostic summary. It does not include transcripts, audio, meeting titles, calendar titles, clipboard contents, screen/OCR text, API keys, auth tokens, local file paths, raw error messages, raw logs, or database contents.\n\n        ### Anonymized diagnostics\n        - Incident: %@\n        - Severity: %@\n        - User impact: %@\n        - Stage: %@\n        - App: %@\n        - Version: %@\n        - Build: %@\n        - Bundle ID: %@\n        - macOS: %@\n        - Architecture: %@\n        - Backend: %@\n        - Model: %@\n        - Error signature: %@\n        - Error domain: %@\n        - Error code: %@\n        - Error meaning: %@\n        - Diagnostic area: %@\n        - Incident ID: %@",
+                comment: "Template for diagnostic issue report body with anonymized metadata fields"
+            ),
+            kind.rawValue,
+            severity.rawValue,
+            userImpact.rawValue,
+            stage.rawValue,
+            metadata.displayName,
+            metadata.appVersion,
+            metadata.buildNumber,
+            metadata.bundleID,
+            metadata.macOSVersion,
+            metadata.architecture,
+            backend,
+            model,
+            errorFingerprint.signature,
+            errorDomain,
+            errorCode,
+            errorFingerprint.summary,
+            errorFingerprint.area,
+            id.uuidString
+        )
     }
 
     var githubIssueURL: URL? {
