@@ -19,10 +19,10 @@ struct MeetingTemplatesManagerView: View {
         VStack(alignment: .leading, spacing: MuesliTheme.spacing20) {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Manage Templates")
+                    Text(String(localized: "meeting_templates_manager.title", defaultValue: "Manage Templates", comment: ""))
                         .font(MuesliTheme.title2())
                         .foregroundStyle(MuesliTheme.textPrimary)
-                    Text("Create reusable prompt-based note formats for meetings.")
+                    Text(String(localized: "meeting_templates_manager.subtitle", defaultValue: "Create reusable prompt-based note formats for meetings.", comment: ""))
                         .font(MuesliTheme.callout())
                         .foregroundStyle(MuesliTheme.textSecondary)
                 }
@@ -31,21 +31,21 @@ struct MeetingTemplatesManagerView: View {
 
                 HStack(spacing: MuesliTheme.spacing8) {
                     if isCreatingTemplate || editingTemplateID != nil {
-                        actionButton("Cancel", systemImage: "xmark") {
+                        actionButton(String(localized: "meeting_templates_manager.toolbar.cancel", defaultValue: "Cancel", comment: ""), systemImage: "xmark") {
                             resetTemplateEditor()
                         }
                     } else {
-                        actionButton("New template", systemImage: "plus") {
+                        actionButton(String(localized: "meeting_templates_manager.toolbar.new_template", defaultValue: "New template", comment: ""), systemImage: "plus") {
                             beginCreatingTemplate()
                         }
                     }
 
-                    actionButton("Done", systemImage: "checkmark") {
+                    actionButton(String(localized: "meeting_templates_manager.toolbar.done", defaultValue: "Done", comment: ""), systemImage: "checkmark") {
                         onClose()
                     }
                     .disabled(isEditingTemplateInProgress)
                     .opacity(isEditingTemplateInProgress ? 0.55 : 1)
-                    .help(isEditingTemplateInProgress ? "Finish or cancel template editing before closing." : "Close template manager")
+                    .help(isEditingTemplateInProgress ? String(localized: "meeting_templates_manager.close.help.editing_in_progress", defaultValue: "Finish or cancel template editing before closing.", comment: "") : String(localized: "meeting_templates_manager.close.help", defaultValue: "Close template manager", comment: ""))
                 }
             }
 
@@ -72,16 +72,16 @@ struct MeetingTemplatesManagerView: View {
         .frame(minWidth: 760, minHeight: 520)
         .background(MuesliTheme.backgroundBase)
         .alert(
-            "Delete \"\(templateToDelete?.name ?? "")\"?",
+            String(format: String(localized: "meeting_templates_manager.delete_template.confirmation", defaultValue: "Delete \"%@\"?", comment: ""), "\(templateToDelete?.name ?? "")"),
             isPresented: Binding(
                 get: { templateToDelete != nil },
                 set: { if !$0 { templateToDelete = nil } }
             )
         ) {
-            Button("Cancel", role: .cancel) {
+            Button(String(localized: "meeting_templates_manager.cancel.button", defaultValue: "Cancel", comment: ""), role: .cancel) {
                 templateToDelete = nil
             }
-            Button("Delete", role: .destructive) {
+            Button(String(localized: "meeting_templates_manager.delete.button", defaultValue: "Delete", comment: ""), role: .destructive) {
                 guard let template = templateToDelete else { return }
                 controller.deleteCustomMeetingTemplate(id: template.id)
                 if editingTemplateID == template.id {
@@ -90,7 +90,7 @@ struct MeetingTemplatesManagerView: View {
                 templateToDelete = nil
             }
         } message: {
-            Text("This template will be permanently removed. Existing meetings will keep their saved template snapshot.")
+            Text(String(localized: "meeting_templates_manager.delete.warning_message", defaultValue: "This template will be permanently removed. Existing meetings will keep their saved template snapshot.", comment: ""))
         }
     }
 
@@ -100,7 +100,7 @@ struct MeetingTemplatesManagerView: View {
             Image(systemName: MeetingTemplates.customIconFallback)
                 .font(.system(size: 11))
                 .foregroundStyle(MuesliTheme.textTertiary)
-            Text("No custom templates yet.")
+            Text(String(localized: "meeting_templates_manager.empty_state.no_custom_templates", defaultValue: "No custom templates yet.", comment: ""))
                 .font(MuesliTheme.callout())
                 .foregroundStyle(MuesliTheme.textTertiary)
         }
@@ -134,10 +134,10 @@ struct MeetingTemplatesManagerView: View {
                 }
                 Spacer()
                 HStack(spacing: MuesliTheme.spacing8) {
-                    actionButton("Edit", systemImage: "pencil") {
+                    actionButton(String(localized: "meeting_templates_manager.template_row.edit", defaultValue: "Edit", comment: ""), systemImage: "pencil") {
                         beginEditingTemplate(template)
                     }
-                    actionButton("Delete", systemImage: "trash", role: .destructive) {
+                    actionButton(String(localized: "meeting_templates_manager.template_row.delete", defaultValue: "Delete", comment: ""), systemImage: "trash", role: .destructive) {
                         templateToDelete = template
                     }
                 }
@@ -155,15 +155,15 @@ struct MeetingTemplatesManagerView: View {
     @ViewBuilder
     private var customTemplateEditor: some View {
         VStack(alignment: .leading, spacing: MuesliTheme.spacing12) {
-            Text(isCreatingTemplate ? "New template" : "Edit template")
+            Text(isCreatingTemplate ? String(localized: "meeting_templates_manager.editor.new_template", defaultValue: "New template", comment: "") : String(localized: "meeting_templates_manager.editor.edit_template", defaultValue: "Edit template", comment: ""))
                 .font(MuesliTheme.captionMedium())
                 .foregroundStyle(MuesliTheme.textPrimary)
 
             VStack(alignment: .leading, spacing: 6) {
-                Text("Name")
+                Text(String(localized: "meeting_templates_manager.editor.name_label", defaultValue: "Name", comment: ""))
                     .font(MuesliTheme.caption())
                     .foregroundStyle(MuesliTheme.textSecondary)
-                TextField("Customer follow-up", text: $draftTemplateName)
+                TextField(String(localized: "meeting_templates_manager.editor.name_placeholder", defaultValue: "Customer follow-up", comment: ""), text: $draftTemplateName)
                     .textFieldStyle(.roundedBorder)
                     .overlay {
                         RoundedRectangle(cornerRadius: 6)
@@ -178,21 +178,21 @@ struct MeetingTemplatesManagerView: View {
                         }
                     }
                 if showNameValidationError {
-                    Text("Enter a template name.")
+                    Text(String(localized: "meeting_templates_manager.editor.name_validation", defaultValue: "Enter a template name.", comment: ""))
                         .font(MuesliTheme.caption())
                         .foregroundStyle(MuesliTheme.recording)
                 }
             }
 
             VStack(alignment: .leading, spacing: 6) {
-                Text("Icon")
+                Text(String(localized: "meeting_templates_manager.editor.icon_label", defaultValue: "Icon", comment: ""))
                     .font(MuesliTheme.caption())
                     .foregroundStyle(MuesliTheme.textSecondary)
                 customIconPicker
             }
 
             VStack(alignment: .leading, spacing: 6) {
-                Text("Prompt")
+                Text(String(localized: "meeting_templates_manager.editor.prompt_label", defaultValue: "Prompt", comment: ""))
                     .font(MuesliTheme.caption())
                     .foregroundStyle(MuesliTheme.textSecondary)
                 TextEditor(text: $draftTemplatePrompt)
@@ -216,7 +216,7 @@ struct MeetingTemplatesManagerView: View {
                         }
                     }
                 if showPromptValidationError {
-                    Text("Enter the prompt instructions for this template.")
+                    Text(String(localized: "meeting_templates_manager.editor.prompt_help", defaultValue: "Enter the prompt instructions for this template.", comment: ""))
                         .font(MuesliTheme.caption())
                         .foregroundStyle(MuesliTheme.recording)
                 }
@@ -225,7 +225,7 @@ struct MeetingTemplatesManagerView: View {
             HStack {
                 Spacer()
                 actionButton(
-                    isCreatingTemplate ? "Create template" : "Save changes",
+                    isCreatingTemplate ? String(localized: "meeting_templates_manager.editor.create_template", defaultValue: "Create template", comment: "") : String(localized: "meeting_templates_manager.editor.save_changes", defaultValue: "Save changes", comment: ""),
                     systemImage: isCreatingTemplate ? "plus.circle" : "checkmark.circle"
                 ) {
                     saveTemplateEditor()
@@ -360,7 +360,7 @@ struct MeetingTemplatesManagerView: View {
     }
 
     private var selectedIconLabel: String {
-        MeetingTemplates.customIconOptions.first(where: { $0.symbolName == draftTemplateIcon })?.label ?? "Custom"
+        MeetingTemplates.customIconOptions.first(where: { $0.symbolName == draftTemplateIcon })?.label ?? String(localized: "meeting_templates_manager.editor.icon_label.custom", defaultValue: "Custom", comment: "")
     }
 
     @ViewBuilder
