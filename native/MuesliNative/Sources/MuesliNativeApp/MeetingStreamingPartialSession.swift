@@ -7,8 +7,8 @@ import os
 enum MeetingLiveCaptionModelStore {
     static let repo = Repo.parakeetEou320
     static let modelID = "FluidInference/parakeet-realtime-eou-120m-coreml/320ms"
-    static let sizeLabel = "~430 MB"
-    static let label = "Parakeet Live Captions"
+    static let sizeLabel = String(localized: "meeting_live_captions.model.size_label", defaultValue: "~430 MB", comment: "Approximate model size label for live captions model selection")
+    static let label = String(localized: "meeting_live_captions.model.label", defaultValue: "Parakeet Live Captions", comment: "Display name for the Parakeet live captions model")
 
     static func cacheRoot(fileManager: FileManager = .default) -> URL {
         fileManager.homeDirectoryForCurrentUser
@@ -66,7 +66,7 @@ enum MeetingLiveCaptionModelStore {
         case .parakeetRealtimeEOU:
             let mic = try await makeEngine(label: "You")
             do {
-                return (mic, try await makeEngine(label: "Others"))
+                return (mic, try await makeEngine(label: String(localized: "meeting_live_captions.speaker.others", defaultValue: "Others", comment: "Speaker label for other participants in meeting live captions")))
             } catch {
                 await mic.shutdown()
                 throw error
@@ -76,14 +76,14 @@ enum MeetingLiveCaptionModelStore {
                 throw NSError(
                     domain: "MeetingLiveCaptions",
                     code: 2,
-                    userInfo: [NSLocalizedDescriptionKey: "Nemotron 3.5 requires macOS 15 or later."]
+                    userInfo: [NSLocalizedDescriptionKey: String(localized: "meeting_live_captions.error.nemotron_requires_macos_15", defaultValue: "Nemotron 3.5 requires macOS 15 or later.", comment: "Error shown when Nemotron live captions is unavailable on older macOS versions")]
                 )
             }
             let transcriber = Nemotron35StreamingTranscriber()
             await transcriber.setPromptId(nemotronPromptId)
             try await transcriber.loadModels()
             let mic = Nemotron35MeetingPartialEngine(transcriber: transcriber, label: "You")
-            let system = Nemotron35MeetingPartialEngine(transcriber: transcriber, label: "Others")
+            let system = Nemotron35MeetingPartialEngine(transcriber: transcriber, label: String(localized: "meeting_partials.speaker.others", defaultValue: "Others", comment: "Speaker label for other participants in meeting partial transcript output"))
             do {
                 try await mic.prepare()
                 try await system.prepare()
@@ -139,7 +139,7 @@ private actor ParakeetEOUMeetingPartialEngine: MeetingStreamingPartialEngine {
             throw NSError(
                 domain: "MeetingLiveCaptions",
                 code: 1,
-                userInfo: [NSLocalizedDescriptionKey: "Could not allocate a 16 kHz live-caption buffer."]
+                userInfo: [NSLocalizedDescriptionKey: String(localized: "meeting_live_captions.error.buffer_allocation_failed", defaultValue: "Could not allocate a 16 kHz live-caption buffer.", comment: "Error shown when live captions audio buffer allocation fails")]
             )
         }
         buffer.frameLength = AVAudioFrameCount(samples.count)
@@ -396,7 +396,7 @@ final class MeetingStreamingPartialSession: @unchecked Sendable {
                 goDormant(error: NSError(
                     domain: "MeetingStreamingPartialSession",
                     code: 1,
-                    userInfo: [NSLocalizedDescriptionKey: "Timed out finalizing live transcript audio."]
+                    userInfo: [NSLocalizedDescriptionKey: String(localized: "meeting_live_captions.error.finalization_timed_out", defaultValue: "Timed out finalizing live transcript audio.", comment: "Error shown when finalizing live transcript audio exceeds timeout")]
                 ))
                 return nil
             }
