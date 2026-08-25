@@ -154,7 +154,7 @@ final class FloatingIndicatorController: NSObject {
     var onPositionSaved: ((CGPoint) -> Void)?
     var isToggleDictation = false
     private var stopLayer: CALayer?
-    private var transcribingTitle = "Transcribing"
+    private var transcribingTitle = String(localized: "floating_indicator.status.transcribing", defaultValue: "Transcribing", comment: "Status text shown while dictation is transcribing")
     private var computerUseTranscriptText: String?
     private var loadingSpinner: NSProgressIndicator?
     private var isShowingLoading = false
@@ -388,7 +388,7 @@ final class FloatingIndicatorController: NSObject {
     func showComputerUseTranscript(_ transcript: String, config: AppConfig) {
         let normalized = Self.normalizedComputerUseTranscript(transcript)
         computerUseTranscriptText = normalized.isEmpty ? nil : normalized
-        transcribingTitle = normalized.isEmpty ? "Starting CUA" : normalized
+        transcribingTitle = normalized.isEmpty ? String(localized: "floating_indicator.status.starting_cua", defaultValue: "Starting CUA", comment: "Status text shown while CUA startup is in progress") : normalized
         setState(.transcribing, config: config)
     }
 
@@ -401,7 +401,7 @@ final class FloatingIndicatorController: NSObject {
         }
         self.state = state
         if state != .transcribing {
-            transcribingTitle = "Transcribing"
+            transcribingTitle = String(localized: "floating_indicator.status.transcribing", defaultValue: "Transcribing", comment: "Status text shown while dictation is transcribing")
             computerUseTranscriptText = nil
         }
         if state != .recording {
@@ -1644,7 +1644,7 @@ final class FloatingIndicatorController: NSObject {
                 .clear,
                 .colorWith(hex: 0xFFFFFF, alpha: isHovered ? 0.14 : 0.22),
                 "",
-                isHovered ? "Hold \(config.dictationHotkey.label) to dictate" : "",
+                isHovered ? String(format: String(localized: "floating_indicator.instruction.hold_hotkey_to_dictate", defaultValue: "Hold %@ to dictate", comment: "Instruction showing the configured hotkey to start dictation"), "\(config.dictationHotkey.label)") : "",
                 .colorWith(hex: 0xFFFFFF, alpha: 0.75),
                 .colorWith(hex: 0xFFFFFF, alpha: 0.75),
                 isHovered ? 1.0 : 0.90
@@ -1751,7 +1751,7 @@ final class FloatingIndicatorController: NSObject {
     }
 
     static func idleHoverPillSize(hotkeyLabel: String, screenWidth: CGFloat) -> NSSize {
-        let title = "Hold \(hotkeyLabel) to dictate"
+        let title = String(format: String(localized: "floating_indicator.title.hold_hotkey_to_dictate", defaultValue: "Hold %@ to dictate", comment: "Title showing the hotkey the user should hold to dictate"), "\(hotkeyLabel)")
         let font = NSFont.systemFont(ofSize: 11, weight: .regular)
         let textWidth = ceil((title as NSString).size(withAttributes: [.font: font]).width)
         let preferredWidth = 42 + textWidth + 22
