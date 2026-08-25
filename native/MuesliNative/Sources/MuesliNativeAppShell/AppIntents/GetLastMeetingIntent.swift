@@ -3,8 +3,8 @@ import Foundation
 
 @available(macOS 13.0, *)
 struct GetLastMeetingIntent: AppIntent {
-    static var title: LocalizedStringResource = "Get Last Meeting Notes"
-    static var description = IntentDescription("Returns the formatted notes from your most recent Muesli meeting.")
+    static var title: LocalizedStringResource = String(localized: "app_intents.get_last_meeting.title", defaultValue: "Get Last Meeting Notes", comment: "")
+    static var description = IntentDescription(String(localized: "app_intents.get_last_meeting.description", defaultValue: "Returns the formatted notes from your most recent Muesli meeting.", comment: ""))
 
     func perform() async throws -> some IntentResult & ReturnsValue<String> {
         let store = try MuesliShortcutsStore.open()
