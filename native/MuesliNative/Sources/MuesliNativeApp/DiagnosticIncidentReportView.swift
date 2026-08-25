@@ -16,10 +16,10 @@ struct DiagnosticIncidentReportView: View {
                     .font(.system(size: 20, weight: .semibold))
                     .foregroundStyle(isManualReport ? MuesliTheme.accent : .orange)
                 VStack(alignment: .leading, spacing: MuesliTheme.spacing4) {
-                    Text(isManualReport ? "Report a Problem" : "Diagnostic Failure Detected")
+                    Text(isManualReport ? String(localized: "diagnostic_incident_report.title.report_problem", defaultValue: "Report a Problem", comment: "Dialog title for manually reporting a problem") : String(localized: "diagnostic_incident_report.title.failure_detected", defaultValue: "Diagnostic Failure Detected", comment: "Dialog title shown when a diagnostic failure is detected"))
                         .font(MuesliTheme.title3())
                         .foregroundStyle(MuesliTheme.textPrimary)
-                    Text(isManualReport ? "\(AppIdentity.displayName) can prepare an anonymized GitHub issue for you to review before opening it." : "\(AppIdentity.displayName) detected a hard failure in \(incident.stage.rawValue). You can review the anonymized report before opening a GitHub issue.")
+                    Text(isManualReport ? String(format: String(localized: "diagnostic_incident_report.description.prepare_anonymized_issue", defaultValue: "%@ can prepare an anonymized GitHub issue for you to review before opening it.", comment: "Description explaining anonymized GitHub issue preparation for manual reports"), "\(AppIdentity.displayName)") : String(format: String(localized: "diagnostic_incident_report.description.detected_failure", defaultValue: "%@ detected a hard failure in %@. You can review the anonymized report before opening a GitHub issue.", comment: "Description explaining detected failure and anonymized report review flow"), "\(AppIdentity.displayName)", "\(incident.stage.rawValue)"))
                         .font(MuesliTheme.callout())
                         .foregroundStyle(MuesliTheme.textSecondary)
                         .fixedSize(horizontal: false, vertical: true)
@@ -28,11 +28,11 @@ struct DiagnosticIncidentReportView: View {
 
             if !isManualReport {
                 VStack(alignment: .leading, spacing: MuesliTheme.spacing8) {
-                    diagnosticSummaryRow("Failure", value: incident.kind.title)
-                    diagnosticSummaryRow("Stage", value: incident.stage.rawValue)
-                    diagnosticSummaryRow("Model", value: incident.model)
-                    diagnosticSummaryRow("Error", value: incident.errorDisplayIdentifier)
-                    diagnosticSummaryRow("Meaning", value: incident.errorFingerprint.summary)
+                    diagnosticSummaryRow(String(localized: "diagnostic_incident_report.summary.failure", defaultValue: "Failure", comment: "Summary field label for failure type in diagnostic incident report"), value: incident.kind.title)
+                    diagnosticSummaryRow(String(localized: "diagnostic_incident_report.summary.stage", defaultValue: "Stage", comment: "Summary field label for incident stage in diagnostic incident report"), value: incident.stage.rawValue)
+                    diagnosticSummaryRow(String(localized: "diagnostic_incident_report.summary.model", defaultValue: "Model", comment: "Summary field label for model in diagnostic incident report"), value: incident.model)
+                    diagnosticSummaryRow(String(localized: "diagnostic_incident_report.summary.error", defaultValue: "Error", comment: "Summary field label for error signature in diagnostic incident report"), value: incident.errorDisplayIdentifier)
+                    diagnosticSummaryRow(String(localized: "diagnostic_incident_report.summary.meaning", defaultValue: "Meaning", comment: "Summary field label for interpreted error meaning in diagnostic incident report"), value: incident.errorFingerprint.summary)
                 }
                 .padding(MuesliTheme.spacing12)
                 .background(Color.orange.opacity(0.10))
@@ -43,7 +43,7 @@ struct DiagnosticIncidentReportView: View {
                 )
             }
 
-            Text("Only allowlisted diagnostic categories and a random incident ID are included. No transcript, audio, meeting title, calendar title, clipboard contents, screen text, API keys, auth tokens, local file paths, raw error messages, raw logs, or database contents are included.")
+            Text(String(localized: "diagnostic_incident_report.privacy.explanation", defaultValue: "Only allowlisted diagnostic categories and a random incident ID are included. No transcript, audio, meeting title, calendar title, clipboard contents, screen text, API keys, auth tokens, local file paths, raw error messages, raw logs, or database contents are included.", comment: "Privacy explanation describing what is excluded from diagnostic incident reports"))
                 .font(MuesliTheme.caption())
                 .foregroundStyle(MuesliTheme.textTertiary)
                 .fixedSize(horizontal: false, vertical: true)
@@ -66,10 +66,10 @@ struct DiagnosticIncidentReportView: View {
 
             HStack {
                 Spacer()
-                Button("Not Now") {
+                Button(String(localized: "diagnostic_incident_report.action.not_now", defaultValue: "Not Now", comment: "Action button title to defer opening a diagnostic GitHub issue")) {
                     onDismiss()
                 }
-                Button("Open GitHub Issue") {
+                Button(String(localized: "diagnostic_incident_report.action.open_github_issue", defaultValue: "Open GitHub Issue", comment: "Action button title to open the generated diagnostic GitHub issue")) {
                     onOpenIssue()
                 }
                 .keyboardShortcut(.defaultAction)
