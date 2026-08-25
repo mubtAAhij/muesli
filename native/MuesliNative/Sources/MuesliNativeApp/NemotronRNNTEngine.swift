@@ -50,10 +50,10 @@ enum NemotronRNNTError: Error, LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .notLoaded: return "Nemotron models not loaded."
-        case .downloadFailed(let m): return "Download failed: \(m)"
-        case .preprocessingFailed(let m): return "Preprocessing failed: \(m)"
-        case .decodingFailed(let m): return "Decoding failed: \(m)"
+        case .notLoaded: return String(localized: "nemotron_rnnt.error.models_not_loaded", defaultValue: "Nemotron models not loaded.", comment: "Error when Nemotron transcription is attempted before models are loaded")
+        case .downloadFailed(let m): return String(format: String(localized: "nemotron_rnnt.error.download_failed", defaultValue: "Download failed: %@", comment: "Error when Nemotron model download fails with details"), "\(m)")
+        case .preprocessingFailed(let m): return String(format: String(localized: "nemotron_rnnt.error.preprocessing_failed", defaultValue: "Preprocessing failed: %@", comment: "Error when Nemotron audio preprocessing fails with details"), "\(m)")
+        case .decodingFailed(let m): return String(format: String(localized: "nemotron_rnnt.error.decoding_failed", defaultValue: "Decoding failed: %@", comment: "Error when Nemotron decoding fails with details"), "\(m)")
         }
     }
 }
@@ -137,7 +137,7 @@ func nemotronTranscribeChunk(
 
     guard let mel = prepOutput.featureValue(for: "mel")?.multiArrayValue,
           let melLength = prepOutput.featureValue(for: "mel_length")?.multiArrayValue else {
-        throw NemotronRNNTError.preprocessingFailed("No mel output")
+        throw NemotronRNNTError.preprocessingFailed(String(localized: "nemotron_rnnt.error.no_mel_output", defaultValue: "No mel output", comment: "Error when mel-spectrogram model produces no output"))
     }
 
     // 2. Pad/crop mel to totalMelFrames for the encoder
@@ -176,7 +176,7 @@ func nemotronTranscribeChunk(
 
     guard let encoded = encOutput.featureValue(for: "encoded")?.multiArrayValue,
           let encodedLength = encOutput.featureValue(for: "encoded_length")?.multiArrayValue else {
-        throw NemotronRNNTError.decodingFailed("No encoder output")
+        throw NemotronRNNTError.decodingFailed(String(localized: "nemotron_rnnt.error.no_encoder_output", defaultValue: "No encoder output", comment: "Error when Nemotron encoder produces no output"))
     }
     if let cc = encOutput.featureValue(for: "cache_channel_out")?.multiArrayValue { state.cacheChannel = cc }
     if let ct = encOutput.featureValue(for: "cache_time_out")?.multiArrayValue { state.cacheTime = ct }
@@ -213,7 +213,7 @@ func nemotronTranscribeChunk(
             let decOutput = try await decoder.prediction(from: decInput)
 
             guard let decoderOut = decOutput.featureValue(for: "decoder_out")?.multiArrayValue else {
-                throw NemotronRNNTError.decodingFailed("No decoder output")
+                throw NemotronRNNTError.decodingFailed(String(localized: "nemotron_rnnt.error.no_decoder_output", defaultValue: "No decoder output", comment: "Error when Nemotron decoder produces no output"))
             }
 
             // Joint: encoder [1, encoderDim, 1] + decoder [1, 640, 1] → logits.
@@ -232,7 +232,7 @@ func nemotronTranscribeChunk(
             let jointOutput = try await joint.prediction(from: jointInput)
 
             guard let logits = jointOutput.featureValue(for: "logits")?.multiArrayValue else {
-                throw NemotronRNNTError.decodingFailed("No joint logits")
+                throw NemotronRNNTError.decodingFailed(String(localized: "nemotron_rnnt.error.no_joint_logits", defaultValue: "No joint logits", comment: "Error when Nemotron joint network produces no logits"))
             }
 
             // Argmax
@@ -265,7 +265,7 @@ func nemotronTranscribeChunk(
 
 func nemotronLoadWavAsFloats(url: URL) throws -> [Float] {
     let data = try Data(contentsOf: url)
-    guard data.count > 44 else { throw NemotronRNNTError.decodingFailed("WAV too small") }
+    guard data.count > 44 else { throw NemotronRNNTError.decodingFailed(String(localized: "nemotron_rnnt.error.wav_too_small", defaultValue: "WAV too small", comment: "Error when provided WAV input is too short for transcription")) }
     let pcmData = data.dropFirst(44)
     let count = pcmData.count / 2
     var floats = [Float](repeating: 0, count: count)
