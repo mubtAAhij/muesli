@@ -83,188 +83,212 @@ enum MeetingTemplates {
 
     static let auto = MeetingTemplateDefinition(
         id: autoID,
-        title: "Auto",
+        title: String(localized: "meeting_templates.auto.title", defaultValue: "Auto", comment: ""),
         category: nil,
         icon: "sparkles",
         kind: .auto,
-        promptBody: """
-        Use this structure exactly:
-
-        ## Meeting Summary
-        A 2-3 sentence overview of what was discussed.
-
-        ## Key Discussion Points
-        - Bullet points of the main topics discussed
-
-        ## Decisions Made
-        - Bullet points of any decisions reached
-
-        ## Action Items
-        - [ ] Bullet points of tasks assigned or agreed upon, with owners if mentioned
-
-        ## Notable Quotes
-        - Any important or notable statements, if applicable
-        """
+        promptBody: String(
+            localized: "meeting_templates.auto.prompt",
+            defaultValue: """
+            Use this structure exactly:
+    
+            ## Meeting Summary
+            A 2-3 sentence overview of what was discussed.
+    
+            ## Key Discussion Points
+            - Bullet points of the main topics discussed
+    
+            ## Decisions Made
+            - Bullet points of any decisions reached
+    
+            ## Action Items
+            - [ ] Bullet points of tasks assigned or agreed upon, with owners if mentioned
+    
+            ## Notable Quotes
+            - Any important or notable statements, if applicable
+            """,
+            comment: ""
+        )
     )
 
     static let builtIns: [MeetingTemplateDefinition] = [
         MeetingTemplateDefinition(
             id: "one-to-one",
-            title: "1 to 1",
-            category: "Team",
+            title: String(localized: "meeting_templates.one_to_one.title", defaultValue: "1 to 1", comment: ""),
+            category: String(localized: "meeting_templates.one_to_one.category", defaultValue: "Team", comment: ""),
             icon: "person.2.fill",
             kind: .builtin,
-            promptBody: """
-            Use this structure exactly:
-
-            ## Check-In
-            A brief summary of how the conversation opened and the overall tone.
-
-            ## Topics Discussed
-            - Main themes raised by either person
-
-            ## Support Needed
-            - Blockers, concerns, or asks for help
-
-            ## Commitments
-            - [ ] Follow-ups or commitments made by either person
-
-            ## Manager Notes
-            - Coaching, feedback, or context that should be remembered
-            """
+            promptBody: String(
+                localized: "meeting_templates.one_to_one.prompt",
+                defaultValue: """
+                Use this structure exactly:
+    
+                ## Check-In
+                A brief summary of how the conversation opened and the overall tone.
+    
+                ## Topics Discussed
+                - Main themes raised by either person
+    
+                ## Support Needed
+                - Blockers, concerns, or asks for help
+    
+                ## Commitments
+                - [ ] Follow-ups or commitments made by either person
+    
+                ## Manager Notes
+                - Coaching, feedback, or context that should be remembered
+                """,
+                comment: ""
+            )
         ),
         MeetingTemplateDefinition(
             id: "customer-discovery",
-            title: "Customer: Discovery",
-            category: "Commercial",
+            title: String(localized: "meeting_templates.customer_discovery.title", defaultValue: "Customer: Discovery", comment: ""),
+            category: String(localized: "meeting_templates.customer_discovery.category", defaultValue: "Commercial", comment: ""),
             icon: "person.crop.circle.badge.questionmark",
             kind: .builtin,
-            promptBody: """
-            Use this structure exactly:
-
-            ## Customer Context
-            - Company, role, or situation if mentioned
-
-            ## Problems and Pain Points
-            - Explicit frustrations, blockers, or unmet needs
-
-            ## Current Workflow
-            - How they currently solve the problem today
-
-            ## Buying Signals
-            - Indicators of urgency, budget, timing, or decision process
-
-            ## Next Steps
-            - [ ] Follow-up actions, owners, and dates if mentioned
-            """
+            promptBody: String(
+                localized: "meeting_templates.customer_discovery.prompt",
+                defaultValue: """
+                Use this structure exactly:
+    
+                ## Customer Context
+                - Company, role, or situation if mentioned
+    
+                ## Problems and Pain Points
+                - Explicit frustrations, blockers, or unmet needs
+    
+                ## Current Workflow
+                - How they currently solve the problem today
+    
+                ## Buying Signals
+                - Indicators of urgency, budget, timing, or decision process
+    
+                ## Next Steps
+                - [ ] Follow-up actions, owners, and dates if mentioned
+                """,
+                comment: ""
+            )
         ),
         MeetingTemplateDefinition(
             id: "hiring",
-            title: "Hiring",
-            category: "Recruiting",
+            title: String(localized: "meeting_templates.hiring.title", defaultValue: "Hiring", comment: ""),
+            category: String(localized: "meeting_templates.hiring.category", defaultValue: "Recruiting", comment: ""),
             icon: "briefcase.fill",
             kind: .builtin,
-            promptBody: """
-            Use this structure exactly:
-
-            ## Candidate Snapshot
-            A concise overview of the candidate and relevant background.
-
-            ## Strengths
-            - Positive signals from the conversation
-
-            ## Concerns
-            - Risks, gaps, or open questions
-
-            ## Role Fit
-            - Why they do or do not fit the role as discussed
-
-            ## Decision and Next Steps
-            - [ ] Hiring decision, interview progression, or follow-up items
-            """
+            promptBody: String(
+                localized: "meeting_templates.hiring.prompt",
+                defaultValue: """
+                Use this structure exactly:
+    
+                ## Candidate Snapshot
+                A concise overview of the candidate and relevant background.
+    
+                ## Strengths
+                - Positive signals from the conversation
+    
+                ## Concerns
+                - Risks, gaps, or open questions
+    
+                ## Role Fit
+                - Why they do or do not fit the role as discussed
+    
+                ## Decision and Next Steps
+                - [ ] Hiring decision, interview progression, or follow-up items
+                """,
+                comment: ""
+            )
         ),
         MeetingTemplateDefinition(
             id: "stand-up",
-            title: "Stand-Up",
-            category: "Team",
+            title: String(localized: "meeting_templates.stand_up.title", defaultValue: "Stand-Up", comment: ""),
+            category: String(localized: "meeting_templates.stand_up.category", defaultValue: "Team", comment: ""),
             icon: "figure.stand",
             kind: .builtin,
-            promptBody: """
-            Use this structure exactly:
-
-            ## Yesterday
-            - Work completed or progress since the last update
-
-            ## Today
-            - Planned work or priorities for today
-
-            ## Blockers
-            - Risks, delays, or dependencies
-
-            ## Coordination Notes
-            - Decisions, asks, or cross-team alignment points
-            """
+            promptBody: String(
+                localized: "meeting_templates.stand_up.prompt",
+                defaultValue: """
+                Use this structure exactly:
+    
+                ## Yesterday
+                - Work completed or progress since the last update
+    
+                ## Today
+                - Planned work or priorities for today
+    
+                ## Blockers
+                - Risks, delays, or dependencies
+    
+                ## Coordination Notes
+                - Decisions, asks, or cross-team alignment points
+                """,
+                comment: ""
+            )
         ),
         MeetingTemplateDefinition(
             id: "weekly-team-meeting",
-            title: "Weekly Team Meeting",
-            category: "Team",
+            title: String(localized: "meeting_templates.weekly_team_meeting.title", defaultValue: "Weekly Team Meeting", comment: ""),
+            category: String(localized: "meeting_templates.weekly_team_meeting.category", defaultValue: "Team", comment: ""),
             icon: "calendar",
             kind: .builtin,
-            promptBody: """
-            Use this structure exactly:
-
-            ## Weekly Overview
-            A concise summary of the most important updates from the meeting.
-
-            ## Progress Updates
-            - Key workstreams and status changes
-
-            ## Decisions
-            - Decisions made or confirmed
-
-            ## Risks and Open Questions
-            - Issues that need attention or follow-up
-
-            ## Action Items
-            - [ ] Tasks, owners, and timing if mentioned
-            """
+            promptBody: String(
+                localized: "meeting_templates.weekly_team_meeting.prompt",
+                defaultValue: """
+                Use this structure exactly:
+    
+                ## Weekly Overview
+                A concise summary of the most important updates from the meeting.
+    
+                ## Progress Updates
+                - Key workstreams and status changes
+    
+                ## Decisions
+                - Decisions made or confirmed
+    
+                ## Risks and Open Questions
+                - Issues that need attention or follow-up
+    
+                ## Action Items
+                - [ ] Tasks, owners, and timing if mentioned
+                """,
+                comment: ""
+            )
         ),
     ]
 
     static let customIconOptions: [CustomIconOption] = [
-        CustomIconOption(symbolName: "square.and.pencil", label: "Notes"),
-        CustomIconOption(symbolName: "person.2.fill", label: "1 to 1"),
-        CustomIconOption(symbolName: "person.crop.circle.badge.questionmark", label: "Discovery"),
-        CustomIconOption(symbolName: "briefcase.fill", label: "Hiring"),
-        CustomIconOption(symbolName: "calendar", label: "Weekly"),
-        CustomIconOption(symbolName: "figure.stand", label: "Stand-Up"),
-        CustomIconOption(symbolName: "person.fill.questionmark", label: "Interview"),
-        CustomIconOption(symbolName: "person.fill.checkmark", label: "Review"),
-        CustomIconOption(symbolName: "building.2.fill", label: "Business"),
-        CustomIconOption(symbolName: "chart.line.uptrend.xyaxis", label: "Strategy"),
-        CustomIconOption(symbolName: "dollarsign.circle", label: "Sales"),
-        CustomIconOption(symbolName: "megaphone.fill", label: "Marketing"),
-        CustomIconOption(symbolName: "hammer.fill", label: "Execution"),
-        CustomIconOption(symbolName: "shippingbox.fill", label: "Ops"),
-        CustomIconOption(symbolName: "doc.text.fill", label: "Docs"),
-        CustomIconOption(symbolName: "checklist", label: "Checklist"),
-        CustomIconOption(symbolName: "lightbulb.fill", label: "Ideas"),
-        CustomIconOption(symbolName: "waveform.path.ecg", label: "Health"),
-        CustomIconOption(symbolName: "graduationcap.fill", label: "Learning"),
-        CustomIconOption(symbolName: "globe", label: "Global"),
-        CustomIconOption(symbolName: "phone.fill", label: "Calls"),
-        CustomIconOption(symbolName: "message.fill", label: "Conversation"),
-        CustomIconOption(symbolName: "person.3.fill", label: "Team"),
-        CustomIconOption(symbolName: "target", label: "Goals"),
-        CustomIconOption(symbolName: "flag.fill", label: "Milestones"),
-        CustomIconOption(symbolName: "sparkles", label: "Enhanced"),
-        CustomIconOption(symbolName: "wand.and.stars", label: "Creative"),
-        CustomIconOption(symbolName: "paperplane.fill", label: "Launch"),
-        CustomIconOption(symbolName: "gearshape.fill", label: "Systems"),
-        CustomIconOption(symbolName: "folder.fill", label: "Projects"),
-        CustomIconOption(symbolName: "clock.fill", label: "Timeline"),
-        CustomIconOption(symbolName: "bolt.fill", label: "Sprint"),
+        CustomIconOption(symbolName: "square.and.pencil", label: String(localized: "meeting_templates.custom_icon.notes", defaultValue: "Notes", comment: "")),
+        CustomIconOption(symbolName: "person.2.fill", label: String(localized: "meeting_templates.custom_icon.one_to_one", defaultValue: "1 to 1", comment: "")),
+        CustomIconOption(symbolName: "person.crop.circle.badge.questionmark", label: String(localized: "meeting_templates.custom_icon.discovery", defaultValue: "Discovery", comment: "")),
+        CustomIconOption(symbolName: "briefcase.fill", label: String(localized: "meeting_templates.custom_icon.hiring", defaultValue: "Hiring", comment: "")),
+        CustomIconOption(symbolName: "calendar", label: String(localized: "meeting_templates.custom_icon.weekly", defaultValue: "Weekly", comment: "")),
+        CustomIconOption(symbolName: "figure.stand", label: String(localized: "meeting_templates.custom_icon.stand_up", defaultValue: "Stand-Up", comment: "")),
+        CustomIconOption(symbolName: "person.fill.questionmark", label: String(localized: "meeting_templates.custom_icon.interview", defaultValue: "Interview", comment: "")),
+        CustomIconOption(symbolName: "person.fill.checkmark", label: String(localized: "meeting_templates.custom_icon.review", defaultValue: "Review", comment: "")),
+        CustomIconOption(symbolName: "building.2.fill", label: String(localized: "meeting_templates.custom_icon.business", defaultValue: "Business", comment: "")),
+        CustomIconOption(symbolName: "chart.line.uptrend.xyaxis", label: String(localized: "meeting_templates.custom_icon.strategy", defaultValue: "Strategy", comment: "")),
+        CustomIconOption(symbolName: "dollarsign.circle", label: String(localized: "meeting_templates.custom_icon.sales", defaultValue: "Sales", comment: "")),
+        CustomIconOption(symbolName: "megaphone.fill", label: String(localized: "meeting_templates.custom_icon.marketing", defaultValue: "Marketing", comment: "")),
+        CustomIconOption(symbolName: "hammer.fill", label: String(localized: "meeting_templates.custom_icon.execution", defaultValue: "Execution", comment: "")),
+        CustomIconOption(symbolName: "shippingbox.fill", label: String(localized: "meeting_templates.custom_icon.ops", defaultValue: "Ops", comment: "")),
+        CustomIconOption(symbolName: "doc.text.fill", label: String(localized: "meeting_templates.custom_icon.docs", defaultValue: "Docs", comment: "")),
+        CustomIconOption(symbolName: "checklist", label: String(localized: "meeting_templates.custom_icon.checklist", defaultValue: "Checklist", comment: "")),
+        CustomIconOption(symbolName: "lightbulb.fill", label: String(localized: "meeting_templates.custom_icon.ideas", defaultValue: "Ideas", comment: "")),
+        CustomIconOption(symbolName: "waveform.path.ecg", label: String(localized: "meeting_templates.custom_icon.health", defaultValue: "Health", comment: "")),
+        CustomIconOption(symbolName: "graduationcap.fill", label: String(localized: "meeting_templates.custom_icon.learning", defaultValue: "Learning", comment: "")),
+        CustomIconOption(symbolName: "globe", label: String(localized: "meeting_templates.custom_icon.global", defaultValue: "Global", comment: "")),
+        CustomIconOption(symbolName: "phone.fill", label: String(localized: "meeting_templates.custom_icon.calls", defaultValue: "Calls", comment: "")),
+        CustomIconOption(symbolName: "message.fill", label: String(localized: "meeting_templates.custom_icon.conversation", defaultValue: "Conversation", comment: "")),
+        CustomIconOption(symbolName: "person.3.fill", label: String(localized: "meeting_templates.custom_icon.team", defaultValue: "Team", comment: "")),
+        CustomIconOption(symbolName: "target", label: String(localized: "meeting_templates.custom_icon.goals", defaultValue: "Goals", comment: "")),
+        CustomIconOption(symbolName: "flag.fill", label: String(localized: "meeting_templates.custom_icon.milestones", defaultValue: "Milestones", comment: "")),
+        CustomIconOption(symbolName: "sparkles", label: String(localized: "meeting_templates.custom_icon.enhanced", defaultValue: "Enhanced", comment: "")),
+        CustomIconOption(symbolName: "wand.and.stars", label: String(localized: "meeting_templates.custom_icon.creative", defaultValue: "Creative", comment: "")),
+        CustomIconOption(symbolName: "paperplane.fill", label: String(localized: "meeting_templates.custom_icon.launch", defaultValue: "Launch", comment: "")),
+        CustomIconOption(symbolName: "gearshape.fill", label: String(localized: "meeting_templates.custom_icon.systems", defaultValue: "Systems", comment: "")),
+        CustomIconOption(symbolName: "folder.fill", label: String(localized: "meeting_templates.custom_icon.projects", defaultValue: "Projects", comment: "")),
+        CustomIconOption(symbolName: "clock.fill", label: String(localized: "meeting_templates.custom_icon.timeline", defaultValue: "Timeline", comment: "")),
+        CustomIconOption(symbolName: "bolt.fill", label: String(localized: "meeting_templates.custom_icon.sprint", defaultValue: "Sprint", comment: "")),
     ]
 
     static func normalizedCustomIcon(named icon: String?) -> String {
@@ -281,7 +305,7 @@ enum MeetingTemplates {
         MeetingTemplateDefinition(
             id: customTemplate.id,
             title: customTemplate.name,
-            category: "Custom",
+            category: String(localized: "meeting_templates.custom.title", defaultValue: "Custom", comment: ""),
             icon: normalizedCustomIcon(named: customTemplate.icon),
             kind: .custom,
             promptBody: customTemplate.prompt
