@@ -231,14 +231,14 @@ enum MuesliBridgeDeviceIdentity {
             return name
         }
         let hostName = ProcessInfo.processInfo.hostName.trimmingCharacters(in: .whitespacesAndNewlines)
-        return hostName.isEmpty ? "This Mac" : hostName
+        return hostName.isEmpty ? String(localized: "sync.device.this_mac", defaultValue: "This Mac", comment: "Device label for the current Mac in iCloud sync metadata") : hostName
     }
 
     private static func appVersion() -> String {
         let info = Bundle.main.infoDictionary
         return (info?["CFBundleShortVersionString"] as? String)
             ?? (info?["CFBundleVersion"] as? String)
-            ?? "unknown"
+            ?? String(localized: "sync.app_version.unknown", defaultValue: "unknown", comment: "Fallback label when app version is unknown in iCloud sync metadata")
     }
 }
 
@@ -251,13 +251,13 @@ private enum ICloudSyncAccountError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .noAccount:
-            return "Sign in to iCloud on this Mac to sync text records."
+            return String(localized: "sync.error.account_unavailable", defaultValue: "Sign in to iCloud on this Mac to sync text records.", comment: "Error shown when iCloud account is unavailable for syncing text records")
         case .restricted:
-            return "iCloud is restricted for this Mac."
+            return String(localized: "sync.error.restricted", defaultValue: "iCloud is restricted for this Mac.", comment: "Error shown when iCloud access is restricted on this Mac")
         case .temporarilyUnavailable:
-            return "iCloud is temporarily unavailable. Try syncing again shortly."
+            return String(localized: "sync.error.temporarily_unavailable", defaultValue: "iCloud is temporarily unavailable. Try syncing again shortly.", comment: "Error shown when iCloud service is temporarily unavailable")
         case .couldNotDetermine:
-            return "Couldn't determine iCloud account status."
+            return String(localized: "sync.error.cannot_determine_account_status", defaultValue: "Couldn't determine iCloud account status.", comment: "Error shown when iCloud account status cannot be determined")
         }
     }
 }
@@ -266,7 +266,7 @@ enum ICloudSyncDeadlineError: LocalizedError, Equatable {
     case operationTimedOut
 
     var errorDescription: String? {
-        "iCloud did not respond in time. Your text is safe and will be retried."
+        String(localized: "sync.error.timeout_retry", defaultValue: "iCloud did not respond in time. Your text is safe and will be retried.", comment: "Error shown when iCloud request times out and sync will retry automatically")
     }
 }
 
