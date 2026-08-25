@@ -138,20 +138,20 @@ enum CohereTranscribeLanguage: String, CaseIterable, Codable, Sendable {
 
     var label: String {
         switch self {
-        case .english: return "English"
-        case .french: return "French"
-        case .german: return "German"
-        case .spanish: return "Spanish"
-        case .italian: return "Italian"
-        case .portuguese: return "Portuguese"
-        case .dutch: return "Dutch"
-        case .polish: return "Polish"
-        case .greek: return "Greek"
-        case .arabic: return "Arabic"
-        case .japanese: return "Japanese"
-        case .chinese: return "Chinese"
-        case .vietnamese: return "Vietnamese"
-        case .korean: return "Korean"
+        case .english: return String(localized: "cohere_transcribe.language.english", defaultValue: "English", comment: "")
+        case .french: return String(localized: "cohere_transcribe.language.french", defaultValue: "French", comment: "")
+        case .german: return String(localized: "cohere_transcribe.language.german", defaultValue: "German", comment: "")
+        case .spanish: return String(localized: "cohere_transcribe.language.spanish", defaultValue: "Spanish", comment: "")
+        case .italian: return String(localized: "cohere_transcribe.language.italian", defaultValue: "Italian", comment: "")
+        case .portuguese: return String(localized: "cohere_transcribe.language.portuguese", defaultValue: "Portuguese", comment: "")
+        case .dutch: return String(localized: "cohere_transcribe.language.dutch", defaultValue: "Dutch", comment: "")
+        case .polish: return String(localized: "cohere_transcribe.language.polish", defaultValue: "Polish", comment: "")
+        case .greek: return String(localized: "cohere_transcribe.language.greek", defaultValue: "Greek", comment: "")
+        case .arabic: return String(localized: "cohere_transcribe.language.arabic", defaultValue: "Arabic", comment: "")
+        case .japanese: return String(localized: "cohere_transcribe.language.japanese", defaultValue: "Japanese", comment: "")
+        case .chinese: return String(localized: "cohere_transcribe.language.chinese", defaultValue: "Chinese", comment: "")
+        case .vietnamese: return String(localized: "cohere_transcribe.language.vietnamese", defaultValue: "Vietnamese", comment: "")
+        case .korean: return String(localized: "cohere_transcribe.language.korean", defaultValue: "Korean", comment: "")
         }
     }
 
@@ -778,7 +778,7 @@ enum CohereTranscribeModelStore {
             return !fm.fileExists(atPath: directory.appendingPathComponent(relativePath).path)
         }
         guard !missing.isEmpty else {
-            progress?(1.0, "Cohere Transcribe download complete")
+            progress?(1.0, String(localized: "cohere_transcribe.download.complete", defaultValue: "Cohere Transcribe download complete", comment: ""))
             return
         }
 
@@ -797,13 +797,13 @@ enum CohereTranscribeModelStore {
         )
         try await ModelDownloadCoordinator.shared.download(manifest, to: directory) { snapshot in
             let fraction = snapshot.fractionCompleted ?? 0
-            let current = snapshot.currentFile ?? "model files"
+            let current = snapshot.currentFile ?? String(localized: "cohere_transcribe.download.model_files", defaultValue: "model files", comment: "")
             let speed = ModelDownloadDisplayFormatting.rate(snapshot.bytesPerSecond)
             let detail = speed.isEmpty ? "" : " · " + speed
-            progress?(fraction, "Downloading " + current + detail)
+            progress?(fraction, String(localized: "cohere_transcribe.download.in_progress_prefix", defaultValue: "Downloading", comment: "") + " " + current + detail)
             progressSnapshot?(snapshot)
         }
-        progress?(1.0, "Cohere Transcribe download complete")
+        progress?(1.0, String(localized: "cohere_transcribe.download.complete", defaultValue: "Cohere Transcribe download complete", comment: ""))
     }
 
 }
@@ -1196,7 +1196,7 @@ actor CohereTranscribeTranscriber {
         var errorDescription: String? {
             switch self {
             case .notLoaded:
-                return "Cohere Transcribe models not loaded. Call loadModels() first."
+                return String(localized: "cohere_transcribe.error.models_not_loaded", defaultValue: "Cohere Transcribe models not loaded. Call loadModels() first.", comment: "")
             }
         }
     }
@@ -1221,8 +1221,8 @@ actor CohereTranscribeTranscriber {
             let dirMs = (CFAbsoluteTimeGetCurrent() - dirStart) * 1000
             CohereProfilingLog.write("[cohere][load] resolvedDirectory in \(String(format: "%.0f", dirMs))ms path=\(modelDir.path)")
             try Task.checkCancellation()
-            progress?(1.0, "Preparing Core ML models...")
-            progressSnapshot?(ModelDownloadProgress.preparing(modelID: CohereTranscribeConfig.repoId, message: "Preparing Core ML models..."))
+            progress?(1.0, String(localized: "cohere_transcribe.status.preparing_models", defaultValue: "Preparing Core ML models...", comment: ""))
+            progressSnapshot?(ModelDownloadProgress.preparing(modelID: CohereTranscribeConfig.repoId, message: String(localized: "cohere_transcribe.status.preparing_models", defaultValue: "Preparing Core ML models...", comment: "")))
             let modelsStart = CFAbsoluteTimeGetCurrent()
             let models = try await CohereTranscribeModels.load(from: modelDir)
             let modelsMs = (CFAbsoluteTimeGetCurrent() - modelsStart) * 1000
