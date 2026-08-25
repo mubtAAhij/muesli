@@ -49,7 +49,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             NSApplication.shared.registerForRemoteNotifications()
         } catch {
             let alert = NSAlert()
-            alert.messageText = "\(AppIdentity.displayName) failed to start"
+            alert.messageText = String(format: String(localized: "app.startup.failed_to_start", defaultValue: "%@ failed to start", comment: ""), "\(AppIdentity.displayName)")
             alert.informativeText = error.localizedDescription
             alert.runModal()
             NSApplication.shared.terminate(nil)
@@ -130,14 +130,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let appMenuItem = NSMenuItem()
         let appMenu = NSMenu()
         let settingsItem = NSMenuItem(
-            title: "Settings…",
+            title: String(localized: "app_menu.settings", defaultValue: "Settings…", comment: ""),
             action: #selector(AppDelegate.openPreferences(_:)),
             keyEquivalent: ","
         )
         settingsItem.target = self
         appMenu.addItem(settingsItem)
         let whatsNewItem = NSMenuItem(
-            title: "What's New in Muesli",
+            title: String(localized: "app_menu.whats_new", defaultValue: "What's New in Muesli", comment: ""),
             action: #selector(AppDelegate.showWhatsNew(_:)),
             keyEquivalent: ""
         )
@@ -145,25 +145,25 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         appMenu.addItem(whatsNewItem)
         appMenu.addItem(.separator())
         appMenu.addItem(
-            withTitle: "Hide \(AppIdentity.displayName)",
+            withTitle: String(format: String(localized: "app_menu.hide_app", defaultValue: "Hide %@", comment: ""), "\(AppIdentity.displayName)"),
             action: #selector(NSApplication.hide(_:)),
             keyEquivalent: "h"
         )
         let hideOthersItem = NSMenuItem(
-            title: "Hide Others",
+            title: String(localized: "app_menu.hide_others", defaultValue: "Hide Others", comment: ""),
             action: #selector(NSApplication.hideOtherApplications(_:)),
             keyEquivalent: "h"
         )
         hideOthersItem.keyEquivalentModifierMask = [.command, .option]
         appMenu.addItem(hideOthersItem)
         appMenu.addItem(
-            withTitle: "Show All",
+            withTitle: String(localized: "app_menu.show_all", defaultValue: "Show All", comment: ""),
             action: #selector(NSApplication.unhideAllApplications(_:)),
             keyEquivalent: ""
         )
         appMenu.addItem(.separator())
         appMenu.addItem(
-            withTitle: "Quit \(AppIdentity.displayName)",
+            withTitle: String(format: String(localized: "app_menu.quit_app", defaultValue: "Quit %@", comment: ""), "\(AppIdentity.displayName)"),
             action: #selector(NSApplication.terminate(_:)),
             keyEquivalent: "q"
         )
@@ -171,23 +171,23 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         mainMenu.addItem(appMenuItem)
 
         let editMenuItem = NSMenuItem()
-        let editMenu = NSMenu(title: "Edit")
-        editMenu.addItem(withTitle: "Undo", action: Selector(("undo:")), keyEquivalent: "z")
+        let editMenu = NSMenu(title: String(localized: "app_menu.edit", defaultValue: "Edit", comment: ""))
+        editMenu.addItem(withTitle: String(localized: "app_menu.undo", defaultValue: "Undo", comment: ""), action: Selector(("undo:")), keyEquivalent: "z")
 
-        let redo = NSMenuItem(title: "Redo", action: Selector(("redo:")), keyEquivalent: "z")
+        let redo = NSMenuItem(title: String(localized: "app_menu.redo", defaultValue: "Redo", comment: ""), action: Selector(("redo:")), keyEquivalent: "z")
         redo.keyEquivalentModifierMask = [.command, .shift]
         editMenu.addItem(redo)
 
         editMenu.addItem(.separator())
-        editMenu.addItem(withTitle: "Cut", action: #selector(NSText.cut(_:)), keyEquivalent: "x")
-        editMenu.addItem(withTitle: "Copy", action: #selector(NSText.copy(_:)), keyEquivalent: "c")
-        editMenu.addItem(withTitle: "Paste", action: #selector(NSText.paste(_:)), keyEquivalent: "v")
-        editMenu.addItem(withTitle: "Delete", action: #selector(NSText.delete(_:)), keyEquivalent: "")
+        editMenu.addItem(withTitle: String(localized: "app_menu.cut", defaultValue: "Cut", comment: ""), action: #selector(NSText.cut(_:)), keyEquivalent: "x")
+        editMenu.addItem(withTitle: String(localized: "app_menu.copy", defaultValue: "Copy", comment: ""), action: #selector(NSText.copy(_:)), keyEquivalent: "c")
+        editMenu.addItem(withTitle: String(localized: "app_menu.paste", defaultValue: "Paste", comment: ""), action: #selector(NSText.paste(_:)), keyEquivalent: "v")
+        editMenu.addItem(withTitle: String(localized: "app_menu.delete", defaultValue: "Delete", comment: ""), action: #selector(NSText.delete(_:)), keyEquivalent: "")
         editMenu.addItem(.separator())
-        editMenu.addItem(withTitle: "Select All", action: #selector(NSText.selectAll(_:)), keyEquivalent: "a")
+        editMenu.addItem(withTitle: String(localized: "app_menu.select_all", defaultValue: "Select All", comment: ""), action: #selector(NSText.selectAll(_:)), keyEquivalent: "a")
         editMenu.addItem(.separator())
         let findItem = NSMenuItem(
-            title: "Find",
+            title: String(localized: "app_menu.find", defaultValue: "Find", comment: ""),
             action: #selector(AppDelegate.focusSearch(_:)),
             keyEquivalent: "f"
         )
@@ -197,17 +197,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         editMenuItem.submenu = editMenu
         mainMenu.addItem(editMenuItem)
 
-        let viewMenuItem = NSMenuItem(title: "View", action: nil, keyEquivalent: "")
-        let viewMenu = NSMenu(title: "View")
+        let viewMenuItem = NSMenuItem(title: String(localized: "app_menu.view_top_level", defaultValue: "View", comment: ""), action: nil, keyEquivalent: "")
+        let viewMenu = NSMenu(title: String(localized: "app_menu.view", defaultValue: "View", comment: ""))
         let dictationsItem = NSMenuItem(
-            title: "Dictations",
+            title: String(localized: "app_menu.dictations", defaultValue: "Dictations", comment: ""),
             action: #selector(AppDelegate.showDictations(_:)),
             keyEquivalent: "1"
         )
         dictationsItem.target = self
         viewMenu.addItem(dictationsItem)
         let meetingsItem = NSMenuItem(
-            title: "Meetings",
+            title: String(localized: "app_menu.meetings", defaultValue: "Meetings", comment: ""),
             action: #selector(AppDelegate.showMeetings(_:)),
             keyEquivalent: "2"
         )
@@ -216,27 +216,27 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         viewMenuItem.submenu = viewMenu
         mainMenu.addItem(viewMenuItem)
 
-        let windowMenuItem = NSMenuItem(title: "Window", action: nil, keyEquivalent: "")
-        let windowMenu = NSMenu(title: "Window")
+        let windowMenuItem = NSMenuItem(title: String(localized: "app_menu.window_top_level", defaultValue: "Window", comment: ""), action: nil, keyEquivalent: "")
+        let windowMenu = NSMenu(title: String(localized: "app_menu.window", defaultValue: "Window", comment: ""))
         windowMenu.addItem(
-            withTitle: "Minimize",
+            withTitle: String(localized: "app_menu.minimize", defaultValue: "Minimize", comment: ""),
             action: #selector(NSWindow.performMiniaturize(_:)),
             keyEquivalent: "m"
         )
         windowMenu.addItem(
-            withTitle: "Zoom",
+            withTitle: String(localized: "app_menu.zoom", defaultValue: "Zoom", comment: ""),
             action: #selector(NSWindow.performZoom(_:)),
             keyEquivalent: ""
         )
         windowMenu.addItem(.separator())
         windowMenu.addItem(
-            withTitle: "Close Window",
+            withTitle: String(localized: "app_menu.close_window", defaultValue: "Close Window", comment: ""),
             action: #selector(NSWindow.performClose(_:)),
             keyEquivalent: "w"
         )
         windowMenu.addItem(.separator())
         windowMenu.addItem(
-            withTitle: "Bring All to Front",
+            withTitle: String(localized: "app_menu.bring_all_to_front", defaultValue: "Bring All to Front", comment: ""),
             action: #selector(NSApplication.arrangeInFront(_:)),
             keyEquivalent: ""
         )
@@ -370,11 +370,11 @@ final class SparkleUpdateDelegate: NSObject, SPUUpdaterDelegate, SPUStandardUser
         lastPresentedAt = Date()
 
         let alert = NSAlert()
-        alert.messageText = "Update did not finish"
+        alert.messageText = String(localized: "update_guidance.title.update_did_not_finish", defaultValue: "Update did not finish", comment: "")
         alert.informativeText = UpdateFailureGuidance.message
         alert.alertStyle = .warning
-        alert.addButton(withTitle: "Open Download Page")
-        alert.addButton(withTitle: "OK")
+        alert.addButton(withTitle: String(localized: "update_guidance.action.open_download_page", defaultValue: "Open Download Page", comment: ""))
+        alert.addButton(withTitle: String(localized: "common.ok", defaultValue: "OK", comment: ""))
 
         if alert.runModal() == .alertFirstButtonReturn,
            let url = URL(string: UpdateFailureGuidance.downloadPageURLString) {
@@ -414,11 +414,15 @@ enum UpdateFailureGuidance {
 
     static let downloadPageURLString = "https://muesli-hq.github.io/muesli/"
 
-    static let message = """
-    Please quit Muesli, reopen it from Applications, and try the update once more.
-
-    If this keeps happening, download the latest DMG and replace Muesli manually. This can happen when the local updater cannot finish preparing or replacing the app.
-    """
+    static let message = String(
+        localized: "update_guidance.message.manual_install_instructions",
+        defaultValue: """
+        Please quit Muesli, reopen it from Applications, and try the update once more.
+    
+        If this keeps happening, download the latest DMG and replace Muesli manually. This can happen when the local updater cannot finish preparing or replacing the app.
+        """,
+        comment: ""
+    )
 
     static func isNoUpdateError(_ error: NSError) -> Bool {
         guard error.domain == SUSparkleErrorDomain else { return false }
