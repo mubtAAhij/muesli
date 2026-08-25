@@ -15,14 +15,14 @@ enum GoogleCalendarAuthError: Error, LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .notAuthenticated: return "Not signed in to Google Calendar"
-        case .notAvailable: return "Google Calendar credentials not configured"
-        case .callbackTimeout: return "Sign-in timed out — no response from browser"
-        case .callbackMissingCode: return "OAuth callback missing authorization code"
-        case .callbackStateMismatch: return "OAuth state mismatch — possible CSRF attack"
-        case .tokenExchangeFailed(let msg): return "Token exchange failed: \(msg)"
-        case .refreshFailed(let msg): return "Token refresh failed: \(msg)"
-        case .portInUse: return "Callback port 1456 is already in use"
+        case .notAuthenticated: return String(localized: "google_calendar_auth.error.not_signed_in", defaultValue: "Not signed in to Google Calendar", comment: "")
+        case .notAvailable: return String(localized: "google_calendar_auth.error.credentials_not_configured", defaultValue: "Google Calendar credentials not configured", comment: "")
+        case .callbackTimeout: return String(localized: "google_calendar_auth.error.signin_timed_out", defaultValue: "Sign-in timed out — no response from browser", comment: "")
+        case .callbackMissingCode: return String(localized: "google_calendar_auth.error.missing_authorization_code", defaultValue: "OAuth callback missing authorization code", comment: "")
+        case .callbackStateMismatch: return String(localized: "google_calendar_auth.error.state_mismatch", defaultValue: "OAuth state mismatch — possible CSRF attack", comment: "")
+        case .tokenExchangeFailed(let msg): return String(format: String(localized: "google_calendar_auth.error.token_exchange_failed", defaultValue: "Token exchange failed: %@", comment: ""), "\(msg)")
+        case .refreshFailed(let msg): return String(format: String(localized: "google_calendar_auth.error.token_refresh_failed", defaultValue: "Token refresh failed: %@", comment: ""), "\(msg)")
+        case .portInUse: return String(localized: "google_calendar_auth.error.callback_port_in_use", defaultValue: "Callback port 1456 is already in use", comment: "")
         }
     }
 }
@@ -304,19 +304,18 @@ final class GoogleCalendarAuthManager {
 
         let (data, response) = try await URLSession.shared.data(for: request)
         guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
-            let errorBody = String(data: data, encoding: .utf8) ?? "unknown error"
+            let errorBody = String(data: data, encoding: .utf8) ?? String(localized: "google_calendar_auth.error.unknown", defaultValue: "unknown error", comment: "")
             throw GoogleCalendarAuthError.tokenExchangeFailed(errorBody)
         }
 
         guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
               let accessToken = json["access_token"] as? String else {
-            throw GoogleCalendarAuthError.tokenExchangeFailed("missing access_token in response")
+            throw GoogleCalendarAuthError.tokenExchangeFailed(String(localized: "google_calendar_auth.error.missing_access_token", defaultValue: "missing access_token in response", comment: ""))
         }
 
         guard let refreshToken = json["refresh_token"] as? String, !refreshToken.isEmpty else {
             throw GoogleCalendarAuthError.tokenExchangeFailed(
-                "No refresh token received. Ensure access_type=offline and prompt=consent are set, " +
-                "or revoke access at https://myaccount.google.com/permissions and try again."
+                String(localized: "google_calendar_auth.error.no_refresh_token", defaultValue: "No refresh token received. Ensure access_type=offline and prompt=consent are set, or revoke access at https://myaccount.google.com/permissions and try again.", comment: "")
             )
         }
         let expiresIn = json["expires_in"] as? Double ?? 3600
@@ -345,7 +344,7 @@ final class GoogleCalendarAuthManager {
 
         let (data, response) = try await URLSession.shared.data(for: request)
         guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
-            let errorBody = String(data: data, encoding: .utf8) ?? "unknown error"
+            let errorBody = String(data: data, encoding: .utf8) ?? String(localized: "google_calendar_auth.error.unknown", defaultValue: "unknown error", comment: "")
             if let httpResponse = response as? HTTPURLResponse,
                (httpResponse.statusCode == 400 || httpResponse.statusCode == 401),
                errorBody.contains("invalid_grant") {
@@ -356,7 +355,7 @@ final class GoogleCalendarAuthManager {
 
         guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
               let accessToken = json["access_token"] as? String else {
-            throw GoogleCalendarAuthError.refreshFailed("missing access_token in refresh response")
+            throw GoogleCalendarAuthError.refreshFailed(String(localized: "google_calendar_auth.error.missing_access_token_refresh", defaultValue: "missing access_token in refresh response", comment: ""))
         }
 
         // Google may or may not return a new refresh token
