@@ -5,38 +5,38 @@ struct MuesliAppShortcuts: AppShortcutsProvider {
     static var appShortcuts: [AppShortcut] {
         AppShortcut(
             intent: StartDictationIntent(),
-            phrases: ["Start dictation in \(.applicationName)"],
-            shortTitle: "Start Dictation",
+            phrases: [String(format: String(localized: "app_shortcuts.start_dictation.phrase", defaultValue: "Start dictation in %@", comment: ""), "\(.applicationName)")],
+            shortTitle: String(localized: "app_shortcuts.start_dictation.short_title", defaultValue: "Start Dictation", comment: ""),
             systemImageName: "mic"
         )
         AppShortcut(
             intent: StopDictationIntent(),
-            phrases: ["Stop dictation in \(.applicationName)"],
-            shortTitle: "Stop Dictation",
+            phrases: [String(format: String(localized: "app_shortcuts.stop_dictation.phrase", defaultValue: "Stop dictation in %@", comment: ""), "\(.applicationName)")],
+            shortTitle: String(localized: "app_shortcuts.stop_dictation.short_title", defaultValue: "Stop Dictation", comment: ""),
             systemImageName: "mic.slash"
         )
         AppShortcut(
             intent: StartMeetingIntent(),
-            phrases: ["Start a meeting recording in \(.applicationName)"],
-            shortTitle: "Start Meeting Recording",
+            phrases: [String(format: String(localized: "app_shortcuts.start_meeting_recording.phrase", defaultValue: "Start a meeting recording in %@", comment: ""), "\(.applicationName)")],
+            shortTitle: String(localized: "app_shortcuts.start_meeting_recording.short_title", defaultValue: "Start Meeting Recording", comment: ""),
             systemImageName: "record.circle"
         )
         AppShortcut(
             intent: StopMeetingIntent(),
-            phrases: ["Stop the meeting recording in \(.applicationName)"],
-            shortTitle: "Stop Meeting Recording",
+            phrases: [String(format: String(localized: "app_shortcuts.stop_meeting_recording.phrase", defaultValue: "Stop the meeting recording in %@", comment: ""), "\(.applicationName)")],
+            shortTitle: String(localized: "app_shortcuts.stop_meeting_recording.short_title", defaultValue: "Stop Meeting Recording", comment: ""),
             systemImageName: "stop.circle"
         )
         AppShortcut(
             intent: GetLastDictationIntent(),
-            phrases: ["Get my last dictation from \(.applicationName)"],
-            shortTitle: "Get Last Dictation",
+            phrases: [String(format: String(localized: "app_shortcuts.get_last_dictation.phrase", defaultValue: "Get my last dictation from %@", comment: ""), "\(.applicationName)")],
+            shortTitle: String(localized: "app_shortcuts.get_last_dictation.short_title", defaultValue: "Get Last Dictation", comment: ""),
             systemImageName: "text.bubble"
         )
         AppShortcut(
             intent: GetLastMeetingIntent(),
-            phrases: ["Get my last meeting notes from \(.applicationName)"],
-            shortTitle: "Get Last Meeting Notes",
+            phrases: [String(format: String(localized: "app_shortcuts.get_last_meeting_notes.phrase", defaultValue: "Get my last meeting notes from %@", comment: ""), "\(.applicationName)")],
+            shortTitle: String(localized: "app_shortcuts.get_last_meeting_notes.short_title", defaultValue: "Get Last Meeting Notes", comment: ""),
             systemImageName: "doc.text"
         )
     }
