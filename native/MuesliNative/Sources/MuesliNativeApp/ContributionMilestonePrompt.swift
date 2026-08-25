@@ -36,9 +36,9 @@ struct ContributionMilestonePrompt: Equatable, Identifiable {
     var title: String {
         switch kind {
         case .dictationWords:
-            return "You crossed \(ContributionSocialShare.formatCount(count)) words!"
+            return String(format: String(localized: "contribution.milestone.prompt.words.title", defaultValue: "You crossed %@ words!", comment: "Milestone prompt title shown when user reaches a word-count milestone"), "\(ContributionSocialShare.formatCount(count))")
         case .meetings:
-            return "You captured \(ContributionSocialShare.formatCount(count)) meetings!"
+            return String(format: String(localized: "contribution.milestone.prompt.meetings.title", defaultValue: "You captured %@ meetings!", comment: "Milestone prompt title shown when user reaches a meetings-count milestone"), "\(ContributionSocialShare.formatCount(count))")
         }
     }
 
@@ -46,11 +46,11 @@ struct ContributionMilestonePrompt: Equatable, Identifiable {
         switch kind {
         case .dictationWords:
             if !showGitHubStar && !showBuyMeCoffee && (showTweetAboutMuesli || showPostOnLinkedIn) {
-                return "That is a serious pile of words. If Muesli has been saving your fingers and your flow, sharing your milestone helps more people find it."
+                return String(localized: "contribution.milestone.prompt.message.words.share_milestone", defaultValue: "That is a serious pile of words. If Muesli has been saving your fingers and your flow, sharing your milestone helps more people find it.", comment: "Milestone prompt body encouraging users to share word milestone")
             }
-            return "That is a serious pile of words. If Muesli has been saving your fingers and your flow, a GitHub star or a coffee helps keep it moving."
+            return String(localized: "contribution.milestone.prompt.message.words.support_actions", defaultValue: "That is a serious pile of words. If Muesli has been saving your fingers and your flow, a GitHub star or a coffee helps keep it moving.", comment: "Milestone prompt body asking users for support after word milestone")
         case .meetings:
-            return "That is a lot of conversations turned into something useful. If Muesli has been keeping your meetings in order, a GitHub star or a coffee helps keep it moving."
+            return String(localized: "contribution.milestone.prompt.message.meetings.support_actions", defaultValue: "That is a lot of conversations turned into something useful. If Muesli has been keeping your meetings in order, a GitHub star or a coffee helps keep it moving.", comment: "Milestone prompt body asking users for support after meeting milestone")
         }
     }
 }
@@ -65,7 +65,7 @@ enum ContributionSocialShare {
     }
 
     static func message(wordCount: Int) -> String {
-        "I've dictated \(formatCount(wordCount)) words with Muesli. It's fast, open source, on-device, and free to use. Try it: \(muesliURL.absoluteString)"
+        String(format: String(localized: "contribution.social_share.words.message", defaultValue: "I've dictated %@ words with Muesli. It's fast, open source, on-device, and free to use. Try it: %@", comment: "Social share message text for word-count contribution milestones"), "\(formatCount(wordCount))", "\(muesliURL.absoluteString)")
     }
 
     static func tweetURL(wordCount: Int) -> URL {
