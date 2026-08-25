@@ -21,36 +21,36 @@ struct NewMeetingContactView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: MuesliTheme.spacing16) {
             VStack(alignment: .leading, spacing: 4) {
-                Text("Create New Contact")
+                Text(String(localized: "new_meeting_contact.title", defaultValue: "Create New Contact", comment: "Title for creating a new meeting contact"))
                     .font(MuesliTheme.title2())
-                Text("Save this person to Apple Contacts and add them to the meeting.")
+                Text(String(localized: "new_meeting_contact.subtitle", defaultValue: "Save this person to Apple Contacts and add them to the meeting.", comment: "Subtitle explaining the new meeting contact action"))
                     .font(MuesliTheme.callout())
                     .foregroundStyle(MuesliTheme.textSecondary)
             }
 
             Grid(alignment: .leading, horizontalSpacing: MuesliTheme.spacing12, verticalSpacing: MuesliTheme.spacing12) {
-                contactField("First name", text: $draft.givenName, field: .firstName)
-                contactField("Last name", text: $draft.familyName, field: .lastName)
-                contactField("Email", text: $draft.emailAddress, field: .email)
+                contactField(String(localized: "new_meeting_contact.field.first_name", defaultValue: "First name", comment: "Label for first name field when creating a contact"), text: $draft.givenName, field: .firstName)
+                contactField(String(localized: "new_meeting_contact.field.last_name", defaultValue: "Last name", comment: "Label for last name field when creating a contact"), text: $draft.familyName, field: .lastName)
+                contactField(String(localized: "new_meeting_contact.field.email", defaultValue: "Email", comment: "Label for email field when creating a contact"), text: $draft.emailAddress, field: .email)
             }
 
             HStack(spacing: MuesliTheme.spacing12) {
                 if isSaving {
                     ProgressView()
                         .controlSize(.small)
-                    Text("Saving to Contacts…")
+                    Text(String(localized: "new_meeting_contact.status.saving", defaultValue: "Saving to Contacts…", comment: "Status text shown while saving a contact to Apple Contacts"))
                         .font(MuesliTheme.caption())
                         .foregroundStyle(MuesliTheme.textSecondary)
                 }
 
                 Spacer()
 
-                Button("Cancel") {
+                Button(String(localized: "common.cancel", defaultValue: "Cancel", comment: "Common cancel button title")) {
                     dismiss()
                 }
                 .keyboardShortcut(.cancelAction)
 
-                Button("Save Contact") {
+                Button(String(localized: "new_meeting_contact.action.save_contact", defaultValue: "Save Contact", comment: "Button title to save a newly created contact")) {
                     save()
                 }
                 .keyboardShortcut(.defaultAction)
@@ -64,18 +64,18 @@ struct NewMeetingContactView: View {
         .onAppear {
             focusedField = .firstName
         }
-        .alert("Couldn't Save Contact", isPresented: errorBinding) {
+        .alert(String(localized: "new_meeting_contact.alert.couldnt_save_contact.title", defaultValue: "Couldn't Save Contact", comment: "Alert title shown when saving contact fails"), isPresented: errorBinding) {
             if isAccessDenied {
-                Button("Open System Settings") {
+                Button(String(localized: "new_meeting_contact.alert.open_system_settings", defaultValue: "Open System Settings", comment: "Alert action title to open System Settings for permissions")) {
                     openContactsPrivacyPane()
                     errorMessage = nil
                 }
             }
-            Button("OK", role: .cancel) {
+            Button(String(localized: "common.ok", defaultValue: "OK", comment: "Common confirmation button title"), role: .cancel) {
                 errorMessage = nil
             }
         } message: {
-            Text(errorMessage ?? "The contact could not be saved.")
+            Text(errorMessage ?? String(localized: "new_meeting_contact.alert.could_not_save_contact.message", defaultValue: "The contact could not be saved.", comment: "Alert message shown when contact save operation fails"))
         }
     }
 
