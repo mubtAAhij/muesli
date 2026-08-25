@@ -160,7 +160,7 @@ final class CalendarMonitor {
                 let eventID = event.eventIdentifier ?? ""
                 return UpcomingMeetingEvent(
                     id: eventID,
-                    title: event.title ?? "Meeting",
+                    title: event.title ?? String(localized: "calendar_monitor.meeting.default_title", defaultValue: "Meeting", comment: "Fallback meeting title when calendar event title is missing"),
                     startDate: startDate,
                     calendarOccurrence: Self.occurrenceReference(
                         for: event,
@@ -189,7 +189,7 @@ final class CalendarMonitor {
             guard let startDate = event.startDate, let endDate = event.endDate else { continue }
             let ctx = CalendarEventContext(
                 id: event.eventIdentifier ?? UUID().uuidString,
-                title: event.title ?? "Meeting",
+                title: event.title ?? String(localized: "calendar_monitor.meeting.default_title", defaultValue: "Meeting", comment: "Fallback meeting title when calendar event title is missing"),
                 calendarOccurrence: Self.occurrenceReference(
                     for: event,
                     eventID: event.eventIdentifier ?? "",
@@ -230,7 +230,7 @@ final class CalendarMonitor {
             let eventID = event.eventIdentifier ?? UUID().uuidString
             return UnifiedCalendarEvent(
                 id: eventID,
-                title: event.title ?? "Meeting",
+                title: event.title ?? String(localized: "calendar_monitor.meeting.default_title", defaultValue: "Meeting", comment: "Fallback meeting title when calendar event title is missing"),
                 startDate: startDate,
                 endDate: endDate,
                 isAllDay: false,
@@ -341,12 +341,12 @@ final class CalendarMonitor {
 
     private static func typeLabel(for type: EKCalendarType) -> String {
         switch type {
-        case .local: return "Local"
-        case .calDAV: return "CalDAV"
-        case .exchange: return "Exchange"
-        case .subscription: return "Subscription"
-        case .birthday: return "Birthday"
-        @unknown default: return "Calendar"
+        case .local: return String(localized: "calendar_monitor.source_type.local", defaultValue: "Local", comment: "Calendar source type label for local calendars")
+        case .calDAV: return String(localized: "calendar_monitor.source_type.caldav", defaultValue: "CalDAV", comment: "Calendar source type label for CalDAV calendars")
+        case .exchange: return String(localized: "calendar_monitor.source_type.exchange", defaultValue: "Exchange", comment: "Calendar source type label for Exchange calendars")
+        case .subscription: return String(localized: "calendar_monitor.source_type.subscription", defaultValue: "Subscription", comment: "Calendar source type label for subscribed calendars")
+        case .birthday: return String(localized: "calendar_monitor.source_type.birthday", defaultValue: "Birthday", comment: "Calendar source type label for birthday calendars")
+        @unknown default: return String(localized: "calendar_monitor.source_type.calendar", defaultValue: "Calendar", comment: "Calendar source type label for generic calendar sources")
         }
     }
 
