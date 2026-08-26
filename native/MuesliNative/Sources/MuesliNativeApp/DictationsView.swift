@@ -36,9 +36,9 @@ struct DictationsView: View {
                 currentRecords = []
 
                 if dayStart == today {
-                    currentHeader = "TODAY"
+                    currentHeader = String(localized: "dictations.section.today", defaultValue: "TODAY", comment: "Section header label for today's dictations.")
                 } else if dayStart == yesterday {
-                    currentHeader = "YESTERDAY"
+                    currentHeader = String(localized: "dictations.section.yesterday", defaultValue: "YESTERDAY", comment: "Section header label for yesterday's dictations.")
                 } else {
                     currentHeader = dateHeaderFormatter.string(from: date).uppercased()
                 }
@@ -125,13 +125,13 @@ struct DictationsView: View {
                                             Button {
                                                 controller.copyToClipboard(record.rawText)
                                             } label: {
-                                                Label("Copy", systemImage: "doc.on.doc")
+                                                Label(String(localized: "common.copy", defaultValue: "Copy", comment: "Common copy action label."), systemImage: "doc.on.doc")
                                             }
                                             if record.computerUseTrace != nil {
                                                 Button {
                                                     controller.copyToClipboard(ComputerUseTraceFormatter.debugText(for: record))
                                                 } label: {
-                                                    Label("Copy CUA Trace", systemImage: "list.bullet.clipboard")
+                                                    Label(String(localized: "dictations.actions.copy_cua_trace", defaultValue: "Copy CUA Trace", comment: "Action label to copy the CUA trace for a dictation."), systemImage: "list.bullet.clipboard")
                                                 }
                                             }
                                         }
@@ -165,21 +165,21 @@ struct DictationsView: View {
         if appState.dictationOriginFilter != .all
             || selectedFilter != .all
             || appState.dictationApplicationFilter != nil {
-            return "Try another source, app, or time range"
+            return String(localized: "dictations.empty_state.instruction.adjust_filters", defaultValue: "Try another source, app, or time range", comment: "Empty-state guidance to adjust dictation filters.")
         }
         return appState.config.resolvedOnboardingUseCase.includesVoiceNotes
-            ? "Click Record Voice Note to capture your first note"
-            : "Hold \(appState.config.dictationHotkey.label) to start dictating"
+            ? String(localized: "dictations.empty_state.instruction.record_first_note", defaultValue: "Click Record Voice Note to capture your first note", comment: "Empty-state guidance to create the first voice note.")
+            : String(format: String(localized: "dictations.empty_state.instruction.hold_hotkey_to_dictate", defaultValue: "Hold %@ to start dictating", comment: "Empty-state guidance showing keyboard shortcut to start dictation."), "\(appState.config.dictationHotkey.label)")
     }
 
     private var emptyStateTitle: String {
         if let application = appState.dictationApplicationFilter {
-            return "No dictations for \(application.name)"
+            return String(format: String(localized: "dictations.empty_state.title.no_dictations_for_app", defaultValue: "No dictations for %@", comment: "Empty-state title when no dictations match selected app."), "\(application.name)")
         }
         switch appState.dictationOriginFilter {
-        case .all: return "No dictations yet"
-        case .thisMac: return "No dictations from this Mac"
-        case .fromIPhone: return "No dictations from iPhone"
+        case .all: return String(localized: "dictations.empty_state.title.no_dictations_yet", defaultValue: "No dictations yet", comment: "Empty-state title when there are no dictations at all.")
+        case .thisMac: return String(localized: "dictations.empty_state.title.no_dictations_from_this_mac", defaultValue: "No dictations from this Mac", comment: "Empty-state title when there are no dictations from current Mac.")
+        case .fromIPhone: return String(localized: "dictations.empty_state.title.no_dictations_from_iphone", defaultValue: "No dictations from iPhone", comment: "Empty-state title when there are no dictations synced from iPhone.")
         }
     }
 
@@ -209,7 +209,7 @@ struct DictationsView: View {
             HStack(spacing: 6) {
                 Image(systemName: isRecording ? "stop.fill" : "mic.fill")
                     .font(.system(size: 12, weight: .semibold))
-                Text(isRecording ? "Stop Voice Note" : "Record Voice Note")
+                Text(isRecording ? String(localized: "dictations.voice_note.stop", defaultValue: "Stop Voice Note", comment: "Button label to stop active voice note recording.") : String(localized: "dictations.voice_note.record", defaultValue: "Record Voice Note", comment: "Button label to start voice note recording."))
                     .font(.system(size: 12, weight: .semibold))
             }
             .foregroundStyle(.white)
