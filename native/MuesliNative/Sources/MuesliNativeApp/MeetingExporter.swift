@@ -9,9 +9,9 @@ enum MeetingExportContent: String, CaseIterable {
 
     var displayName: String {
         switch self {
-        case .notes: return "Notes"
-        case .transcript: return "Transcript"
-        case .fullMeeting: return "Full Meeting"
+        case .notes: return String(localized: "meeting_export.scope.notes", defaultValue: "Notes", comment: "Export scope option for notes-only export.")
+        case .transcript: return String(localized: "meeting_export.scope.transcript", defaultValue: "Transcript", comment: "Export scope option for transcript-only export.")
+        case .fullMeeting: return String(localized: "meeting_export.scope.full_meeting", defaultValue: "Full Meeting", comment: "Export scope option for full meeting export.")
         }
     }
 
@@ -27,9 +27,9 @@ enum MeetingAutoExportFileFormat: String, CaseIterable {
 
     var displayName: String {
         switch self {
-        case .markdown: return "Markdown"
-        case .pdf: return "PDF"
-        case .markdownAndPDF: return "Markdown and PDF"
+        case .markdown: return String(localized: "meeting_export.format.markdown", defaultValue: "Markdown", comment: "Export format option for Markdown output.")
+        case .pdf: return String(localized: "meeting_export.format.pdf", defaultValue: "PDF", comment: "Export format option for PDF output.")
+        case .markdownAndPDF: return String(localized: "meeting_export.format.markdown_and_pdf", defaultValue: "Markdown and PDF", comment: "Export format option for combined Markdown and PDF output.")
         }
     }
 
@@ -70,7 +70,7 @@ struct MeetingExporter {
                         try writePDF(attributed: buildAttributedString(from: markdown), to: url)
                         NSWorkspace.shared.open(url)
                     } catch {
-                        showError("Export Failed", error.localizedDescription)
+                        showError(String(localized: "meeting_export.error.title", defaultValue: "Export Failed", comment: "Title shown when meeting export fails."), error.localizedDescription)
                     }
                 } else {
                     writeMarkdown(markdown, to: url)
@@ -86,11 +86,11 @@ struct MeetingExporter {
 
         parts.append("# \(meeting.title)")
         parts.append("")
-        parts.append("**Date:** \(formatExportDate(meeting.startTime))")
-        parts.append("**Duration:** \(formatExportDuration(meeting.durationSeconds))")
-        parts.append("**Words:** \(meeting.wordCount)")
+        parts.append(String(format: String(localized: "meeting_export.markdown.date_line", defaultValue: "**Date:** %@", comment: "Markdown metadata line showing the export date."), "\(formatExportDate(meeting.startTime))"))
+        parts.append(String(format: String(localized: "meeting_export.markdown.duration_line", defaultValue: "**Duration:** %@", comment: "Markdown metadata line showing meeting duration."), "\(formatExportDuration(meeting.durationSeconds))"))
+        parts.append(String(format: String(localized: "meeting_export.markdown.words_line", defaultValue: "**Words:** %d", comment: "Markdown metadata line showing meeting word count."), meeting.wordCount))
         if let name = meeting.selectedTemplateName, !name.isEmpty {
-            parts.append("**Template:** \(name)")
+            parts.append(String(format: String(localized: "meeting_export.markdown.template_line", defaultValue: "**Template:** %@", comment: "Markdown metadata line showing template name when present."), "\(name)"))
         }
         parts.append("")
         parts.append("---")
@@ -101,26 +101,26 @@ struct MeetingExporter {
             if meeting.notesState == .structuredNotes {
                 parts.append(meeting.formattedNotes)
             } else {
-                parts.append("*No structured notes available. Raw transcript included below.*")
+                parts.append(String(localized: "meeting_export.markdown.no_structured_notes", defaultValue: "*No structured notes available. Raw transcript included below.*", comment: "Markdown message when structured notes are unavailable but transcript follows."))
                 parts.append("")
-                parts.append("## Raw Transcript")
+                parts.append(String(localized: "meeting_export.markdown.raw_transcript_heading", defaultValue: "## Raw Transcript", comment: "Markdown heading introducing raw transcript section."))
                 parts.append("")
                 parts.append(meeting.rawTranscript)
             }
         case .transcript:
-            parts.append("## Raw Transcript")
+            parts.append(String(localized: "meeting_export.markdown.raw_transcript_heading", defaultValue: "## Raw Transcript", comment: "Markdown heading introducing raw transcript section."))
             parts.append("")
             parts.append(meeting.rawTranscript)
         case .fullMeeting:
             if meeting.notesState == .structuredNotes {
                 parts.append(meeting.formattedNotes)
             } else {
-                parts.append("*No structured notes available.*")
+                parts.append(String(localized: "meeting_export.markdown.no_structured_notes_short", defaultValue: "*No structured notes available.*", comment: "Markdown message when structured notes are unavailable."))
             }
             parts.append("")
             parts.append("---")
             parts.append("")
-            parts.append("## Raw Transcript")
+            parts.append(String(localized: "meeting_export.markdown.raw_transcript_heading", defaultValue: "## Raw Transcript", comment: "Markdown heading introducing raw transcript section."))
             parts.append("")
             parts.append(meeting.rawTranscript)
         }
@@ -136,7 +136,7 @@ struct MeetingExporter {
                 try text.write(to: url, atomically: true, encoding: .utf8)
                 DispatchQueue.main.async { NSWorkspace.shared.open(url) }
             } catch {
-                DispatchQueue.main.async { showError("Export Failed", error.localizedDescription) }
+                DispatchQueue.main.async { showError(String(localized: "meeting_export.error.title", defaultValue: "Export Failed", comment: "Title shown when meeting export fails."), error.localizedDescription) }
             }
         }
     }
@@ -385,14 +385,14 @@ struct MeetingExporter {
     private static func formatExportDuration(_ seconds: Double) -> String {
         let rounded = Int(seconds.rounded())
         if rounded >= 3600 {
-            return "\(rounded / 3600)h \((rounded % 3600) / 60)m"
+            return String(format: String(localized: "meeting_export.duration.hours_minutes", defaultValue: "%dh %dm", comment: "Duration format used in export metadata for hours and minutes."), rounded / 3600, (rounded % 3600) / 60)
         }
         if rounded >= 60 {
             let m = rounded / 60
             let s = rounded % 60
-            return s == 0 ? "\(m) minutes" : "\(m)m \(s)s"
+            return s == 0 ? String(format: String(localized: "meeting_export.duration.minutes", defaultValue: "%d minutes", comment: "Duration format used in export metadata for minutes."), m) : String(format: String(localized: "meeting_export.duration.minutes_seconds_short", defaultValue: "%dm %ds", comment: "Duration format used in export metadata for minutes and seconds."), m, s)
         }
-        return "\(rounded)s"
+        return String(format: String(localized: "meeting_export.duration.seconds_short", defaultValue: "%ds", comment: "Duration format used in export metadata for seconds only."), rounded)
     }
 
     private static func showError(_ title: String, _ message: String) {
@@ -422,12 +422,12 @@ private class ExportFormatAccessory: NSObject {
 
         let container = NSView(frame: NSRect(x: 0, y: 0, width: 260, height: 32))
 
-        let label = NSTextField(labelWithString: "Format:")
+        let label = NSTextField(labelWithString: String(localized: "meeting_export.menu.format.label", defaultValue: "Format:", comment: "Menu label preceding export format options."))
         label.font = .systemFont(ofSize: 13)
         label.frame = NSRect(x: 0, y: 6, width: 55, height: 20)
 
         let button = NSPopUpButton(frame: NSRect(x: 60, y: 2, width: 190, height: 28), pullsDown: false)
-        button.addItems(withTitles: ["PDF", "Markdown"])
+        button.addItems(withTitles: [String(localized: "meeting_export.menu.format.pdf", defaultValue: "PDF", comment: "Menu item title for exporting as PDF."), String(localized: "meeting_export.menu.format.markdown", defaultValue: "Markdown", comment: "Menu item title for exporting as Markdown.")])
         button.selectItem(at: 0)
 
         container.addSubview(label)
