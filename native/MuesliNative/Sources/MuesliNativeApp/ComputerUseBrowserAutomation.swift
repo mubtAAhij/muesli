@@ -5,7 +5,7 @@ enum ComputerUseBrowserAutomation {
 
     static func listTabs(appBundleID: String) async -> ComputerUseExecutionResult {
         guard supportsBrowser(appBundleID) else {
-            return .unsupported("Browser tools currently support Google Chrome only")
+            return .unsupported(String(localized: "computer_use.browser.unsupported.chrome_only", defaultValue: "Browser tools currently support Google Chrome only", comment: "Message shown when browser tool is used with unsupported browser."))
         }
         let script = """
         set output to ""
@@ -26,7 +26,7 @@ enum ComputerUseBrowserAutomation {
             let output = try await runAppleScript(script)
             let tabs = parseTabs(output: output, appBundleID: appBundleID)
             guard !tabs.isEmpty else {
-                return .executed("No browser tabs")
+                return .executed(String(localized: "computer_use.browser.tabs.none", defaultValue: "No browser tabs", comment: "Message shown when no browser tabs are available."))
             }
             return .executed(tabs.map { tab in
                 "\(tab.windowIndex):\(tab.tabIndex) \(tab.isActive ? "active " : "")\(tab.title) - \(tab.url)"
@@ -40,7 +40,7 @@ enum ComputerUseBrowserAutomation {
 
     static func activateTab(appBundleID: String, windowIndex: Int, tabIndex: Int) async -> ComputerUseExecutionResult {
         guard supportsBrowser(appBundleID) else {
-            return .unsupported("Browser tools currently support Google Chrome only")
+            return .unsupported(String(localized: "computer_use.browser.unsupported.chrome_only", defaultValue: "Browser tools currently support Google Chrome only", comment: "Message shown when browser tool is used with unsupported browser."))
         }
         let script = """
         tell application id "\(appleScriptString(appBundleID))"
@@ -51,7 +51,7 @@ enum ComputerUseBrowserAutomation {
         """
         do {
             _ = try await runAppleScript(script)
-            return .executed("Activated browser tab \(windowIndex):\(tabIndex)")
+            return .executed(String(format: String(localized: "computer_use.browser.tab.activate.success", defaultValue: "Activated browser tab %@:%@", comment: "Success message after activating a browser tab by window and tab index."), "\(windowIndex)", "\(tabIndex)"))
         } catch is CancellationError {
             return .cancelled()
         } catch {
@@ -61,7 +61,7 @@ enum ComputerUseBrowserAutomation {
 
     static func openNewTab(appBundleID: String) async -> ComputerUseExecutionResult {
         guard supportsBrowser(appBundleID) else {
-            return .unsupported("Browser tools currently support Google Chrome only")
+            return .unsupported(String(localized: "computer_use.browser.unsupported.chrome_only", defaultValue: "Browser tools currently support Google Chrome only", comment: "Message shown when browser tool is used with unsupported browser."))
         }
         let script = """
         tell application id "\(appleScriptString(appBundleID))"
@@ -77,7 +77,7 @@ enum ComputerUseBrowserAutomation {
         """
         do {
             _ = try await runAppleScript(script)
-            return .executed("Opened new browser tab")
+            return .executed(String(localized: "computer_use.browser.tab.opened", defaultValue: "Opened new browser tab", comment: "Success message after opening a new browser tab."))
         } catch is CancellationError {
             return .cancelled()
         } catch {
@@ -87,10 +87,10 @@ enum ComputerUseBrowserAutomation {
 
     static func navigate(appBundleID: String, windowIndex: Int?, tabIndex: Int?, url: String) async -> ComputerUseExecutionResult {
         guard supportsBrowser(appBundleID) else {
-            return .unsupported("Browser tools currently support Google Chrome only")
+            return .unsupported(String(localized: "computer_use.browser.unsupported.chrome_only", defaultValue: "Browser tools currently support Google Chrome only", comment: "Message shown when browser tool is used with unsupported browser."))
         }
         guard let safeURL = ComputerUseToolInvocation.safeHTTPURL(url) else {
-            return .needsConfirmation("Confirm: unsafe navigation URL")
+            return .needsConfirmation(String(localized: "computer_use.browser.navigate.confirm_unsafe_url", defaultValue: "Confirm: unsafe navigation URL", comment: "Confirmation prompt message for unsafe navigation target."))
         }
         let script = navigateScript(
             appBundleID: appBundleID,
@@ -101,7 +101,7 @@ enum ComputerUseBrowserAutomation {
         do {
             let output = try await runAppleScript(script)
             let suffix = output.isEmpty ? "" : " (\(output))"
-            return .executed("Navigated to \(safeURL.absoluteString)\(suffix)")
+            return .executed(String(format: String(localized: "computer_use.browser.navigate.success", defaultValue: "Navigated to %@%@", comment: "Success message after browser navigates to URL with optional suffix."), "\(safeURL.absoluteString)", "\(suffix)"))
         } catch is CancellationError {
             return .cancelled()
         } catch {
@@ -223,7 +223,7 @@ enum ComputerUseBrowserAutomation {
         successPrefix: String
     ) async -> ComputerUseExecutionResult {
         guard supportsBrowser(appBundleID) else {
-            return .unsupported("Browser tools currently support Google Chrome only")
+            return .unsupported(String(localized: "computer_use.browser.unsupported.chrome_only", defaultValue: "Browser tools currently support Google Chrome only", comment: "Message shown when browser tool is used with unsupported browser."))
         }
         let target = browserTabReference(windowIndex: windowIndex, tabIndex: tabIndex)
         let script = """
@@ -287,7 +287,7 @@ enum ComputerUseBrowserAutomation {
                         let data = output.fileHandleForReading.readDataToEndOfFile()
                         let errorData = error.fileHandleForReading.readDataToEndOfFile()
                         if process.terminationStatus != 0 {
-                            let message = String(data: errorData, encoding: .utf8) ?? "Apple Events failed"
+                            let message = String(data: errorData, encoding: .utf8) ?? String(localized: "computer_use.browser.error.apple_events_failed", defaultValue: "Apple Events failed", comment: "Error message when Apple Events automation call fails.")
                             throw NSError(domain: "ComputerUseBrowserAutomation", code: Int(process.terminationStatus), userInfo: [
                                 NSLocalizedDescriptionKey: message.trimmingCharacters(in: .whitespacesAndNewlines),
                             ])
@@ -307,9 +307,9 @@ enum ComputerUseBrowserAutomation {
     private static func browserScriptError(_ error: Error) -> String {
         let message = error.localizedDescription
         if message.localizedCaseInsensitiveContains("not allowed") || message.localizedCaseInsensitiveContains("javascript") {
-            return "Chrome Apple Events JavaScript permission is required for browser page tools"
+            return String(localized: "computer_use.browser.error.chrome_permission_required", defaultValue: "Chrome Apple Events JavaScript permission is required for browser page tools", comment: "Error message indicating required Chrome automation permission is missing.")
         }
-        return message.isEmpty ? "Browser automation failed" : message
+        return message.isEmpty ? String(localized: "computer_use.browser.error.automation_failed", defaultValue: "Browser automation failed", comment: "Generic error message when browser automation fails.") : message
     }
 
     private static func appleScriptString(_ value: String) -> String {
