@@ -261,8 +261,8 @@ struct FeatureTourOverlay: View {
                 }
                 .buttonStyle(.plain)
                 .foregroundStyle(MuesliTheme.textSecondary)
-                .help("End walkthrough")
-                .accessibilityLabel("End walkthrough")
+                .help(String(localized: "feature_tour.end_walkthrough.help", defaultValue: "End walkthrough", comment: "Help text for ending the feature walkthrough."))
+                .accessibilityLabel(String(localized: "feature_tour.end_walkthrough.accessibility_label", defaultValue: "End walkthrough", comment: "Accessibility label for ending the feature walkthrough."))
             }
 
             Text(step.message)
@@ -272,12 +272,12 @@ struct FeatureTourOverlay: View {
                 .fixedSize(horizontal: false, vertical: true)
 
             HStack(spacing: MuesliTheme.spacing12) {
-                Text("\(stepIndex + 1) of \(tour.steps.count)")
+                Text(String(format: String(localized: "feature_tour.progress.step_of_total", defaultValue: "%@ of %@", comment: "Progress indicator showing current tour step out of total steps."), "\(stepIndex + 1)", "\(tour.steps.count)"))
                     .font(MuesliTheme.caption())
                     .monospacedDigit()
                     .foregroundStyle(MuesliTheme.textTertiary)
 
-                Button("Skip", action: onDismiss)
+                Button(String(localized: "feature_tour.skip", defaultValue: "Skip", comment: "Button title to skip the feature tour."), action: onDismiss)
                     .buttonStyle(.plain)
                     .foregroundStyle(MuesliTheme.textSecondary)
 
@@ -285,14 +285,14 @@ struct FeatureTourOverlay: View {
 
                 if stepIndex > 0 {
                     Button(action: onBack) {
-                        Label("Back", systemImage: "chevron.left")
+                        Label(String(localized: "feature_tour.back", defaultValue: "Back", comment: "Button title to return to the previous step in the feature tour."), systemImage: "chevron.left")
                     }
                     .buttonStyle(.bordered)
                 }
 
                 Button(action: onNext) {
                     Label(
-                        stepIndex == tour.steps.count - 1 ? "Done" : "Next",
+                        stepIndex == tour.steps.count - 1 ? "Done" : String(localized: "feature_tour.next", defaultValue: "Next", comment: "Button title to continue to the next feature tour step."),
                         systemImage: stepIndex == tour.steps.count - 1 ? "checkmark" : "chevron.right"
                     )
                 }
@@ -337,10 +337,10 @@ struct FeatureTourInvitationView: View {
                         .frame(width: 26, height: 26)
 
                     VStack(alignment: .leading, spacing: 5) {
-                        Text("MUESLI \(tour.displayVersion)")
+                        Text(String(format: String(localized: "feature_tour.header.app_version", defaultValue: "MUESLI %@", comment: "Header showing app name and display version in feature tour intro."), "\(tour.displayVersion)"))
                             .font(.system(size: 10, weight: .bold))
                             .foregroundStyle(MuesliTheme.accent)
-                        Text("Want a quick tour of what’s new?")
+                        Text(String(localized: "feature_tour.prompt.whats_new", defaultValue: "Want a quick tour of what’s new?", comment: "Intro prompt asking whether to start the feature tour."))
                             .font(.system(size: 21, weight: .bold))
                             .foregroundStyle(MuesliTheme.textPrimary)
                     }
@@ -354,11 +354,11 @@ struct FeatureTourInvitationView: View {
                     }
                     .buttonStyle(.plain)
                     .foregroundStyle(MuesliTheme.textSecondary)
-                    .help("Skip walkthrough")
-                    .accessibilityLabel("Skip walkthrough")
+                    .help(String(localized: "feature_tour.skip_walkthrough.help", defaultValue: "Skip walkthrough", comment: "Help text for skipping walkthrough from intro screen."))
+                    .accessibilityLabel(String(localized: "feature_tour.skip_walkthrough.accessibility_label", defaultValue: "Skip walkthrough", comment: "Accessibility label for skipping walkthrough from intro screen."))
                 }
 
-                Text("See \(tour.steps.count) additions in the places where you’ll actually use them. You can replay this later from What’s New in Muesli.")
+                Text(String(format: String(localized: "feature_tour.intro.summary.additions", defaultValue: "See %@ additions in the places where you’ll actually use them. You can replay this later from What’s New in Muesli.", comment: "Intro summary describing number of additions in the walkthrough."), "\(tour.steps.count)"))
                     .font(MuesliTheme.body())
                     .foregroundStyle(MuesliTheme.textSecondary)
                     .lineSpacing(2)
@@ -366,10 +366,10 @@ struct FeatureTourInvitationView: View {
 
                 HStack(spacing: MuesliTheme.spacing12) {
                     Spacer()
-                    Button("Skip", action: onSkip)
+                    Button(String(localized: "feature_tour.skip", defaultValue: "Skip", comment: "Button title to skip the feature tour."), action: onSkip)
                         .buttonStyle(.bordered)
                     Button(action: onAccept) {
-                        Label("Take the Tour", systemImage: "arrow.right")
+                        Label(String(localized: "feature_tour.take_the_tour", defaultValue: "Take the Tour", comment: "Primary button title to start the feature tour."), systemImage: "arrow.right")
                     }
                     .buttonStyle(.borderedProminent)
                 }
