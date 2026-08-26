@@ -10,12 +10,12 @@ enum MeetingSummaryError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case let .backendFailed(backend, statusCode, message):
-            let statusText = statusCode.map { " Status \($0)." } ?? ""
-            return "\(backend) could not generate meeting notes.\(statusText) \(message) The selected model may be unavailable or retired."
+            let statusText = statusCode.map { String(format: String(localized: "meeting_summary.error.status_suffix", defaultValue: "Status %@.", comment: "Status-code sentence suffix used in meeting summary backend error text."), "\($0)") } ?? ""
+            return String(format: String(localized: "meeting_summary.error.backend_failed", defaultValue: "%@ could not generate meeting notes.%@ %@ The selected model may be unavailable or retired.", comment: "Error when selected backend fails to generate meeting notes."), "\(backend)", "\(statusText)", "\(message)")
         case let .emptyResponse(backend):
-            return "\(backend) returned an empty response while generating meeting notes. The selected model may be unavailable or incompatible."
+            return String(format: String(localized: "meeting_summary.error.empty_response", defaultValue: "%@ returned an empty response while generating meeting notes. The selected model may be unavailable or incompatible.", comment: "Error when backend returns empty response for meeting notes."), "\(backend)")
         case let .requestFailed(backend, underlying):
-            return "\(backend) could not be reached while generating meeting notes. \(underlying.localizedDescription)"
+            return String(format: String(localized: "meeting_summary.error.unreachable", defaultValue: "%@ could not be reached while generating meeting notes. %@", comment: "Error when backend is unreachable during meeting summary generation."), "\(backend)", "\(underlying.localizedDescription)")
         }
     }
 }
@@ -296,15 +296,15 @@ enum MeetingSummaryClient {
     static func summaryFailureNotes(transcript: String, meetingTitle: String, error: Error, manualNotes: String? = nil) -> String {
         let trimmedTitle = meetingTitle.trimmingCharacters(in: .whitespacesAndNewlines)
         let trimmedManualNotes = manualNotes?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        var sections = ["## Summary failed"]
+        var sections = [String(localized: "meeting_summary.failure.heading", defaultValue: "## Summary failed", comment: "Markdown heading for summary generation failure output.")]
         if !trimmedTitle.isEmpty {
-            sections.append("Meeting: \(trimmedTitle)")
+            sections.append(String(format: String(localized: "meeting_summary.failure.meeting_line", defaultValue: "Meeting: %@", comment: "Failure report line showing meeting title."), "\(trimmedTitle)"))
         }
-        sections.append("Muesli could not generate structured meeting notes.\n\n\(error.localizedDescription)")
+        sections.append(String(format: String(localized: "meeting_summary.failure.description", defaultValue: "Muesli could not generate structured meeting notes.\n\n%@", comment: "Failure description with underlying error details."), "\(error.localizedDescription)"))
         if !trimmedManualNotes.isEmpty {
-            sections.append("### Written notes\n\n\(trimmedManualNotes)")
+            sections.append(String(format: String(localized: "meeting_summary.failure.written_notes_section", defaultValue: "### Written notes\n\n%@", comment: "Failure output section for user-written notes."), "\(trimmedManualNotes)"))
         }
-        sections.append("## Raw Transcript\n\n\(transcript)")
+        sections.append(String(format: String(localized: "meeting_summary.failure.raw_transcript_section", defaultValue: "## Raw Transcript\n\n%@", comment: "Failure output section for raw transcript content."), "\(transcript)"))
         return sections.joined(separator: "\n\n")
     }
 
@@ -380,7 +380,7 @@ enum MeetingSummaryClient {
         guard !missingNotes.isEmpty else {
             return trimmedGeneratedNotes
         }
-        let manualSection = "### Written notes\n\n\(missingNotes.joined(separator: "\n"))"
+        let manualSection = String(format: String(localized: "meeting_summary.notes.written_notes_section", defaultValue: "### Written notes\n\n%@", comment: "Written notes section used when transcript is missing notes."), "\(missingNotes.joined(separator: "\n"))")
         if trimmedGeneratedNotes.isEmpty {
             return manualSection
         }
@@ -507,20 +507,20 @@ enum MeetingSummaryClient {
 
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
-            try validateHTTPResponse(response, data: data, backend: "OpenAI")
+            try validateHTTPResponse(response, data: data, backend: String(localized: "meeting_summary.backend.openai", defaultValue: "OpenAI", comment: "Backend display name for OpenAI provider."))
             guard
                 let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
                 let text = extractOpenAIText(from: json),
                 !text.isEmpty
             else {
                 if let message = extractErrorMessage(from: data) {
-                    throw MeetingSummaryError.backendFailed(backend: "OpenAI", statusCode: nil, message: message)
+                    throw MeetingSummaryError.backendFailed(backend: String(localized: "meeting_summary.backend.openai", defaultValue: "OpenAI", comment: "Backend display name for OpenAI provider."), statusCode: nil, message: message)
                 }
-                throw MeetingSummaryError.emptyResponse(backend: "OpenAI")
+                throw MeetingSummaryError.emptyResponse(backend: String(localized: "meeting_summary.backend.openai", defaultValue: "OpenAI", comment: "Backend display name for OpenAI provider."))
             }
             return text
         } catch {
-            throw summaryRequestError(backend: "OpenAI", error: error)
+            throw summaryRequestError(backend: String(localized: "meeting_summary.backend.openai", defaultValue: "OpenAI", comment: "Backend display name for OpenAI provider."), error: error)
         }
     }
 
@@ -568,20 +568,20 @@ enum MeetingSummaryClient {
 
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
-            try validateHTTPResponse(response, data: data, backend: "OpenRouter")
+            try validateHTTPResponse(response, data: data, backend: String(localized: "meeting_summary.backend.openrouter", defaultValue: "OpenRouter", comment: "Backend display name for OpenRouter provider."))
             guard
                 let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
                 let text = extractOpenRouterText(from: json),
                 !text.isEmpty
             else {
                 if let message = extractErrorMessage(from: data) {
-                    throw MeetingSummaryError.backendFailed(backend: "OpenRouter", statusCode: nil, message: message)
+                    throw MeetingSummaryError.backendFailed(backend: String(localized: "meeting_summary.backend.openrouter", defaultValue: "OpenRouter", comment: "Backend display name for OpenRouter provider."), statusCode: nil, message: message)
                 }
-                throw MeetingSummaryError.emptyResponse(backend: "OpenRouter")
+                throw MeetingSummaryError.emptyResponse(backend: String(localized: "meeting_summary.backend.openrouter", defaultValue: "OpenRouter", comment: "Backend display name for OpenRouter provider."))
             }
             return text
         } catch {
-            throw summaryRequestError(backend: "OpenRouter", error: error)
+            throw summaryRequestError(backend: String(localized: "meeting_summary.backend.openrouter", defaultValue: "OpenRouter", comment: "Backend display name for OpenRouter provider."), error: error)
         }
     }
 
@@ -611,12 +611,12 @@ enum MeetingSummaryClient {
                 logCategory: "summary"
             )
             guard !text.isEmpty else {
-                throw MeetingSummaryError.emptyResponse(backend: "ChatGPT")
+                throw MeetingSummaryError.emptyResponse(backend: String(localized: "meeting_summary.backend.chatgpt", defaultValue: "ChatGPT", comment: "Backend display name for ChatGPT provider."))
             }
             return text
         } catch {
             fputs("[summary] ChatGPT summarization failed: \(error)\n", stderr)
-            throw summaryRequestError(backend: "ChatGPT", error: error)
+            throw summaryRequestError(backend: String(localized: "meeting_summary.backend.chatgpt", defaultValue: "ChatGPT", comment: "Backend display name for ChatGPT provider."), error: error)
         }
     }
 
@@ -636,7 +636,7 @@ enum MeetingSummaryClient {
             baseURL = defaultOllamaBaseURL
         } else {
             guard let url = URL(string: baseURLString) else {
-                throw MeetingSummaryError.backendFailed(backend: "Ollama", statusCode: nil, message: "Invalid Ollama URL: \(baseURLString)")
+                throw MeetingSummaryError.backendFailed(backend: String(localized: "meeting_summary.backend.ollama", defaultValue: "Ollama", comment: "Backend display name for Ollama provider."), statusCode: nil, message: "Invalid Ollama URL: \(baseURLString)")
             }
             baseURL = url
         }
@@ -671,7 +671,7 @@ enum MeetingSummaryClient {
 
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
-            try validateHTTPResponse(response, data: data, backend: "Ollama")
+            try validateHTTPResponse(response, data: data, backend: String(localized: "meeting_summary.backend.ollama", defaultValue: "Ollama", comment: "Backend display name for Ollama provider."))
             guard
                 let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
                 let message = json["message"] as? [String: Any],
@@ -679,13 +679,13 @@ enum MeetingSummaryClient {
                 !text.isEmpty
             else {
                 if let message = extractErrorMessage(from: data) {
-                    throw MeetingSummaryError.backendFailed(backend: "Ollama", statusCode: nil, message: message)
+                    throw MeetingSummaryError.backendFailed(backend: String(localized: "meeting_summary.backend.ollama", defaultValue: "Ollama", comment: "Backend display name for Ollama provider."), statusCode: nil, message: message)
                 }
-                throw MeetingSummaryError.emptyResponse(backend: "Ollama")
+                throw MeetingSummaryError.emptyResponse(backend: String(localized: "meeting_summary.backend.ollama", defaultValue: "Ollama", comment: "Backend display name for Ollama provider."))
             }
             return text
         } catch {
-            throw summaryRequestError(backend: "Ollama", error: error)
+            throw summaryRequestError(backend: String(localized: "meeting_summary.backend.ollama", defaultValue: "Ollama", comment: "Backend display name for Ollama provider."), error: error)
         }
     }
 
@@ -700,18 +700,18 @@ enum MeetingSummaryClient {
         previousMeetingNotes: String? = nil
     ) async throws -> String {
         guard let requestURL = resolveLMStudioURL(config: config) else {
-            throw MeetingSummaryError.backendFailed(backend: "LM Studio", statusCode: nil, message: "Invalid LM Studio URL: \(config.lmStudioURL)")
+            throw MeetingSummaryError.backendFailed(backend: String(localized: "meeting_summary.backend.lm_studio", defaultValue: "LM Studio", comment: "Backend display name for LM Studio provider."), statusCode: nil, message: "Invalid LM Studio URL: \(config.lmStudioURL)")
         }
         let configuredModel = config.lmStudioModel.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !configuredModel.isEmpty else {
             throw MeetingSummaryError.backendFailed(
-                backend: "LM Studio",
+                backend: String(localized: "meeting_summary.backend.lm_studio", defaultValue: "LM Studio", comment: "Backend display name for LM Studio provider."),
                 statusCode: nil,
-                message: "No model selected. Select an LM Studio model in Settings."
+                message: String(localized: "meeting_summary.error.lm_studio.no_model_selected", defaultValue: "No model selected. Select an LM Studio model in Settings.", comment: "Error shown when LM Studio backend has no model selected.")
             )
         }
         return try await summarizeWithChatCompletions(
-            backend: "LM Studio",
+            backend: String(localized: "meeting_summary.backend.lm_studio", defaultValue: "LM Studio", comment: "Backend display name for LM Studio provider."),
             requestURL: requestURL,
             apiKey: "",
             model: configuredModel,
@@ -739,29 +739,29 @@ enum MeetingSummaryClient {
     ) async throws -> String {
         let format = CustomLLMFormat(rawValue: config.customLLMFormat) ?? .openAI
         guard let requestURL = resolveCustomLLMURL(config: config, format: format) else {
-            throw MeetingSummaryError.backendFailed(backend: "Custom LLM", statusCode: nil, message: "Invalid custom URL: \(config.customLLMURL)")
+            throw MeetingSummaryError.backendFailed(backend: String(localized: "meeting_summary.backend.custom_llm", defaultValue: "Custom LLM", comment: "Backend display name for custom LLM provider."), statusCode: nil, message: "Invalid custom URL: \(config.customLLMURL)")
         }
         let configuredModel = config.customLLMModel.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !configuredModel.isEmpty else {
             throw MeetingSummaryError.backendFailed(
-                backend: "Custom LLM",
+                backend: String(localized: "meeting_summary.backend.custom_llm", defaultValue: "Custom LLM", comment: "Backend display name for custom LLM provider."),
                 statusCode: nil,
-                message: "No model selected. Enter a model in Settings."
+                message: String(localized: "meeting_summary.error.custom_llm.no_model_selected", defaultValue: "No model selected. Enter a model in Settings.", comment: "Error shown when custom LLM backend has no model configured.")
             )
         }
         let apiKey = config.customLLMAPIKey.trimmingCharacters(in: .whitespacesAndNewlines)
         if customLLMRequiresAPIKey(config: config) && apiKey.isEmpty {
             throw MeetingSummaryError.backendFailed(
-                backend: "Custom LLM",
+                backend: String(localized: "meeting_summary.backend.custom_llm", defaultValue: "Custom LLM", comment: "Backend display name for custom LLM provider."),
                 statusCode: nil,
-                message: "Enter an API key for the selected Custom LLM format."
+                message: String(localized: "meeting_summary.error.custom_llm.missing_api_key", defaultValue: "Enter an API key for the selected Custom LLM format.", comment: "Error shown when custom LLM backend is missing an API key.")
             )
         }
 
         switch format {
         case .openAI:
             return try await summarizeWithChatCompletions(
-                backend: "Custom LLM",
+                backend: String(localized: "meeting_summary.backend.custom_llm", defaultValue: "Custom LLM", comment: "Backend display name for custom LLM provider."),
                 requestURL: requestURL,
                 apiKey: apiKey,
                 model: configuredModel,
@@ -777,7 +777,7 @@ enum MeetingSummaryClient {
             )
         case .anthropic:
             return try await summarizeWithAnthropicMessages(
-                backend: "Custom LLM",
+                backend: String(localized: "meeting_summary.backend.custom_llm", defaultValue: "Custom LLM", comment: "Backend display name for custom LLM provider."),
                 requestURL: requestURL,
                 apiKey: apiKey,
                 model: configuredModel,
@@ -1288,7 +1288,7 @@ enum MeetingSummaryClient {
 
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
-            try validateHTTPResponse(response, data: data, backend: "Custom LLM")
+            try validateHTTPResponse(response, data: data, backend: String(localized: "meeting_summary.backend.custom_llm", defaultValue: "Custom LLM", comment: "Backend display name for custom LLM provider."))
             guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
                 fputs("[summary] Anthropic title generation: invalid JSON response\n", stderr)
                 return nil
@@ -1415,7 +1415,7 @@ enum MeetingSummaryClient {
 
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
-            try validateHTTPResponse(response, data: data, backend: "Ollama")
+            try validateHTTPResponse(response, data: data, backend: String(localized: "meeting_summary.backend.ollama", defaultValue: "Ollama", comment: "Backend display name for Ollama provider."))
             guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
                   let message = json["message"] as? [String: Any],
                   let content = message["content"] as? String,
@@ -1440,6 +1440,6 @@ enum MeetingSummaryClient {
     }
 
     private static func rawTranscriptFallback(transcript: String, meetingTitle: String) -> String {
-        "## Raw Transcript\n\n\(transcript)"
+        String(format: String(localized: "meeting_summary.raw_transcript_fallback.heading", defaultValue: "## Raw Transcript\n\n%@", comment: "Fallback raw transcript section when structured notes are unavailable."), "\(transcript)")
     }
 }
