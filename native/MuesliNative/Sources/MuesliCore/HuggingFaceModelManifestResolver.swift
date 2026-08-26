@@ -42,15 +42,15 @@ public enum HuggingFaceModelManifestError: Error, LocalizedError, Sendable {
     public var errorDescription: String? {
         switch self {
         case .invalidRepository(let repository):
-            return "Invalid Hugging Face repository: \(repository)"
+            return String(format: String(localized: "huggingface_manifest.error.invalid_repository", defaultValue: "Invalid Hugging Face repository: %@", comment: "Error when Hugging Face repository identifier is invalid"), "\(repository)")
         case .invalidResponse(let path):
-            return "Hugging Face returned invalid model metadata for \(path)"
+            return String(format: String(localized: "huggingface_manifest.error.invalid_model_metadata", defaultValue: "Hugging Face returned invalid model metadata for %@", comment: "Error when Hugging Face model metadata response is invalid"), "\(path)")
         case .invalidHTTPStatus(let status, let path):
-            return "Hugging Face returned HTTP \(status) while listing \(path)"
+            return String(format: String(localized: "huggingface_manifest.error.http_status_listing_path", defaultValue: "Hugging Face returned HTTP %d while listing %@", comment: "Error when Hugging Face listing endpoint returns non-success HTTP status"), status, "\(path)")
         case .emptySelection(let path):
-            return "No downloadable files were found for \(path)"
+            return String(format: String(localized: "huggingface_manifest.error.no_downloadable_files", defaultValue: "No downloadable files were found for %@", comment: "Error when no downloadable model files are found for Hugging Face path"), "\(path)")
         case .conflictingDestination(let path):
-            return "More than one Hugging Face file maps to \(path)"
+            return String(format: String(localized: "huggingface_manifest.error.multiple_files_map_to_path", defaultValue: "More than one Hugging Face file maps to %@", comment: "Error when multiple Hugging Face files resolve to a single expected path"), "\(path)")
         }
     }
 }
@@ -184,7 +184,7 @@ public final class HuggingFaceModelManifestResolver: @unchecked Sendable {
                 }
                 let result = try await session.data(for: request)
                 if let http = result.1 as? HTTPURLResponse,
-                   (http.statusCode == 429 || (500..<600).contains(http.statusCode)),
+                   http.statusCode == 429 || (500..<600).contains(http.statusCode),
                    attempt < 2 {
                     try await Task.sleep(nanoseconds: UInt64(1 << attempt) * 1_000_000_000)
                     continue
