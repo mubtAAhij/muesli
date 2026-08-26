@@ -6,12 +6,12 @@ enum MeetingBrowserFilter: Hashable {
 
     var label: String {
         switch self {
-        case .all: return "All time"
-        case .last2Days: return "Last 2 days"
-        case .lastWeek: return "Last week"
-        case .last2Weeks: return "Last 2 weeks"
-        case .lastMonth: return "Last month"
-        case .last3Months: return "Last 3 months"
+        case .all: return String(localized: "meetings.filter.range.all_time", defaultValue: "All time", comment: "Time range filter option for all meetings.")
+        case .last2Days: return String(localized: "meetings.filter.range.last_2_days", defaultValue: "Last 2 days", comment: "Time range filter option for last two days.")
+        case .lastWeek: return String(localized: "meetings.filter.range.last_week", defaultValue: "Last week", comment: "Time range filter option for last week.")
+        case .last2Weeks: return String(localized: "meetings.filter.range.last_2_weeks", defaultValue: "Last 2 weeks", comment: "Time range filter option for last two weeks.")
+        case .lastMonth: return String(localized: "meetings.filter.range.last_month", defaultValue: "Last month", comment: "Time range filter option for last month.")
+        case .last3Months: return String(localized: "meetings.filter.range.last_3_months", defaultValue: "Last 3 months", comment: "Time range filter option for last three months.")
         }
     }
 }
@@ -22,8 +22,8 @@ enum MeetingBrowserSort: Hashable {
 
     var label: String {
         switch self {
-        case .newestFirst: return "Newest first"
-        case .oldestFirst: return "Oldest first"
+        case .newestFirst: return String(localized: "meetings.sort.newest_first", defaultValue: "Newest first", comment: "Sort option for newest meetings first.")
+        case .oldestFirst: return String(localized: "meetings.sort.oldest_first", defaultValue: "Oldest first", comment: "Sort option for oldest meetings first.")
         }
     }
 }
@@ -209,8 +209,8 @@ struct MeetingsView: View {
     }
 
     private var currentFolderName: String {
-        guard let folderID = appState.selectedFolderID else { return "All Meetings" }
-        return appState.folders.first(where: { $0.id == folderID })?.name ?? "All Meetings"
+        guard let folderID = appState.selectedFolderID else { return String(localized: "meetings.current_folder.all_meetings", defaultValue: "All Meetings", comment: "Folder label for all meetings.") }
+        return appState.folders.first(where: { $0.id == folderID })?.name ?? String(localized: "meetings.current_folder.all_meetings", defaultValue: "All Meetings", comment: "Folder label for all meetings.")
     }
 
     private var currentDocumentMeeting: MeetingRecord? {
@@ -233,7 +233,7 @@ struct MeetingsView: View {
                     controller: controller,
                     appState: appState,
                     onBack: { controller.showMeetingsHome(folderID: appState.selectedFolderID) },
-                    backLabel: "Back to Meetings"
+                    backLabel: String(localized: "meetings.navigation.back_to_meetings", defaultValue: "Back to Meetings", comment: "Navigation label to return to meetings list.")
                 )
                 .id(meeting.id)
             } else {
@@ -372,9 +372,9 @@ struct MeetingsView: View {
             let isTomorrow = calendar.date(byAdding: .day, value: 1, to: today).map { calendar.isDate(date, inSameDayAs: $0) } ?? false
             let dayLabel: String
             if isToday {
-                dayLabel = "Today"
+                dayLabel = String(localized: "meetings.group.today", defaultValue: "Today", comment: "Grouping label for today's meetings.")
             } else if isTomorrow {
-                dayLabel = "Tomorrow"
+                dayLabel = String(localized: "meetings.group.tomorrow", defaultValue: "Tomorrow", comment: "Grouping label for tomorrow's meetings.")
             } else {
                 dayLabel = monthFormatter.string(from: date)
             }
@@ -396,7 +396,7 @@ struct MeetingsView: View {
     private var comingUpSection: some View {
         VStack(alignment: .leading, spacing: MuesliTheme.spacing16) {
             VStack(alignment: .leading, spacing: 4) {
-                Text("Coming Up")
+                Text(String(localized: "meetings.coming_up.title", defaultValue: "Coming Up", comment: "Section title for upcoming meetings."))
                     .font(.custom("Cormorant Garamond", size: 22).weight(.medium))
                     .foregroundStyle(MuesliTheme.textPrimary)
 
@@ -409,7 +409,7 @@ struct MeetingsView: View {
                         HStack(spacing: 4) {
                             Image(systemName: "arrow.triangle.2.circlepath")
                                 .font(.system(size: 9))
-                            Text("Add Google to macOS Calendar for real-time sync")
+                            Text(String(localized: "meetings.coming_up.add_google_calendar_realtime_sync", defaultValue: "Add Google to macOS Calendar for real-time sync", comment: "Guidance text for enabling Google calendar sync."))
                                 .font(.system(size: 11))
                         }
                         .foregroundStyle(MuesliTheme.accent)
@@ -472,7 +472,7 @@ struct MeetingsView: View {
                                         HStack(spacing: 4) {
                                             Image(systemName: "video.fill")
                                                 .font(.system(size: 9))
-                                            Text("Join & Record")
+                                            Text(String(localized: "meetings.coming_up.join_and_record", defaultValue: "Join & Record", comment: "Button title to join and record upcoming meeting."))
                                                 .font(.system(size: 10, weight: .medium))
                                         }
                                         .foregroundStyle(.white)
@@ -485,7 +485,7 @@ struct MeetingsView: View {
                                 }
 
                                 Menu {
-                                    Button("All Meetings") {
+                                    Button(String(localized: "meetings.coming_up.all_meetings_button", defaultValue: "All Meetings", comment: "Button title to view all meetings from coming up section.")) {
                                         controller.createMeetingFromCalendarEvent(event, folderID: nil)
                                     }
                                     Divider()
@@ -495,7 +495,7 @@ struct MeetingsView: View {
                                         }
                                     }
                                 } label: {
-                                    Text("Add to folder")
+                                    Text(String(localized: "meetings.coming_up.add_to_folder", defaultValue: "Add to folder", comment: "Button title to add meeting to a folder."))
                                         .font(.system(size: 10, weight: .medium))
                                         .foregroundStyle(MuesliTheme.textSecondary)
                                         .padding(.horizontal, 8)
@@ -552,7 +552,7 @@ struct MeetingsView: View {
                 .frame(width: 20, height: 20)
         }
         .buttonStyle(.plain)
-        .help("Hide from Coming Up")
+        .help(String(localized: "meetings.coming_up.hide_event_help", defaultValue: "Hide from Coming Up", comment: "Help text to hide an event from coming up section."))
     }
 
     @ViewBuilder
@@ -594,7 +594,11 @@ struct MeetingsView: View {
     @ViewBuilder
     private func browserHeaderMeta(meetingCount: Int) -> some View {
         HStack(spacing: MuesliTheme.spacing8) {
-            Text("\(meetingCount) meeting\(meetingCount == 1 ? "" : "s")")
+            Text(String(format: String(
+                localized: "meetings.coming_up.meeting_count",
+                defaultValue: "%#@count@",
+                comment: "Meeting count label in coming up section."
+            ), meetingCount))
                 .font(MuesliTheme.callout())
                 .foregroundStyle(MuesliTheme.textSecondary)
                 .fixedSize()
@@ -604,7 +608,7 @@ struct MeetingsView: View {
                 .foregroundStyle(MuesliTheme.textTertiary)
                 .fixedSize()
 
-            Text("Open a meeting to review notes, transcript, and template-driven summaries")
+            Text(String(localized: "meetings.browser.header.review_notes_transcript_summaries", defaultValue: "Open a meeting to review notes, transcript, and template-driven summaries", comment: "Header guidance for reviewing meeting details and summaries."))
                 .font(MuesliTheme.callout())
                 .foregroundStyle(MuesliTheme.textTertiary)
         }
@@ -620,7 +624,7 @@ struct MeetingsView: View {
                 HStack(spacing: 6) {
                     Image(systemName: "plus")
                         .font(.system(size: 11, weight: .semibold))
-                    Text("Quick Note")
+                    Text(String(localized: "meetings.browser.quick_note", defaultValue: "Quick Note", comment: "Button title to start a quick meeting note."))
                         .font(.system(size: 12, weight: .semibold))
                         .lineLimit(1)
                 }
@@ -632,7 +636,7 @@ struct MeetingsView: View {
             }
             .buttonStyle(.plain)
             .disabled(appState.isMeetingRecording || appState.isMeetingStarting)
-            .help("Start a quick meeting note")
+            .help(String(localized: "meetings.browser.quick_note_help", defaultValue: "Start a quick meeting note", comment: "Help text for quick note action."))
             .fixedSize()
 
             Button {
@@ -641,7 +645,7 @@ struct MeetingsView: View {
                 HStack(spacing: 6) {
                     Image(systemName: "square.and.arrow.down")
                         .font(.system(size: 11, weight: .semibold))
-                    Text("Import Audio")
+                    Text(String(localized: "meetings.browser.import_audio", defaultValue: "Import Audio", comment: "Button title to import audio for transcription."))
                         .font(.system(size: 12, weight: .semibold))
                         .lineLimit(1)
                 }
@@ -657,7 +661,7 @@ struct MeetingsView: View {
             }
             .buttonStyle(.plain)
             .disabled(appState.isMeetingRecording || appState.isMeetingStarting)
-            .help("Import an audio file for offline transcription")
+            .help(String(localized: "meetings.browser.import_audio_help", defaultValue: "Import an audio file for offline transcription", comment: "Help text for importing audio files."))
             .fixedSize()
 
             sortButton
@@ -669,7 +673,7 @@ struct MeetingsView: View {
                 HStack(spacing: 6) {
                     Image(systemName: "square.and.pencil")
                         .font(.system(size: 11, weight: .medium))
-                    Text("Manage Templates")
+                    Text(String(localized: "meetings.browser.manage_templates", defaultValue: "Manage Templates", comment: "Button title to manage meeting templates."))
                         .font(.system(size: 12, weight: .semibold))
                         .lineLimit(1)
                 }
@@ -715,7 +719,7 @@ struct MeetingsView: View {
                 HStack(spacing: 6) {
                     Image(systemName: "square.and.pencil")
                         .font(.system(size: 11, weight: .semibold))
-                    Text("Open Notes")
+                    Text(String(localized: "meetings.active_banner.open_notes", defaultValue: "Open Notes", comment: "Action button title to open notes from active banner."))
                         .font(.system(size: 12, weight: .semibold))
                 }
                 .foregroundStyle(MuesliTheme.textPrimary)
@@ -733,7 +737,7 @@ struct MeetingsView: View {
                     HStack(spacing: 6) {
                         Image(systemName: appState.isMeetingRecordingPaused ? "play.fill" : "pause.fill")
                             .font(.system(size: 10, weight: .semibold))
-                        Text(appState.isMeetingRecordingPaused ? "Resume" : "Pause")
+                        Text(appState.isMeetingRecordingPaused ? String(localized: "meetings.active_banner.resume", defaultValue: "Resume", comment: "Action button title to resume recording.") : String(localized: "meetings.active_banner.pause", defaultValue: "Pause", comment: "Action button title to pause recording."))
                             .font(.system(size: 12, weight: .semibold))
                     }
                     .foregroundStyle(appState.isMeetingRecordingPaused ? MuesliTheme.backgroundBase : MuesliTheme.textPrimary)
@@ -755,7 +759,7 @@ struct MeetingsView: View {
                     HStack(spacing: 6) {
                         Image(systemName: "stop.fill")
                             .font(.system(size: 10, weight: .semibold))
-                        Text("Stop")
+                        Text(String(localized: "meetings.active_banner.stop", defaultValue: "Stop", comment: "Action button title to stop recording."))
                             .font(.system(size: 12, weight: .semibold))
                     }
                     .foregroundStyle(.white)
@@ -778,8 +782,8 @@ struct MeetingsView: View {
     }
 
     private func activeMeetingStatusText(for meeting: MeetingRecord) -> String {
-        guard meeting.status == .recording else { return "Finalizing notes" }
-        return appState.isMeetingRecordingPaused ? "Recording paused" : "Recording now"
+        guard meeting.status == .recording else { return String(localized: "meetings.active_status.finalizing_notes", defaultValue: "Finalizing notes", comment: "Status text while meeting notes are finalizing.") }
+        return appState.isMeetingRecordingPaused ? String(localized: "meetings.active_status.recording_paused", defaultValue: "Recording paused", comment: "Status text when recording is paused.") : String(localized: "meetings.active_status.recording_now", defaultValue: "Recording now", comment: "Status text when recording is active.")
     }
 
     private func activeMeetingStatusColor(for meeting: MeetingRecord) -> Color {
@@ -886,20 +890,20 @@ struct MeetingsView: View {
     private var emptyStateTitle: String {
         switch appState.meetingOriginFilter {
         case .thisMac:
-            return "No meetings from this Mac"
+            return String(localized: "meetings.empty_state.title.no_meetings_from_mac", defaultValue: "No meetings from this Mac", comment: "Empty state title when no meetings exist from current Mac source.")
         case .fromIPhone:
-            return "No meetings from iPhone"
+            return String(localized: "meetings.empty_state.title.no_meetings_from_iphone", defaultValue: "No meetings from iPhone", comment: "Empty state title when no meetings exist from iPhone source.")
         case .all:
-            return appState.selectedFolderID == nil ? "No meetings yet" : "No meetings in this folder"
+            return appState.selectedFolderID == nil ? String(localized: "meetings.empty_state.title.no_meetings_yet", defaultValue: "No meetings yet", comment: "Empty state title when no meetings exist at all.") : String(localized: "meetings.empty_state.title.no_meetings_in_folder", defaultValue: "No meetings in this folder", comment: "Empty state title when selected folder has no meetings.")
         }
     }
 
     private var emptyStateInstruction: String {
         if appState.meetingOriginFilter != .all || selectedFilter != .all {
-            return "Try another source, time range, or folder."
+            return String(localized: "meetings.empty_state.instruction.try_another_source_time_range_or_folder", defaultValue: "Try another source, time range, or folder.", comment: "Empty state instruction to adjust filters.")
         }
         return appState.selectedFolderID == nil
-            ? "Start a recording from the menu bar to create your first meeting note."
-            : "Choose another folder or move a meeting here from the browser."
+            ? String(localized: "meetings.empty_state.instruction.start_recording_from_menu_bar", defaultValue: "Start a recording from the menu bar to create your first meeting note.", comment: "Empty state instruction for first meeting creation.")
+            : String(localized: "meetings.empty_state.instruction.choose_another_folder_or_move_meeting", defaultValue: "Choose another folder or move a meeting here from the browser.", comment: "Empty state instruction for folder-scoped meetings.")
     }
 }
