@@ -44,19 +44,19 @@ struct SidebarView: View {
         switch appState.sparkleUpdateStatus {
         case .available:
             return UpdateCTA(
-                label: "Update",
+                label: String(localized: "sidebar.update.cta_title", defaultValue: "Update", comment: "Call-to-action title for available update banner."),
                 icon: "arrow.down",
                 foreground: updateCTAForeground,
-                accessibilityLabel: "Update available",
-                tooltip: "Open About for update instructions"
+                accessibilityLabel: String(localized: "sidebar.update.available", defaultValue: "Update available", comment: "Status text when an update is available."),
+                tooltip: String(localized: "sidebar.update.instructions", defaultValue: "Open About for update instructions", comment: "Instruction text directing user to About for update details.")
             )
         case .downloaded:
             return UpdateCTA(
-                label: "Ready",
+                label: String(localized: "sidebar.update.ready_title", defaultValue: "Ready", comment: "Short status title when update is ready to install."),
                 icon: "arrow.clockwise",
                 foreground: updateCTAForeground,
-                accessibilityLabel: "Update ready to install",
-                tooltip: "Open About for update instructions"
+                accessibilityLabel: String(localized: "sidebar.update.ready_message", defaultValue: "Update ready to install", comment: "Message indicating update is ready for installation."),
+                tooltip: String(localized: "sidebar.update.instructions", defaultValue: "Open About for update instructions", comment: "Instruction text directing user to About for update details.")
             )
         case .idle, .checking, .busy, .installing, .upToDate, .disabled, .failed:
             return nil
@@ -102,19 +102,19 @@ struct SidebarView: View {
             sidebarHeader
             searchBar
 
-            sidebarItem(tab: .timeline, icon: "clock.fill", label: "Timeline")
-            sidebarItem(tab: .dictations, icon: "mic.fill", label: "Dictations")
+            sidebarItem(tab: .timeline, icon: "clock.fill", label: String(localized: "sidebar.timeline", defaultValue: "Timeline", comment: "Sidebar navigation item for timeline."))
+            sidebarItem(tab: .dictations, icon: "mic.fill", label: String(localized: "sidebar.dictations", defaultValue: "Dictations", comment: "Sidebar navigation item for dictations."))
             meetingsSection
-            sidebarItem(tab: .dictionary, icon: "character.book.closed", label: "Dictionary")
-            sidebarItem(tab: .models, icon: "square.and.arrow.down", label: "Models")
-            sidebarItem(tab: .shortcuts, icon: "keyboard", label: "Shortcuts")
+            sidebarItem(tab: .dictionary, icon: "character.book.closed", label: String(localized: "sidebar.dictionary", defaultValue: "Dictionary", comment: "Sidebar navigation item for dictionary."))
+            sidebarItem(tab: .models, icon: "square.and.arrow.down", label: String(localized: "sidebar.models", defaultValue: "Models", comment: "Sidebar navigation item for models."))
+            sidebarItem(tab: .shortcuts, icon: "keyboard", label: String(localized: "sidebar.shortcuts", defaultValue: "Shortcuts", comment: "Sidebar navigation item for shortcuts."))
 
             Spacer()
 
             modelPreparationStatus
             spreadTheWordSection
-            sidebarItem(tab: .settings, icon: "gearshape", label: "Settings")
-            sidebarItem(tab: .about, icon: "info.circle", label: "About", updateCTA: pendingUpdateCTA)
+            sidebarItem(tab: .settings, icon: "gearshape", label: String(localized: "sidebar.settings", defaultValue: "Settings", comment: "Sidebar navigation item for settings."))
+            sidebarItem(tab: .about, icon: "info.circle", label: String(localized: "sidebar.about", defaultValue: "About", comment: "Sidebar navigation item for about screen."), updateCTA: pendingUpdateCTA)
             darkModeToggle
                 .padding(.bottom, MuesliTheme.spacing16)
         }
@@ -131,13 +131,13 @@ struct SidebarView: View {
             }
         }
         .alert(
-            "Delete \"\(folderToDelete?.name ?? "")\"?",
+            String(format: String(localized: "sidebar.folder.delete.confirmation", defaultValue: "Delete \"%@\"?", comment: "Confirmation title for deleting a folder by name."), "\(folderToDelete?.name ?? "")"),
             isPresented: $showDeleteConfirmation
         ) {
-            Button("Cancel", role: .cancel) {
+            Button(String(localized: "common.cancel", defaultValue: "Cancel", comment: "Cancel button title."), role: .cancel) {
                 folderToDelete = nil
             }
-            Button("Delete", role: .destructive) {
+            Button(String(localized: "sidebar.meetings.delete", defaultValue: "Delete", comment: "Delete action button title in meetings sidebar."), role: .destructive) {
                 if let folder = folderToDelete {
                     controller.deleteFolder(id: folder.id)
                     controller.showMeetingsHome(folderID: appState.selectedFolderID)
@@ -149,9 +149,13 @@ struct SidebarView: View {
                 appState.directMeetingCountsByFolder[folder.id] ?? 0
             } ?? 0
             if directCount > 0 {
-                Text("\(directCount) meeting\(directCount == 1 ? "" : "s") in this folder will be moved to Unfiled. Subfolders will be kept.")
+                Text(String(format: String(
+                    localized: "sidebar.folder.delete.move_to_unfiled_warning",
+                    defaultValue: "%#@count@ in this folder will be moved to Unfiled. Subfolders will be kept.",
+                    comment: "Warning that meetings in deleted folder move to Unfiled while subfolders remain."
+                ), directCount))
             } else {
-                Text("This folder will be permanently removed. Subfolders will be kept.")
+                Text(String(localized: "sidebar.folder.delete.warning", defaultValue: "This folder will be permanently removed. Subfolders will be kept.", comment: "Warning message for permanent folder deletion behavior."))
             }
         }
     }
@@ -177,7 +181,7 @@ struct SidebarView: View {
                     .foregroundStyle(MuesliTheme.textPrimary)
             }
             if !userName.isEmpty {
-                Text("Hi, \(userName)")
+                Text(String(format: String(localized: "sidebar.greeting.hi_user", defaultValue: "Hi, %@", comment: "Greeting text in sidebar with current user name."), "\(userName)"))
                     .font(MuesliTheme.caption())
                     .foregroundStyle(MuesliTheme.textTertiary)
                     .padding(.leading, 34)
@@ -194,7 +198,7 @@ struct SidebarView: View {
             Image(systemName: "magnifyingglass")
                 .font(.system(size: 12))
                 .foregroundStyle(MuesliTheme.textTertiary)
-            TextField("Search...", text: searchTextBinding)
+            TextField(String(localized: "sidebar.search.placeholder", defaultValue: "Search...", comment: "Sidebar meetings search field placeholder"), text: searchTextBinding)
                 .textFieldStyle(.plain)
                 .font(MuesliTheme.callout())
                 .foregroundStyle(MuesliTheme.textPrimary)
@@ -245,7 +249,7 @@ struct SidebarView: View {
                             .font(.system(size: 14, weight: .medium))
                             .foregroundStyle(isSelected ? MuesliTheme.accent : MuesliTheme.textSecondary)
                             .frame(width: sidebarIconColumnWidth)
-                        Text("Meetings")
+                        Text(String(localized: "sidebar.meetings.title", defaultValue: "Meetings", comment: "Sidebar meetings section title"))
                             .font(MuesliTheme.headline())
                             .foregroundStyle(isSelected ? MuesliTheme.textPrimary : MuesliTheme.textSecondary)
                         Spacer(minLength: 0)
@@ -274,7 +278,7 @@ struct SidebarView: View {
                         .frame(width: meetingsTrailingColumnWidth, height: 18)
                 }
                 .buttonStyle(.plain)
-                .help("New Meeting Folder")
+                .help(String(localized: "sidebar.meetings.new_folder.help", defaultValue: "New Meeting Folder", comment: "Help tooltip for creating a new meeting folder"))
             }
             .padding(.horizontal, sidebarRowHorizontalPadding)
             .padding(.vertical, MuesliTheme.spacing8)
@@ -292,7 +296,7 @@ struct SidebarView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     meetingFilterRow(
                         icon: "tray.2",
-                        label: "All Meetings",
+                        label: String(localized: "sidebar.meetings.filter.all", defaultValue: "All Meetings", comment: "Label for showing all meetings in sidebar"),
                         count: appState.totalMeetingCount,
                         isSelected: appState.selectedTab == .meetings && appState.selectedFolderID == nil
                     ) {
@@ -331,20 +335,20 @@ struct SidebarView: View {
                                 commitOrder: { ids in controller.reorderFolders(ids: ids) }
                             ))
                             .contextMenu {
-                                Button("New Subfolder") {
+                                Button(String(localized: "sidebar.folder.new_subfolder", defaultValue: "New Subfolder", comment: "Context menu action to create a subfolder")) {
                                     createNewSubfolder(parentID: folder.id)
                                 }
-                                Button("Rename") {
+                                Button(String(localized: "sidebar.meetings.rename", defaultValue: "Rename", comment: "Context menu action to rename a folder")) {
                                     renamingFolderID = folder.id
                                     renamingFolderName = folder.name
                                 }
                                 if folder.parentID != nil {
-                                    Button("Move to Top Level") {
+                                    Button(String(localized: "sidebar.folder.move_to_top_level", defaultValue: "Move to Top Level", comment: "Context menu action to move a folder to top level")) {
                                         controller.moveFolder(id: folder.id, toParent: nil)
                                     }
                                 }
                                 Divider()
-                                Button("Delete", role: .destructive) {
+                                Button(String(localized: "sidebar.meetings.delete", defaultValue: "Delete", comment: "Destructive context menu action to delete a folder"), role: .destructive) {
                                     folderToDelete = folder
                                     showDeleteConfirmation = true
                                 }
@@ -416,7 +420,7 @@ struct SidebarView: View {
         )
         if wordMilestone != nil {
             VStack(alignment: .leading, spacing: 2) {
-                Text("Spread the Word")
+                Text(String(localized: "sidebar.spread_the_word.title", defaultValue: "Spread the Word", comment: "Sidebar section title for sharing Muesli"))
                     .font(.system(size: 11, weight: .semibold, design: .rounded))
                     .foregroundStyle(MuesliTheme.textTertiary)
                     .padding(.horizontal, sidebarRowHorizontalPadding)
@@ -425,13 +429,13 @@ struct SidebarView: View {
                 socialShareRow(
                     imageName: "x-logo",
                     fallbackIcon: "bubble.left.and.bubble.right.fill",
-                    label: "Tweet about Muesli",
+                    label: String(localized: "sidebar.spread_the_word.tweet", defaultValue: "Tweet about Muesli", comment: "Button title to share Muesli on Twitter"),
                     action: { controller.openContributionSidebarShare(.tweetAboutMuesli) }
                 )
                 socialShareRow(
                     imageName: "linkedin-logo",
                     fallbackIcon: "person.crop.square.fill",
-                    label: "Post on LinkedIn",
+                    label: String(localized: "sidebar.spread_the_word.linkedin", defaultValue: "Post on LinkedIn", comment: "Button title to share Muesli on LinkedIn"),
                     action: { controller.openContributionSidebarShare(.postOnLinkedIn) }
                 )
             }
@@ -641,7 +645,7 @@ struct SidebarView: View {
                 .font(.system(size: 11, weight: .medium))
                 .foregroundStyle(MuesliTheme.accent)
                 .frame(width: sidebarIconColumnWidth)
-            TextField("Folder name", text: $renamingFolderName)
+            TextField(String(localized: "sidebar.folder.rename.placeholder", defaultValue: "Folder name", comment: "Placeholder while renaming a meeting folder"), text: $renamingFolderName)
                 .font(MuesliTheme.callout())
                 .textFieldStyle(.plain)
                 .onSubmit {
@@ -687,24 +691,24 @@ struct SidebarView: View {
     }
 
     private func createNewFolder() {
-        if let id = controller.createFolder(name: "New Folder") {
+        if let id = controller.createFolder(name: String(localized: "sidebar.folder.new_default_name", defaultValue: "New Folder", comment: "Default name for a newly created meeting folder")) {
             withAnimation(.easeInOut(duration: 0.15)) {
                 meetingsExpanded = true
             }
             renamingFolderID = id
-            renamingFolderName = "New Folder"
+            renamingFolderName = String(localized: "sidebar.folder.new_default_name", defaultValue: "New Folder", comment: "Default name for a newly created meeting folder")
             controller.showMeetingsHome(folderID: id)
         }
     }
 
     private func createNewSubfolder(parentID: Int64) {
-        if let id = controller.createSubfolder(name: "New Folder", parentID: parentID) {
+        if let id = controller.createSubfolder(name: String(localized: "sidebar.folder.new_default_name", defaultValue: "New Folder", comment: "Default name for a newly created subfolder"), parentID: parentID) {
             withAnimation(.easeInOut(duration: 0.15)) {
                 meetingsExpanded = true
                 collapsedFolderIDs.remove(parentID)
             }
             renamingFolderID = id
-            renamingFolderName = "New Folder"
+            renamingFolderName = String(localized: "sidebar.folder.new_default_name", defaultValue: "New Folder", comment: "Default name for a newly created meeting folder")
             controller.showMeetingsHome(folderID: id)
         }
     }
