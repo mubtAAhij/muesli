@@ -33,12 +33,12 @@ enum SettingsPane: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .general: return "General"
-        case .sync: return "Sync"
-        case .dictation: return "Dictation"
-        case .computerUse: return "Computer Use"
-        case .meetings: return "Meetings"
-        case .appearance: return "Appearance"
+        case .general: return String(localized: "app_state.section.general.title", defaultValue: "General", comment: "Settings section title")
+        case .sync: return String(localized: "app_state.section.sync.title", defaultValue: "Sync", comment: "Settings section title")
+        case .dictation: return String(localized: "app_state.section.dictation.title", defaultValue: "Dictation", comment: "Settings section title")
+        case .computerUse: return String(localized: "app_state.section.computer_use.title", defaultValue: "Computer Use", comment: "Settings section title")
+        case .meetings: return String(localized: "app_state.section.meetings.title", defaultValue: "Meetings", comment: "Settings section title")
+        case .appearance: return String(localized: "app_state.section.appearance.title", defaultValue: "Appearance", comment: "Settings section title")
         }
     }
 }
@@ -52,9 +52,9 @@ enum ModelsCategory: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .dictation: return "Dictation"
-        case .streaming: return "Live Meetings"
-        case .postProcessing: return "Cleanup"
+        case .dictation: return String(localized: "app_state.section.dictation.title", defaultValue: "Dictation", comment: "Timeline section title")
+        case .streaming: return String(localized: "app_state.section.live_meetings.title", defaultValue: "Live Meetings", comment: "Timeline section title")
+        case .postProcessing: return String(localized: "app_state.section.cleanup.title", defaultValue: "Cleanup", comment: "Timeline section title")
         }
     }
 }
@@ -79,12 +79,12 @@ enum HistoryDateFilter: String, CaseIterable, Hashable {
 
     var label: String {
         switch self {
-        case .all: return "All time"
-        case .last2Days: return "Last 2 days"
-        case .lastWeek: return "Last week"
-        case .last2Weeks: return "Last 2 weeks"
-        case .lastMonth: return "Last month"
-        case .last3Months: return "Last 3 months"
+        case .all: return String(localized: "app_state.time_range.all_time.label", defaultValue: "All time", comment: "Time range filter label")
+        case .last2Days: return String(localized: "app_state.time_range.last_2_days.label", defaultValue: "Last 2 days", comment: "Time range filter label")
+        case .lastWeek: return String(localized: "app_state.time_range.last_week.label", defaultValue: "Last week", comment: "Time range filter label")
+        case .last2Weeks: return String(localized: "app_state.time_range.last_2_weeks.label", defaultValue: "Last 2 weeks", comment: "Time range filter label")
+        case .lastMonth: return String(localized: "app_state.time_range.last_month.label", defaultValue: "Last month", comment: "Time range filter label")
+        case .last3Months: return String(localized: "app_state.time_range.last_3_months.label", defaultValue: "Last 3 months", comment: "Time range filter label")
         }
     }
 
@@ -262,7 +262,7 @@ final class AppState {
     var selectedTab: DashboardTab = .timeline
     var insightsReturnTab: DashboardTab = .timeline
     var insightsBackLabel: String {
-        insightsReturnTab == .dictations ? "Back to Dictations" : "Back to Timeline"
+        insightsReturnTab == .dictations ? String(localized: "app_state.insights.back_to_dictations", defaultValue: "Back to Dictations", comment: "Navigation label to return from insights view") : String(localized: "app_state.insights.back_to_timeline", defaultValue: "Back to Timeline", comment: "Navigation label to return from insights view")
     }
     var insightsInitialSection: InsightsSection = .words
     var selectedSettingsPane: SettingsPane = .general
