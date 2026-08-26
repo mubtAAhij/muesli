@@ -28,8 +28,8 @@ enum SoundController {
 
     /// Bundled preset clips (shipped with the app).
     static let maraudersMapPresets: [(id: String, label: String)] = [
-        ("bbc_world_news", "BBC World News"),
-        ("ndtv", "NDTV"),
+        ("bbc_world_news", String(localized: "sound.marauders_map.clip.bbc_world_news.label", defaultValue: "BBC World News", comment: "Label for BBC World News sample clip option")),
+        ("ndtv", String(localized: "sound.marauders_map.clip.ndtv.label", defaultValue: "NDTV", comment: "Label for NDTV sample clip option")),
     ]
 
     /// ID used in config when the user has loaded a custom file.
@@ -37,7 +37,7 @@ enum SoundController {
 
     /// All dropdown options: presets + custom.
     static var maraudersMapClipLabels: [String] {
-        maraudersMapPresets.map(\.label) + ["Custom\u{2026}"]
+        maraudersMapPresets.map(\.label) + ["Custom…"]
     }
 
     /// Resolve a clip ID to a display label.
@@ -46,9 +46,9 @@ enum SoundController {
             if let path = customPath {
                 return URL(fileURLWithPath: path).lastPathComponent
             }
-            return "Custom\u{2026}"
+            return "Custom…"
         }
-        return maraudersMapPresets.first(where: { $0.id == id })?.label ?? "BBC World News"
+        return maraudersMapPresets.first(where: { $0.id == id })?.label ?? String(localized: "sound.marauders_map.clip.bbc_world_news.label", defaultValue: "BBC World News", comment: "Label for BBC World News sample clip option")
     }
 
     private static var currentClipSound: NSSound?
