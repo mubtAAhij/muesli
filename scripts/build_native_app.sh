@@ -342,6 +342,34 @@ if [[ -d "$ROOT/assets/audio" ]]; then
   ditto "$ROOT/assets/audio" "$STAGED_APP_DIR/Contents/Resources/audio"
 fi
 
+# The app bundle has to advertise the String Catalog's locales. Without
+# CFBundleLocalizations macOS treats this app as English-only, and that decision
+# cascades: every bundle in the process — including the SPM module bundle that
+# actually holds the compiled .lproj tables — then resolves to English no matter
+# where the user's language order puts Spanish. Derived from the catalog so a new
+# locale needs no change here.
+CATALOG_PATH="$ROOT/native/MuesliNative/Sources/MuesliNativeApp/Resources/Localizable.xcstrings"
+APP_LOCALIZATIONS_XML="    <string>en</string>"
+if [[ -f "$CATALOG_PATH" ]]; then
+  DISCOVERED_LOCALIZATIONS_XML="$(python3 - "$CATALOG_PATH" <<'PY'
+import json, sys
+try:
+    catalog = json.load(open(sys.argv[1]))
+except Exception:
+    sys.exit(1)
+locales = {catalog.get("sourceLanguage") or "en"}
+for entry in (catalog.get("strings") or {}).values():
+    locales.update((entry.get("localizations") or {}).keys())
+print("\n".join(f"    <string>{loc}</string>" for loc in sorted(locales)))
+PY
+)" || DISCOVERED_LOCALIZATIONS_XML=""
+  if [[ -n "$DISCOVERED_LOCALIZATIONS_XML" ]]; then
+    APP_LOCALIZATIONS_XML="$DISCOVERED_LOCALIZATIONS_XML"
+  fi
+fi
+echo "==> App localizations advertised:"
+echo "$APP_LOCALIZATIONS_XML" | sed 's/^/    /'
+
 cat > "$STAGED_APP_DIR/Contents/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -363,6 +391,12 @@ cat > "$STAGED_APP_DIR/Contents/Info.plist" <<PLIST
   <string>APPL</string>
   <key>CFBundleIconFile</key>
   <string>muesli.icns</string>
+  <key>CFBundleDevelopmentRegion</key>
+  <string>en</string>
+  <key>CFBundleLocalizations</key>
+  <array>
+$APP_LOCALIZATIONS_XML
+  </array>
   <key>MuesliSupportDirectoryName</key>
   <string>$APP_SUPPORT_DIR_NAME</string>
   <key>MuesliTelemetryDeckAppID</key>
