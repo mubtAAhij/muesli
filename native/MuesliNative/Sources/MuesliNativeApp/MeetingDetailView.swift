@@ -17,8 +17,8 @@ private enum ManualNotesSaveStatus {
 
     var label: String {
         switch self {
-        case .saved: return "Saved"
-        case .saving: return "Saving..."
+        case .saved: return String(localized: "meeting_detail.save_state.saved", defaultValue: "Saved", comment: "Meeting detail save state label when changes are saved.")
+        case .saving: return String(localized: "meeting_detail.save_state.saving", defaultValue: "Saving...", comment: "Meeting detail save state label while saving changes.")
         }
     }
 }
@@ -88,7 +88,7 @@ struct MeetingDetailView: View {
         controller: MuesliController,
         appState: AppState,
         onBack: (() -> Void)? = nil,
-        backLabel: String = "Back to Meetings"
+        backLabel: String = String(localized: "meeting_detail.navigation.back_to_meetings", defaultValue: "Back to Meetings", comment: "Navigation label to return from meeting detail to meetings list.")
     ) {
         self.meeting = meeting
         self.controller = controller
@@ -137,10 +137,10 @@ struct MeetingDetailView: View {
                 }
             } else {
                 VStack(spacing: MuesliTheme.spacing12) {
-                    Text("No meeting selected")
+                    Text(String(localized: "meeting_detail.empty_state.no_meeting_selected", defaultValue: "No meeting selected", comment: "Empty state title when no meeting is selected in detail view."))
                         .font(MuesliTheme.title3())
                         .foregroundStyle(MuesliTheme.textSecondary)
-                    Text("Choose a meeting from the Meetings browser to open it here.")
+                    Text(String(localized: "meeting_detail.empty_state.choose_meeting_message", defaultValue: "Choose a meeting from the Meetings browser to open it here.", comment: "Empty state message instructing user to choose a meeting."))
                         .font(MuesliTheme.callout())
                         .foregroundStyle(MuesliTheme.textTertiary)
                 }
@@ -148,39 +148,39 @@ struct MeetingDetailView: View {
                 .background(MuesliTheme.backgroundBase)
             }
         }
-        .alert("Couldn't Save Summary", isPresented: summaryErrorBinding) {
-            Button("OK", role: .cancel) {
+        .alert(String(localized: "meeting_detail.alert.couldnt_save_summary", defaultValue: "Couldn't Save Summary", comment: "Alert title shown when saving meeting summary fails."), isPresented: summaryErrorBinding) {
+            Button(String(localized: "common.ok", defaultValue: "OK", comment: "Common confirmation button label."), role: .cancel) {
                 summaryErrorMessage = nil
             }
         } message: {
-            Text(summaryErrorMessage ?? "The updated meeting notes could not be saved.")
+            Text(summaryErrorMessage ?? String(localized: "meeting_detail.alert.save_summary_failed_message", defaultValue: "The updated meeting notes could not be saved.", comment: "Alert message explaining meeting summary save failure."))
         }
-        .alert("Couldn't Re-transcribe Meeting", isPresented: retranscriptionErrorBinding) {
-            Button("OK", role: .cancel) {
+        .alert(String(localized: "meeting_detail.alert.couldnt_retranscribe_meeting", defaultValue: "Couldn't Re-transcribe Meeting", comment: "Alert title shown when retranscribing meeting fails."), isPresented: retranscriptionErrorBinding) {
+            Button(String(localized: "common.ok", defaultValue: "OK", comment: "Common confirmation button label."), role: .cancel) {
                 retranscriptionErrorMessage = nil
             }
         } message: {
-            Text(retranscriptionErrorMessage ?? "The saved recording could not be re-transcribed.")
+            Text(retranscriptionErrorMessage ?? String(localized: "meeting_detail.alert.retranscribe_failed_message", defaultValue: "The saved recording could not be re-transcribed.", comment: "Alert message explaining retranscription failure."))
         }
-        .alert("Re-summarize Notes?", isPresented: transcriptResummaryPromptBinding) {
-            Button("Re-summarize") {
+        .alert(String(localized: "meeting_detail.alert.resummarize_notes_title", defaultValue: "Re-summarize Notes?", comment: "Alert title asking whether to re-summarize notes."), isPresented: transcriptResummaryPromptBinding) {
+            Button(String(localized: "meeting_detail.alert.resummarize_action", defaultValue: "Re-summarize", comment: "Alert action button to re-summarize notes.")) {
                 resummarizeAfterTranscriptEdit()
             }
-            Button("Not Now", role: .cancel) {
+            Button(String(localized: "meeting_detail.alert.not_now", defaultValue: "Not Now", comment: "Alert action button to defer re-summarization."), role: .cancel) {
                 transcriptResummaryPromptMeetingID = nil
             }
         } message: {
-            Text("Your transcript edits may change the generated notes. Re-summarize now to update them from the edited transcript.")
+            Text(String(localized: "meeting_detail.alert.resummarize_notes_message", defaultValue: "Your transcript edits may change the generated notes. Re-summarize now to update them from the edited transcript.", comment: "Alert message explaining why re-summarization is recommended after transcript edits."))
         }
-        .alert("Delete Meeting", isPresented: $showDeleteConfirmation) {
-            Button("Delete", role: .destructive) {
+        .alert(String(localized: "meeting_detail.alert.delete_meeting_title", defaultValue: "Delete Meeting", comment: "Alert title for deleting a meeting."), isPresented: $showDeleteConfirmation) {
+            Button(String(localized: "common.delete", defaultValue: "Delete", comment: "Common destructive delete action label."), role: .destructive) {
                 if let meeting {
                     controller.deleteMeeting(id: meeting.id)
                 }
             }
-            Button("Cancel", role: .cancel) {}
+            Button(String(localized: "common.cancel", defaultValue: "Cancel", comment: "Common cancel action label."), role: .cancel) {}
         } message: {
-            Text("Are you sure you want to delete this meeting? Saved notes, transcript, and any retained recording will be removed.")
+            Text(String(localized: "meeting_detail.alert.delete_meeting_message", defaultValue: "Are you sure you want to delete this meeting? Saved notes, transcript, and any retained recording will be removed.", comment: "Alert message warning about deleting meeting data."))
         }
     }
 
@@ -218,7 +218,7 @@ struct MeetingDetailView: View {
                         metadataDivider
                         metadataItem(systemImage: "clock", text: formatDuration(meeting.durationSeconds))
                         metadataDivider
-                        metadataItem(systemImage: "doc.text", text: "\(meeting.wordCount) words")
+                        metadataItem(systemImage: "doc.text", text: String(format: String(localized: "meeting_detail.metadata.word_count", defaultValue: "%d words", comment: "Meeting metadata label showing transcript word count."), meeting.wordCount))
                         if let label = SyncOriginDisplay.badgeLabel(forMeetingSource: meeting.source) {
                             SyncOriginBadge(label: label)
                         }
@@ -460,8 +460,6 @@ struct MeetingDetailView: View {
 
     private var documentModePicker: some View {
         Picker("", selection: $documentMode) {
-            Text("Notes").tag(MeetingDocumentMode.notes)
-            Text("Transcript").tag(MeetingDocumentMode.transcript)
         }
         .pickerStyle(.segmented)
         .tint(MuesliTheme.accent)
@@ -471,8 +469,6 @@ struct MeetingDetailView: View {
 
     private var recordingModePicker: some View {
         Picker("", selection: $recordingMode) {
-            Text("Notes").tag(RecordingContentMode.notes)
-            Text("Live").tag(RecordingContentMode.live)
         }
         .pickerStyle(.segmented)
         .tint(MuesliTheme.accent)
@@ -507,7 +503,7 @@ struct MeetingDetailView: View {
             if isSummarizing {
                 ProgressView()
                     .controlSize(.small)
-                    .help("Summarizing meeting")
+                    .help(String(localized: "meeting_detail.header.summarizing_meeting_help", defaultValue: "Summarizing meeting", comment: "Header help text shown while meeting summary is being generated."))
             }
 
             if isEditingNotes || isEditingTranscript {
@@ -594,13 +590,13 @@ struct MeetingDetailView: View {
                 HStack(spacing: 6) {
                     ProgressView()
                         .controlSize(.small)
-                    Text("Re-transcribing...")
+                    Text(String(localized: "meeting_detail.actions.retranscribing", defaultValue: "Re-transcribing...", comment: "Action label shown while meeting is being re-transcribed."))
                         .font(.system(size: 11))
                         .foregroundStyle(MuesliTheme.textTertiary)
                 }
                 .padding(.horizontal, MuesliTheme.spacing8)
             } else {
-                iconButton("arrow.clockwise", label: "Re-transcribe") {
+                iconButton("arrow.clockwise", label: String(localized: "meeting_detail.actions.retranscribe", defaultValue: "Re-transcribe", comment: "Action label to trigger re-transcription of meeting.")) {
                     startRetranscription(for: meeting)
                 }
                 .disabled(meeting.status == .recording || meeting.status == .processing || isEditingNotes || isEditingTranscript)
@@ -635,7 +631,7 @@ struct MeetingDetailView: View {
                 )
             }
 
-            Section("Built-in Templates") {
+            Section(String(localized: "meeting_detail.templates.built_in_section", defaultValue: "Built-in Templates", comment: "Section title for built-in templates in meeting detail.")) {
                 ForEach(controller.builtInMeetingTemplates()) { template in
                     Button {
                         pendingTemplateID = template.id
@@ -650,7 +646,7 @@ struct MeetingDetailView: View {
             }
 
             if !controller.customMeetingTemplates().isEmpty {
-                Section("Custom Templates") {
+                Section(String(localized: "meeting_detail.templates.custom_section", defaultValue: "Custom Templates", comment: "Section title for custom templates in meeting detail.")) {
                     ForEach(controller.customMeetingTemplates()) { template in
                         Button {
                             pendingTemplateID = template.id
@@ -668,7 +664,7 @@ struct MeetingDetailView: View {
 
             Divider()
 
-            Button("Manage Templates…") {
+            Button(String(localized: "meeting_detail.template_menu.manage_templates", defaultValue: "Manage Templates…", comment: "Menu item label to manage templates from meeting detail.")) {
                 controller.showMeetingTemplatesManager()
             }
     }
@@ -717,16 +713,16 @@ struct MeetingDetailView: View {
 
             Spacer()
 
-            markdownToolbarButton(systemImage: "textformat.size", label: "Heading") {
+            markdownToolbarButton(systemImage: "textformat.size", label: String(localized: "meeting_detail.notes_toolbar.heading", defaultValue: "Heading", comment: "Notes toolbar button label for heading formatting.")) {
                 manualEditorCommand = MarkdownEditorCommand(kind: .heading)
             }
-            markdownToolbarButton(systemImage: "bold", label: "Bold") {
+            markdownToolbarButton(systemImage: "bold", label: String(localized: "meeting_detail.notes_toolbar.bold", defaultValue: "Bold", comment: "Notes toolbar button label for bold formatting.")) {
                 manualEditorCommand = MarkdownEditorCommand(kind: .bold)
             }
-            markdownToolbarButton(systemImage: "list.bullet", label: "Bullet") {
+            markdownToolbarButton(systemImage: "list.bullet", label: String(localized: "meeting_detail.notes_toolbar.bullet", defaultValue: "Bullet", comment: "Notes toolbar button label for bullet list formatting.")) {
                 manualEditorCommand = MarkdownEditorCommand(kind: .bullet)
             }
-            markdownToolbarButton(systemImage: "checklist", label: "Checkbox") {
+            markdownToolbarButton(systemImage: "checklist", label: String(localized: "meeting_detail.notes_toolbar.checkbox", defaultValue: "Checkbox", comment: "Notes toolbar button label for checkbox list formatting.")) {
                 manualEditorCommand = MarkdownEditorCommand(kind: .checkbox)
             }
         }
@@ -737,7 +733,7 @@ struct MeetingDetailView: View {
     private func statusChip(for meeting: MeetingRecord) -> some View {
         let isPreparing = isPreparingThisMeeting(meeting)
         let isPaused = meeting.status == .recording && appState.isMeetingRecordingPaused
-        let label = isPreparing ? "Preparing" : isPaused ? "Paused" : meeting.status.displayLabel
+        let label = isPreparing ? String(localized: "meeting_detail.preparation.preparing", defaultValue: "Preparing", comment: "Preparation status label when meeting detail is preparing.") : isPaused ? String(localized: "meeting_detail.preparation.paused", defaultValue: "Paused", comment: "Preparation status label when meeting detail preparation is paused.") : meeting.status.displayLabel
         let color = isPreparing || isPaused ? MuesliTheme.transcribing : meeting.status.displayColor
         HStack(spacing: 6) {
             Circle()
@@ -850,7 +846,7 @@ struct MeetingDetailView: View {
     @ViewBuilder
     private func exportMenu(for meeting: MeetingRecord) -> some View {
         let currentContent: MeetingExportContent = documentMode == .transcript ? .transcript : .notes
-        let currentLabel = documentMode == .transcript ? "Export Transcript" : "Export Notes"
+        let currentLabel = documentMode == .transcript ? String(localized: "meeting_detail.export.transcript", defaultValue: "Export Transcript", comment: "Export menu action to export transcript.") : String(localized: "meeting_detail.export.notes", defaultValue: "Export Notes", comment: "Export menu action to export notes.")
         Menu {
             Button {
                 MeetingExporter.export(meeting: meeting, content: currentContent)
@@ -860,13 +856,13 @@ struct MeetingDetailView: View {
             Button {
                 MeetingExporter.export(meeting: meeting, content: .fullMeeting)
             } label: {
-                Label("Export Full Meeting", systemImage: "doc.on.doc")
+                Label(String(localized: "meeting_detail.export.full_meeting", defaultValue: "Export Full Meeting", comment: "Export menu action to export full meeting package."), systemImage: "doc.on.doc")
             }
         } label: {
             HStack(spacing: 6) {
                 Image(systemName: "square.and.arrow.up")
                     .font(.system(size: 10, weight: .semibold))
-                Text("Export")
+                Text(String(localized: "meeting_detail.export.title", defaultValue: "Export", comment: "Export menu title in meeting detail view."))
                     .font(.system(size: 12, weight: .semibold))
             }
             .foregroundStyle(MuesliTheme.textPrimary)
@@ -895,7 +891,7 @@ struct MeetingDetailView: View {
                 templateMenuItems(for: meeting, appliedTemplate: appliedTemplate)
             } label: {
                 Label(
-                    "Template: \(labelForSelection(on: meeting, appliedTemplate: appliedTemplate))",
+                    String(format: String(localized: "meeting_detail.template_label", defaultValue: "Template: %@", comment: "Meeting detail label showing currently selected summary template."), "\(labelForSelection(on: meeting, appliedTemplate: appliedTemplate))"),
                     systemImage: iconName(forSelectionOn: meeting, appliedTemplate: appliedTemplate)
                 )
             }
@@ -921,7 +917,7 @@ struct MeetingDetailView: View {
                     Button {
                         controller.revealMeetingRecordingInFinder(path: savedRecordingPath)
                     } label: {
-                        Label("Show Recording", systemImage: "folder")
+                        Label(String(localized: "meeting_detail.menu.show_recording", defaultValue: "Show Recording", comment: "Menu item label to show meeting recording in detail view."), systemImage: "folder")
                     }
                 }
 
@@ -929,7 +925,7 @@ struct MeetingDetailView: View {
                     Button(role: .destructive) {
                         showDeleteConfirmation = true
                     } label: {
-                        Label("Delete Meeting", systemImage: "trash")
+                        Label(String(localized: "meeting_detail.menu.delete_meeting", defaultValue: "Delete Meeting", comment: "Menu item label to delete the current meeting."), systemImage: "trash")
                     }
                 }
             }
@@ -947,7 +943,7 @@ struct MeetingDetailView: View {
         }
         .menuStyle(.borderlessButton)
         .fixedSize()
-        .help("More actions")
+        .help(String(localized: "meeting_detail.menu.more_actions_help", defaultValue: "More actions", comment: "Accessibility/help label for more actions menu in meeting detail."))
     }
 
     private func templateMenuItem(title: String, systemImage: String, isSelected: Bool) -> some View {
@@ -984,7 +980,7 @@ struct MeetingDetailView: View {
     }
 
     private var deleteButton: some View {
-        iconButton("trash", label: "Delete") {
+        iconButton("trash", label: String(localized: "common.delete", defaultValue: "Delete", comment: "Common destructive delete action label.")) {
             showDeleteConfirmation = true
         }
     }
@@ -994,8 +990,8 @@ struct MeetingDetailView: View {
             ProgressView()
                 .controlSize(.small)
                 .frame(width: 14, height: 14)
-                .accessibilityLabel("Preparing transcription")
-            Text(appState.meetingStartStatus ?? "Meeting transcription will start shortly.")
+                .accessibilityLabel(String(localized: "meeting_detail.preparation.preparing_transcription_accessibility", defaultValue: "Preparing transcription", comment: "Accessibility label indicating meeting transcription is being prepared."))
+            Text(appState.meetingStartStatus ?? String(localized: "meeting_detail.preparation.transcription_starting_soon", defaultValue: "Meeting transcription will start shortly.", comment: "Preparation message indicating transcription will start soon."))
                 .font(.system(size: 12, weight: .semibold))
                 .foregroundStyle(MuesliTheme.textSecondary)
                 .lineLimit(1)
@@ -1011,10 +1007,10 @@ struct MeetingDetailView: View {
     }
 
     private var cancelMeetingPreparationButton: some View {
-        iconButton("xmark", label: "Cancel") {
+        iconButton("xmark", label: String(localized: "common.cancel", defaultValue: "Cancel", comment: "Common cancel action label.")) {
             controller.cancelMeetingPreparation()
         }
-        .help("Cancel meeting preparation")
+        .help(String(localized: "meeting_detail.preparation.cancel_help", defaultValue: "Cancel meeting preparation", comment: "Help/accessibility label for canceling meeting preparation."))
     }
 
     private var pauseResumeRecordingButton: some View {
@@ -1025,7 +1021,7 @@ struct MeetingDetailView: View {
             HStack(spacing: 6) {
                 Image(systemName: isPaused ? "play.fill" : "pause.fill")
                     .font(.system(size: 10, weight: .semibold))
-                Text(isPaused ? "Resume" : "Pause")
+                Text(isPaused ? String(localized: "meeting_detail.recording.resume", defaultValue: "Resume", comment: "Recording control label to resume paused meeting recording.") : String(localized: "meeting_detail.recording.pause", defaultValue: "Pause", comment: "Recording control label to pause active meeting recording."))
                     .font(.system(size: 12, weight: .semibold))
             }
             .foregroundStyle(isPaused ? Color.white : MuesliTheme.textPrimary)
@@ -1040,7 +1036,7 @@ struct MeetingDetailView: View {
         }
         .buttonStyle(.plain)
         .disabled(!appState.isMeetingRecording)
-        .help(isPaused ? "Resume recording" : "Pause recording")
+        .help(isPaused ? String(localized: "meeting_detail.recording.resume_help", defaultValue: "Resume recording", comment: "Help/accessibility label for resume recording action.") : String(localized: "meeting_detail.recording.pause_help", defaultValue: "Pause recording", comment: "Help/accessibility label for pause recording action."))
     }
 
     /// Shown on a finished meeting when no recording is active. A split control:
@@ -1057,7 +1053,7 @@ struct MeetingDetailView: View {
                 HStack(spacing: 6) {
                     Image(systemName: "record.circle")
                         .font(.system(size: 10, weight: .semibold))
-                    Text("Resume")
+                    Text(String(localized: "meeting_detail.recording.resume_button", defaultValue: "Resume", comment: "Button label to resume recording from paused state."))
                         .font(.system(size: 12, weight: .semibold))
                 }
                 .foregroundStyle(Color.white)
@@ -1066,18 +1062,18 @@ struct MeetingDetailView: View {
                 .background(MuesliTheme.accent)
             }
             .buttonStyle(.plain)
-            .help("Resume recording")
+            .help(String(localized: "meeting_detail.recording.resume_help", defaultValue: "Resume recording", comment: "Help/accessibility label for resume recording action."))
 
             Menu {
                 Button {
                     controller.resumeFinishedMeeting(meetingID: meeting.id)
                 } label: {
-                    Label("Resume recording", systemImage: "record.circle")
+                    Label(String(localized: "meeting_detail.recording.resume_label", defaultValue: "Resume recording", comment: "Descriptive label for resume recording control."), systemImage: "record.circle")
                 }
                 Button {
                     controller.startFollowUpMeeting(fromMeetingID: meeting.id)
                 } label: {
-                    Label("Start a follow-up", systemImage: "arrow.turn.down.right")
+                    Label(String(localized: "meeting_detail.recording.start_follow_up", defaultValue: "Start a follow-up", comment: "Button label to start a follow-up meeting from paused state."), systemImage: "arrow.turn.down.right")
                 }
             } label: {
                 Image(systemName: "chevron.down")
@@ -1090,7 +1086,7 @@ struct MeetingDetailView: View {
             .menuStyle(.borderlessButton)
             .menuIndicator(.hidden)
             .fixedSize(horizontal: true, vertical: false)
-            .help("Resume recording, or start a follow-up meeting")
+            .help(String(localized: "meeting_detail.recording.resume_or_follow_up_help", defaultValue: "Resume recording, or start a follow-up meeting", comment: "Help/accessibility text describing resume or follow-up actions."))
         }
         .fixedSize()
         .clipShape(RoundedRectangle(cornerRadius: MuesliTheme.cornerSmall))
@@ -1110,7 +1106,7 @@ struct MeetingDetailView: View {
             HStack(spacing: 6) {
                 Image(systemName: "stop.fill")
                     .font(.system(size: 10, weight: .semibold))
-                Text("Stop")
+                Text(String(localized: "meeting_detail.recording.stop", defaultValue: "Stop", comment: "Recording control label to stop meeting recording."))
                     .font(.system(size: 12, weight: .semibold))
             }
             .foregroundStyle(.white)
@@ -1121,11 +1117,11 @@ struct MeetingDetailView: View {
         }
         .buttonStyle(.plain)
         .disabled(!appState.isMeetingRecording)
-        .help("Stop recording")
+        .help(String(localized: "meeting_detail.recording.stop_help", defaultValue: "Stop recording", comment: "Help/accessibility label for stop recording action."))
     }
 
     private var discardRecordingButton: some View {
-        iconButton("xmark", label: "Discard") {
+        iconButton("xmark", label: String(localized: "common.discard", defaultValue: "Discard", comment: "Common discard action label.")) {
             controller.discardMeetingWithConfirmation()
         }
     }
@@ -1140,11 +1136,11 @@ struct MeetingDetailView: View {
                 if let predecessor = threadContext.predecessor {
                     threadLink(
                         icon: "arrow.turn.left.up",
-                        text: "Follow-up to: \(predecessor.title) \u{00B7} \(MeetingBrowserLogic.formatStartTime(predecessor.startTime))",
+                        text: String(format: String(localized: "meeting_detail.thread.follow_up_to", defaultValue: "Follow-up to: %@ · %@", comment: "Thread metadata label showing predecessor meeting title and start time."), "\(predecessor.title)", "\(MeetingBrowserLogic.formatStartTime(predecessor.startTime))"),
                         targetID: predecessor.id
                     )
                 }
-                Text("Thread \u{00B7} \(threadContext.count) meetings")
+                Text(String(format: String(localized: "meeting_detail.thread.count_label", defaultValue: "Thread · %d meetings", comment: "Thread summary label showing number of meetings in thread."), threadContext.count))
                     .font(.system(size: 11, weight: .medium))
                     .foregroundStyle(MuesliTheme.textTertiary)
                 switch threadContext.successors.count {
@@ -1154,19 +1150,19 @@ struct MeetingDetailView: View {
                     if let successor = threadContext.successors.first {
                         threadLink(
                             icon: "arrow.turn.left.down",
-                            text: "Followed by: \(successor.title) \u{00B7} \(MeetingBrowserLogic.formatStartTime(successor.startTime))",
+                            text: String(format: String(localized: "meeting_detail.thread.followed_by", defaultValue: "Followed by: %@ · %@", comment: "Thread metadata label showing next meeting title and start time."), "\(successor.title)", "\(MeetingBrowserLogic.formatStartTime(successor.startTime))"),
                             targetID: successor.id
                         )
                     }
                 default:
                     VStack(alignment: .leading, spacing: 3) {
-                        Text("Follow-ups (\(threadContext.successors.count))")
+                        Text(String(format: String(localized: "meeting_detail.thread.follow_ups_count", defaultValue: "Follow-ups (%d)", comment: "Label showing count of follow-up meetings."), threadContext.successors.count))
                             .font(.system(size: 11, weight: .medium))
                             .foregroundStyle(MuesliTheme.textTertiary)
                         ForEach(threadContext.successors) { successor in
                             threadLink(
                                 icon: "arrow.turn.left.down",
-                                text: "\(successor.title) \u{00B7} \(MeetingBrowserLogic.formatStartTime(successor.startTime))",
+                                text: String(format: String(localized: "meeting_detail.thread.successor_title_time", defaultValue: "%@ · %@", comment: "Follow-up meeting row label showing title and start time."), "\(successor.title)", "\(MeetingBrowserLogic.formatStartTime(successor.startTime))"),
                                 targetID: successor.id
                             )
                         }
@@ -1194,7 +1190,7 @@ struct MeetingDetailView: View {
             .foregroundStyle(MuesliTheme.accent)
         }
         .buttonStyle(.plain)
-        .help("Open this meeting")
+        .help(String(localized: "meeting_detail.thread_link.open_this_meeting_help", defaultValue: "Open this meeting", comment: "Accessibility/help text for opening linked meeting from thread list."))
     }
 
     @ViewBuilder
@@ -1209,7 +1205,7 @@ struct MeetingDetailView: View {
             HStack(spacing: 5) {
                 Image(systemName: hasFolder ? "folder.fill" : "folder.badge.plus")
                     .font(.system(size: 10))
-                Text(currentFolder?.name ?? "Add to folder")
+                Text(currentFolder?.name ?? String(localized: "meeting_detail.folder_pill.add_to_folder", defaultValue: "Add to folder", comment: "Folder pill action label to add meeting to a folder."))
                     .font(.system(size: 11, weight: .medium))
             }
             .foregroundStyle(hasFolder ? MuesliTheme.accent : MuesliTheme.textSecondary)
@@ -1223,7 +1219,7 @@ struct MeetingDetailView: View {
             )
         }
         .buttonStyle(.plain)
-        .help(hasFolder ? "Change folder" : "Add to folder")
+        .help(hasFolder ? String(localized: "meeting_detail.folder_pill.change_folder_help", defaultValue: "Change folder", comment: "Accessibility/help text for changing the current folder.") : String(localized: "meeting_detail.folder_pill.add_to_folder_help", defaultValue: "Add to folder", comment: "Accessibility/help text for adding meeting to a folder."))
         .popover(isPresented: $showFolderPopover, arrowEdge: .bottom) {
             VStack(alignment: .leading, spacing: 0) {
                 if !appState.folders.isEmpty {
@@ -1236,7 +1232,7 @@ struct MeetingDetailView: View {
                     }
                     Divider().padding(.vertical, 4)
                 }
-                folderPopoverRow(icon: "folder.badge.plus", label: "New Folder...") {
+                folderPopoverRow(icon: "folder.badge.plus", label: String(localized: "meeting_detail.folder_pill.new_folder_row", defaultValue: "New Folder...", comment: "Menu row label to create a new folder from folder picker.")) {
                     showFolderPopover = false
                     newFolderName = ""
                     showNewFolderPrompt = true
@@ -1245,16 +1241,16 @@ struct MeetingDetailView: View {
             .padding(8)
             .frame(minWidth: 200)
         }
-        .alert("New Folder", isPresented: $showNewFolderPrompt) {
-            TextField("Folder name", text: $newFolderName)
-            Button("Create") {
+        .alert(String(localized: "meeting_detail.folder_pill.new_folder_title", defaultValue: "New Folder", comment: "Dialog title for creating a new folder."), isPresented: $showNewFolderPrompt) {
+            TextField(String(localized: "meeting_detail.folder_pill.folder_name", defaultValue: "Folder name", comment: "Field label for new folder name input."), text: $newFolderName)
+            Button(String(localized: "common.create", defaultValue: "Create", comment: "Common create action label.")) {
                 let trimmed = newFolderName.trimmingCharacters(in: .whitespacesAndNewlines)
                 guard !trimmed.isEmpty else { return }
                 controller.createFolderAndMoveMeeting(name: trimmed, meetingID: meeting.id)
             }
-            Button("Cancel", role: .cancel) {}
+            Button(String(localized: "common.cancel", defaultValue: "Cancel", comment: "Common cancel action label."), role: .cancel) {}
         } message: {
-            Text("Create a new folder and move this meeting into it.")
+            Text(String(localized: "meeting_detail.folder_pill.create_folder_description", defaultValue: "Create a new folder and move this meeting into it.", comment: "Description text for creating a new folder and moving current meeting."))
         }
     }
 
@@ -1286,17 +1282,17 @@ struct MeetingDetailView: View {
             if hasApiKey {
                 Image(systemName: "sparkles")
                     .foregroundStyle(MuesliTheme.accent)
-                Text("Use \(primarySummaryActionLabel) to turn this raw transcript into AI meeting notes and a cleaned-up title.")
+                Text(String(format: String(localized: "meeting_detail.transcript_cta.use_primary_action", defaultValue: "Use %@ to turn this raw transcript into AI meeting notes and a cleaned-up title.", comment: "Call-to-action text prompting summary generation from transcript."), "\(primarySummaryActionLabel)"))
                     .font(MuesliTheme.callout())
                     .foregroundStyle(MuesliTheme.textSecondary)
             } else {
                 Image(systemName: "key.fill")
                     .foregroundStyle(MuesliTheme.accent)
-                Text("Add your API key in Settings to generate meeting notes")
+                Text(String(localized: "meeting_detail.transcript_cta.add_api_key_message", defaultValue: "Add your API key in Settings to generate meeting notes", comment: "Message prompting user to configure API key for meeting notes generation."))
                     .font(MuesliTheme.callout())
                     .foregroundStyle(MuesliTheme.textSecondary)
                 Spacer()
-                Button("Open Settings") {
+                Button(String(localized: "common.open_settings", defaultValue: "Open Settings", comment: "Common action label to open app settings.")) {
                     controller.openHistoryWindow(tab: .settings)
                 }
                 .font(.system(size: 12, weight: .medium))
@@ -1351,23 +1347,23 @@ struct MeetingDetailView: View {
     }
 
     private var primarySummaryActionLabel: String {
-        guard let meeting else { return "Re-summarize" }
+        guard let meeting else { return String(localized: "meeting_detail.summary.primary_action_resummarize", defaultValue: "Re-summarize", comment: "Primary action label to regenerate meeting summary.") }
         return primarySummaryActionLabel(for: meeting)
     }
 
     private var copyButtonLabel: String {
-        "Copy"
+        String(localized: "common.copy", defaultValue: "Copy", comment: "Common action label to copy content.")
     }
 
     private var editButtonLabel: String {
         if isEditingNotes || isEditingTranscript {
             return "Done"
         }
-        return documentMode == .transcript ? "Edit Transcript" : "Edit Notes"
+        return documentMode == .transcript ? String(localized: "meeting_detail.edit_button.edit_transcript", defaultValue: "Edit Transcript", comment: "Button label to edit meeting transcript.") : String(localized: "meeting_detail.edit_button.edit_notes", defaultValue: "Edit Notes", comment: "Button label to edit meeting notes.")
     }
 
     private func primarySummaryActionLabel(for meeting: MeetingRecord) -> String {
-        hasPendingTemplateChange(for: meeting) ? "Apply Template" : "Re-summarize"
+        hasPendingTemplateChange(for: meeting) ? String(localized: "meeting_detail.summary.primary_action.apply_template", defaultValue: "Apply Template", comment: "Primary action label to apply selected summary template.") : String(localized: "meeting_detail.summary.primary_action.resummarize-mueslinativeapp", defaultValue: "Re-summarize", comment: "Primary action label to regenerate summary from transcript.")
     }
 
     private func activeCopyText(for meeting: MeetingRecord) -> String {
@@ -1613,14 +1609,14 @@ struct MeetingDetailView: View {
     private func formatDuration(_ seconds: Double) -> String {
         let rounded = Int(seconds.rounded())
         if rounded >= 3600 {
-            return "\(rounded / 3600)h \((rounded % 3600) / 60)m"
+            return String(format: String(localized: "meeting_detail.duration.hours_minutes", defaultValue: "%dh %dm", comment: "Duration label showing hours and minutes."), rounded / 3600, (rounded % 3600) / 60)
         }
         if rounded >= 60 {
             let m = rounded / 60
             let s = rounded % 60
-            return s == 0 ? "\(m)m" : "\(m)m \(s)s"
+            return s == 0 ? String(format: String(localized: "meeting_detail.duration.minutes_only", defaultValue: "%dm", comment: "Duration label showing minutes only."), m) : String(format: String(localized: "meeting_detail.duration.minutes_seconds", defaultValue: "%dm %ds", comment: "Duration label showing minutes and seconds."), m, s)
         }
-        return "\(rounded)s"
+        return String(format: String(localized: "meeting_detail.duration.seconds_only", defaultValue: "%ds", comment: "Duration label showing seconds only."), rounded)
     }
 }
 
@@ -1652,7 +1648,7 @@ private struct MarqueeTitleTextField: View {
 
     var body: some View {
         ZStack(alignment: .leading) {
-            TextField("Meeting Title", text: $text)
+            TextField(String(localized: "meeting_detail.meeting_title", defaultValue: "Meeting Title", comment: "Field label for meeting title in detail view."), text: $text)
                 .font(titleFont)
                 .foregroundStyle(MuesliTheme.textPrimary)
                 .textFieldStyle(.plain)
@@ -1668,7 +1664,7 @@ private struct MarqueeTitleTextField: View {
                     restartMarqueeIfNeeded()
                 }
 
-            Text(text.isEmpty ? "Meeting Title" : text)
+            Text(text.isEmpty ? String(localized: "meeting_detail.meeting_title", defaultValue: "Meeting Title", comment: "Field label for meeting title in detail view.") : text)
                 .font(titleFont)
                 .fontWeight(.bold)
                 .foregroundStyle(MuesliTheme.textPrimary)
@@ -1687,7 +1683,7 @@ private struct MarqueeTitleTextField: View {
             }
         )
         .overlay(
-            Text(text.isEmpty ? "Meeting Title" : text)
+            Text(text.isEmpty ? String(localized: "meeting_detail.meeting_title", defaultValue: "Meeting Title", comment: "Field label for meeting title in detail view.") : text)
                 .font(titleFont)
                 .fontWeight(.bold)
                 .lineLimit(1)
@@ -1840,7 +1836,7 @@ struct TranscriptChatMessage: Identifiable, Equatable {
     private static func isLikelySpeakerLabel(_ label: String) -> Bool {
         guard !label.isEmpty, label.count <= 32 else { return false }
         if label.localizedCaseInsensitiveCompare("You") == .orderedSame { return true }
-        if label.localizedCaseInsensitiveCompare("Others") == .orderedSame { return true }
+        if label.localizedCaseInsensitiveCompare(String(localized: "meeting_detail.transcript.speaker_others", defaultValue: "Others", comment: "Speaker label for non-user participants in transcript.")) == .orderedSame { return true }
         if label.range(of: #"^Speaker\s+\d+$"#, options: [.regularExpression, .caseInsensitive]) != nil {
             return true
         }
@@ -1861,7 +1857,7 @@ private struct MeetingTranscriptView: View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: MuesliTheme.spacing8) {
                 if messages.isEmpty {
-                    Text("No transcript available")
+                    Text(String(localized: "meeting_detail.transcript.no_transcript_available", defaultValue: "No transcript available", comment: "Empty state message when no transcript exists for meeting."))
                         .font(MuesliTheme.body())
                         .foregroundStyle(MuesliTheme.textTertiary)
                         .frame(maxWidth: 860, alignment: .leading)
