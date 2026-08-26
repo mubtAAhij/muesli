@@ -77,7 +77,7 @@ enum WavReader {
               String(bytes: data[0..<4], encoding: .ascii) == "RIFF",
               String(bytes: data[8..<12], encoding: .ascii) == "WAVE"
         else {
-            throw NSError(domain: "WavReader", code: 1, userInfo: [NSLocalizedDescriptionKey: "Invalid WAV file: \(url.path)"])
+            throw NSError(domain: "WavReader", code: 1, userInfo: [NSLocalizedDescriptionKey: String(format: String(localized: "wav_reader.error.invalid_wav_file", defaultValue: "Invalid WAV file: %@", comment: "Error when WAV file header is invalid"), url.path)])
         }
 
         var sampleRate: Int?
@@ -121,7 +121,7 @@ enum WavReader {
               channelCount > 0,
               let dataRange
         else {
-            throw NSError(domain: "WavReader", code: 2, userInfo: [NSLocalizedDescriptionKey: "Expected 16-bit PCM WAV: \(url.path)"])
+            throw NSError(domain: "WavReader", code: 2, userInfo: [NSLocalizedDescriptionKey: String(format: String(localized: "wav_reader.error.expected_16bit_pcm_wav", defaultValue: "Expected 16-bit PCM WAV: %@", comment: "Error when WAV file is not 16-bit PCM"), url.path)])
         }
 
         var interleaved: [Int16] = []
