@@ -342,7 +342,7 @@ struct MeetingRecordingPlayerView: View {
             }
             .buttonStyle(.plain)
             .disabled(player == nil)
-            .help(isPlaying ? "Pause recording" : "Play recording")
+            .help(isPlaying ? String(localized: "meeting_recording_player.help.pause_recording", defaultValue: "Pause recording", comment: "Help text for control that pauses meeting recording") : String(localized: "meeting_recording_player.help.play_recording", defaultValue: "Play recording", comment: "Help text for control that plays meeting recording"))
 
             Group {
                 if let waveform {
@@ -352,7 +352,7 @@ struct MeetingRecordingPlayerView: View {
                         onSeek: seek(to:)
                     )
                 } else if loadFailed {
-                    Text("Recording unavailable")
+                    Text(String(localized: "meeting_recording_player.status.recording_unavailable", defaultValue: "Recording unavailable", comment: "Status label when meeting recording is unavailable"))
                         .font(MuesliTheme.captionMedium())
                         .foregroundStyle(MuesliTheme.textTertiary)
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -360,7 +360,7 @@ struct MeetingRecordingPlayerView: View {
                     HStack(spacing: MuesliTheme.spacing8) {
                         ProgressView()
                             .controlSize(.small)
-                        Text("Loading recording")
+                        Text(String(localized: "meeting_recording_player.status.loading_recording", defaultValue: "Loading recording", comment: "Status label while meeting recording is loading"))
                             .font(MuesliTheme.captionMedium())
                             .foregroundStyle(MuesliTheme.textTertiary)
                     }
@@ -513,7 +513,7 @@ private struct RecordingWaveformView: View {
             )
         }
         .frame(minHeight: 36)
-        .accessibilityLabel("Recording waveform")
+        .accessibilityLabel(String(localized: "meeting_recording_player.accessibility.waveform_label", defaultValue: "Recording waveform", comment: "Accessibility label for meeting recording waveform visualization"))
     }
 
     private func peakForVisibleBar(_ index: Int, visibleCount: Int, sourceCount: Int) -> CGFloat {
