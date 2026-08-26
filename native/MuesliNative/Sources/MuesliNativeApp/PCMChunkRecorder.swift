@@ -77,7 +77,7 @@ final class PCMChunkRecorder {
             throw NSError(
                 domain: "PCMChunkRecorder",
                 code: 2,
-                userInfo: [NSLocalizedDescriptionKey: "Could not open chunk recorder file for writing."]
+                userInfo: [NSLocalizedDescriptionKey: String(localized: "pcm_chunk_recorder.error.could_not_open_file_for_writing", defaultValue: "Could not open chunk recorder file for writing.", comment: "Error when chunk recorder output file cannot be opened")]
             )
         }
         fileHandle.write(WavWriter.header(dataSize: 0))
