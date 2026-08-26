@@ -39,24 +39,24 @@ struct DictionaryView: View {
         .onAppear {
             controller.reconcilePendingDictionaryCorrectionAccessibilityEnable()
         }
-        .alert("Enable Accessibility?", isPresented: $isShowingAccessibilityPrompt) {
-            Button("Cancel", role: .cancel) {
+        .alert(String(localized: "dictionary.accessibility_alert.title", defaultValue: "Enable Accessibility?", comment: "Title for accessibility permission prompt in dictionary view."), isPresented: $isShowingAccessibilityPrompt) {
+            Button(String(localized: "common.button.cancel", defaultValue: "Cancel", comment: "Cancel button title."), role: .cancel) {
                 controller.cancelDictionaryCorrectionAccessibilityEnableRequest()
             }
-            Button("Enable") {
+            Button(String(localized: "dictionary.accessibility_alert.enable", defaultValue: "Enable", comment: "Button title to enable accessibility access.")) {
                 controller.requestDictionaryCorrectionAccessibilityEnable()
             }
         } message: {
-            Text("Dictionary suggestions briefly read focused app text via Accessibility after dictation. Grant access, then relaunch Muesli to turn suggestions on.")
+            Text(String(localized: "dictionary.accessibility_alert.message", defaultValue: "Dictionary suggestions briefly read focused app text via Accessibility after dictation. Grant access, then relaunch Muesli to turn suggestions on.", comment: "Explanation of why accessibility access is needed for dictionary suggestions."))
         }
         .alert(
-            "Dictionary",
+            String(localized: "dictionary.accessibility_alert.source", defaultValue: "Dictionary", comment: "Source label for dictionary accessibility alert."),
             isPresented: Binding(
                 get: { dictionaryAlertMessage != nil },
                 set: { if !$0 { dictionaryAlertMessage = nil } }
             )
         ) {
-            Button("OK", role: .cancel) { dictionaryAlertMessage = nil }
+            Button(String(localized: "common.button.ok", defaultValue: "OK", comment: "OK button title."), role: .cancel) { dictionaryAlertMessage = nil }
         } message: {
             Text(dictionaryAlertMessage ?? "")
         }
@@ -65,12 +65,12 @@ struct DictionaryView: View {
     private var header: some View {
         VStack(alignment: .leading, spacing: MuesliTheme.spacing8) {
             HStack {
-                Text("Dictionary")
+                Text(String(localized: "dictionary.header.title", defaultValue: "Dictionary", comment: "Header title for dictionary screen."))
                     .font(MuesliTheme.title1())
                     .foregroundStyle(MuesliTheme.textPrimary)
                 Spacer()
                 Toggle(
-                    "Dictionary suggestions",
+                    String(localized: "dictionary.header.suggestions_toggle", defaultValue: "Dictionary suggestions", comment: "Toggle label for enabling dictionary suggestions."),
                     isOn: Binding(
                         get: { appState.config.enableDictionaryCorrectionPrompts },
                         set: { handleDictionaryCorrectionPromptsToggle($0) }
@@ -79,12 +79,12 @@ struct DictionaryView: View {
                 .toggleStyle(.switch)
                 .font(MuesliTheme.caption())
                 .foregroundStyle(MuesliTheme.textSecondary)
-                .help("Briefly reads focused app text after dictation to detect corrections.")
+                .help(String(localized: "dictionary.header.help.accessibility_summary", defaultValue: "Briefly reads focused app text after dictation to detect corrections.", comment: "Help text describing dictionary suggestions accessibility behavior."))
                 .featureTourTarget(.dictionarySuggestions)
                 Button {
                     importDictionary()
                 } label: {
-                    Label("Import", systemImage: "square.and.arrow.down")
+                    Label(String(localized: "dictionary.header.import", defaultValue: "Import", comment: "Import button title in dictionary header."), systemImage: "square.and.arrow.down")
                         .font(.system(size: 12, weight: .medium))
                         .foregroundStyle(MuesliTheme.textPrimary)
                         .padding(.horizontal, MuesliTheme.spacing12)
@@ -97,11 +97,11 @@ struct DictionaryView: View {
                         )
                 }
                 .buttonStyle(.plain)
-                .help("Import dictionary entries from a JSON file")
+                .help(String(localized: "dictionary.header.import.help", defaultValue: "Import dictionary entries from a JSON file", comment: "Help text for importing dictionary entries."))
                 Button {
                     exportDictionary()
                 } label: {
-                    Label("Export", systemImage: "square.and.arrow.up")
+                    Label(String(localized: "dictionary.header.export", defaultValue: "Export", comment: "Export button title in dictionary header."), systemImage: "square.and.arrow.up")
                         .font(.system(size: 12, weight: .medium))
                         .foregroundStyle(MuesliTheme.textPrimary)
                         .padding(.horizontal, MuesliTheme.spacing12)
@@ -114,7 +114,7 @@ struct DictionaryView: View {
                         )
                 }
                 .buttonStyle(.plain)
-                .help("Export the current dictionary as JSON")
+                .help(String(localized: "dictionary.header.export.help", defaultValue: "Export the current dictionary as JSON", comment: "Help text for exporting dictionary entries."))
                 Button {
                     isAdding = true
                     newWord = ""
@@ -124,7 +124,7 @@ struct DictionaryView: View {
                     HStack(spacing: 4) {
                         Image(systemName: "plus")
                             .font(.system(size: 11, weight: .bold))
-                        Text("Add new")
+                        Text(String(localized: "dictionary.header.add_new", defaultValue: "Add new", comment: "Button title to add a new dictionary entry."))
                             .font(.system(size: 13, weight: .medium))
                     }
                     .foregroundStyle(MuesliTheme.textPrimary)
@@ -139,7 +139,7 @@ struct DictionaryView: View {
                 }
                 .buttonStyle(.plain)
             }
-            Text("Add custom words for names, brands, and domain terms, and tune how aggressively each entry should fuzzy-match transcription errors.")
+            Text(String(localized: "dictionary.header.description", defaultValue: "Add custom words for names, brands, and domain terms, and tune how aggressively each entry should fuzzy-match transcription errors.", comment: "Description text for dictionary customization section."))
                 .font(MuesliTheme.body())
                 .foregroundStyle(MuesliTheme.textSecondary)
         }
@@ -153,9 +153,9 @@ struct DictionaryView: View {
 
     private func importDictionary() {
         let panel = NSOpenPanel()
-        panel.title = "Import Muesli Dictionary"
-        panel.message = "Choose a JSON dictionary file"
-        panel.prompt = "Import"
+        panel.title = String(localized: "dictionary.import.panel_title", defaultValue: "Import Muesli Dictionary", comment: "Title of import panel for dictionary JSON file.")
+        panel.message = String(localized: "dictionary.import.panel_message", defaultValue: "Choose a JSON dictionary file", comment: "Message in import panel prompting file selection.")
+        panel.prompt = String(localized: "dictionary.import.panel_confirm", defaultValue: "Import", comment: "Confirmation button title in import panel.")
         panel.allowedContentTypes = [.json]
         panel.allowsMultipleSelection = false
         panel.canChooseDirectories = false
@@ -174,25 +174,25 @@ struct DictionaryView: View {
                 let totalChanged = result.addedCount + result.updatedCount
                 if totalChanged == 0 {
                     dictionaryAlertMessage = imported.isEmpty
-                        ? "The selected dictionary did not contain any entries."
-                        : "All dictionary entries were already present."
+                        ? String(localized: "dictionary.import.result.no_entries", defaultValue: "The selected dictionary did not contain any entries.", comment: "Result message when imported dictionary file has no entries.")
+                        : String(localized: "dictionary.import.result.already_present", defaultValue: "All dictionary entries were already present.", comment: "Result message when imported dictionary entries already exist.")
                 } else {
-                    var details = ["Imported \(result.addedCount) new", "updated \(result.updatedCount)"]
+                    var details = [String(format: String(localized: "dictionary.import.result.added_fragment", defaultValue: "Imported %d new", comment: "Import result fragment showing newly added entry count."), result.addedCount), String(format: String(localized: "dictionary.import.result.updated_fragment", defaultValue: "updated %d", comment: "Import result fragment showing updated entry count."), result.updatedCount)]
                     if result.skippedCount > 0 {
-                        details.append("skipped \(result.skippedCount)")
+                        details.append(String(format: String(localized: "dictionary.import.result.skipped_fragment", defaultValue: "skipped %d", comment: "Import result fragment showing skipped entry count."), result.skippedCount))
                     }
-                    dictionaryAlertMessage = details.joined(separator: ", ") + " dictionary entries."
+                    dictionaryAlertMessage = details.joined(separator: ", ") + " " + String(localized: "dictionary.import.result.entries_suffix", defaultValue: "dictionary entries.", comment: "Suffix appended to dictionary import summary sentence.")
                 }
             } catch {
-                dictionaryAlertMessage = "Could not import the dictionary. \(error.localizedDescription)"
+                dictionaryAlertMessage = String(format: String(localized: "dictionary.import.error", defaultValue: "Could not import the dictionary. %@", comment: "Error message when dictionary import fails."), "\(error.localizedDescription)")
             }
         }
     }
 
     private func exportDictionary() {
         let panel = NSSavePanel()
-        panel.title = "Export Muesli Dictionary"
-        panel.prompt = "Export"
+        panel.title = String(localized: "dictionary.export.panel_title", defaultValue: "Export Muesli Dictionary", comment: "Title of export panel for dictionary JSON file.")
+        panel.prompt = String(localized: "dictionary.export.panel_confirm", defaultValue: "Export", comment: "Confirmation button title in export panel.")
         panel.nameFieldStringValue = "muesli-dictionary.json"
         panel.allowedContentTypes = [.json]
         panel.canCreateDirectories = true
@@ -201,9 +201,9 @@ struct DictionaryView: View {
             do {
                 let data = try CustomWordDictionaryCodec.encode(appState.config.customWords)
                 try data.write(to: url, options: .atomic)
-                dictionaryAlertMessage = "Exported \(appState.config.customWords.count) dictionary entries."
+                dictionaryAlertMessage = String(format: String(localized: "dictionary.export.success", defaultValue: "Exported %d dictionary entries.", comment: "Success message after exporting dictionary entries."), appState.config.customWords.count)
             } catch {
-                dictionaryAlertMessage = "Could not export the dictionary. \(error.localizedDescription)"
+                dictionaryAlertMessage = String(format: String(localized: "dictionary.export.error", defaultValue: "Could not export the dictionary. %@", comment: "Error message when dictionary export fails."), "\(error.localizedDescription)")
             }
         }
     }
@@ -227,10 +227,10 @@ struct DictionaryView: View {
         VStack(spacing: 0) {
             HStack {
                 VStack(alignment: .leading, spacing: 3) {
-                    Text("Suggested Corrections")
+                    Text(String(localized: "dictionary.suggestions.title", defaultValue: "Suggested Corrections", comment: "Section title for dictionary suggestion corrections."))
                         .font(MuesliTheme.headline())
                         .foregroundStyle(MuesliTheme.textPrimary)
-                    Text("Corrections Muesli noticed by briefly reading focused app text after dictation.")
+                    Text(String(localized: "dictionary.suggestions.description", defaultValue: "Corrections Muesli noticed by briefly reading focused app text after dictation.", comment: "Description explaining source of suggested corrections."))
                         .font(MuesliTheme.caption())
                         .foregroundStyle(MuesliTheme.textTertiary)
                 }
@@ -281,7 +281,7 @@ struct DictionaryView: View {
         guard count > 0 else { return "" }
         let start = boundedSuggestionPage * DictionaryRowMetrics.suggestionPageSize + 1
         let end = min(start + DictionaryRowMetrics.suggestionPageSize - 1, count)
-        return "\(start)-\(end) of \(count)"
+        return String(format: String(localized: "dictionary.suggestions.range", defaultValue: "%d-%d of %d", comment: "Pagination range text for suggestion list."), start, end, count)
     }
 
     private var suggestionPaginationControls: some View {
@@ -294,7 +294,7 @@ struct DictionaryView: View {
 
             DictionaryIconButton(
                 systemName: "chevron.left",
-                label: "Previous suggestions",
+                label: String(localized: "dictionary.suggestions.pagination.previous", defaultValue: "Previous suggestions", comment: "Button label to go to previous suggestions page."),
                 tint: MuesliTheme.textSecondary,
                 isDisabled: boundedSuggestionPage == 0
             ) {
@@ -303,7 +303,7 @@ struct DictionaryView: View {
 
             DictionaryIconButton(
                 systemName: "chevron.right",
-                label: "Next suggestions",
+                label: String(localized: "dictionary.suggestions.pagination.next", defaultValue: "Next suggestions", comment: "Button label to go to next suggestions page."),
                 tint: MuesliTheme.textSecondary,
                 isDisabled: boundedSuggestionPage >= suggestionPageCount - 1
             ) {
@@ -346,10 +346,10 @@ struct DictionaryView: View {
             Image(systemName: "character.book.closed")
                 .font(.system(size: 28))
                 .foregroundStyle(MuesliTheme.textTertiary)
-            Text("No custom words yet")
+            Text(String(localized: "dictionary.empty_state.title", defaultValue: "No custom words yet", comment: "Empty state title when dictionary has no custom words."))
                 .font(MuesliTheme.body())
                 .foregroundStyle(MuesliTheme.textSecondary)
-            Text("Add words that transcription frequently gets wrong")
+            Text(String(localized: "dictionary.empty_state.subtitle", defaultValue: "Add words that transcription frequently gets wrong", comment: "Empty state subtitle encouraging adding custom words."))
                 .font(MuesliTheme.caption())
                 .foregroundStyle(MuesliTheme.textTertiary)
         }
@@ -359,13 +359,13 @@ struct DictionaryView: View {
 
     private var columnHeader: some View {
         HStack(spacing: MuesliTheme.spacing8) {
-            Text("Match")
+            Text(String(localized: "dictionary.table.column.match", defaultValue: "Match", comment: "Column header for source word to match."))
                 .frame(maxWidth: .infinity, alignment: .leading)
             Color.clear
                 .frame(width: DictionaryRowMetrics.arrowWidth)
-            Text("Replace")
+            Text(String(localized: "dictionary.table.column.replace", defaultValue: "Replace", comment: "Column header for replacement text."))
                 .frame(maxWidth: .infinity, alignment: .leading)
-            Text("Threshold")
+            Text(String(localized: "dictionary.table.column.threshold", defaultValue: "Threshold", comment: "Column header for matching threshold value."))
                 .frame(width: DictionaryRowMetrics.thresholdWidth, alignment: .leading)
             Color.clear
                 .frame(width: DictionaryRowMetrics.actionsWidth)
@@ -378,20 +378,20 @@ struct DictionaryView: View {
 
     private var addWordRow: some View {
         HStack(spacing: MuesliTheme.spacing8) {
-            TextField("Word", text: $newWord)
+            TextField(String(localized: "dictionary.add_word.field_label", defaultValue: "Word", comment: "Field label for adding a custom dictionary word."), text: $newWord)
                 .textFieldStyle(.roundedBorder)
                 .frame(maxWidth: .infinity)
             Image(systemName: "arrow.right")
                 .font(.system(size: 10, weight: .semibold))
                 .foregroundStyle(MuesliTheme.textTertiary)
                 .frame(width: DictionaryRowMetrics.arrowWidth)
-            TextField("Replace with", text: $newReplacement)
+            TextField(String(localized: "dictionary.add_word.replace_with.prompt", defaultValue: "Replace with", comment: "Prompt label for replacement text when adding a dictionary word."), text: $newReplacement)
                 .textFieldStyle(.roundedBorder)
                 .frame(maxWidth: .infinity)
             ThresholdEditor(value: $newThreshold)
             DictionaryIconButton(
                 systemName: "checkmark",
-                label: "Add word",
+                label: String(localized: "dictionary.add_word.button", defaultValue: "Add word", comment: "Button title to add a new dictionary word."),
                 tint: MuesliTheme.accent,
                 isDisabled: newWord.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
             ) {
@@ -412,7 +412,7 @@ struct DictionaryView: View {
             }
             DictionaryIconButton(
                 systemName: "xmark",
-                label: "Cancel",
+                label: String(localized: "dictionary.add_word.cancel", defaultValue: "Cancel", comment: "Button title to cancel adding a dictionary word."),
                 tint: MuesliTheme.textTertiary
             ) {
                 isAdding = false
@@ -454,14 +454,14 @@ private struct DictionarySuggestionRow: View {
             Spacer()
             DictionaryIconButton(
                 systemName: "checkmark",
-                label: "Add correction",
+                label: String(localized: "dictionary.suggestion.add_correction", defaultValue: "Add correction", comment: "Button title to add a suggested correction to dictionary."),
                 tint: MuesliTheme.accent
             ) {
                 controller.acceptDictionarySuggestion(id: suggestion.id)
             }
             DictionaryIconButton(
                 systemName: "xmark",
-                label: "Dismiss correction",
+                label: String(localized: "dictionary.suggestion.dismiss_correction", defaultValue: "Dismiss correction", comment: "Button title to dismiss a suggested correction."),
                 tint: MuesliTheme.textTertiary
             ) {
                 controller.dismissDictionarySuggestion(id: suggestion.id)
@@ -472,7 +472,7 @@ private struct DictionarySuggestionRow: View {
     }
 
     private var detailText: String {
-        var parts = ["Seen \(suggestion.occurrenceCount)x"]
+        var parts = [String(format: String(localized: "dictionary.suggestion.seen_count", defaultValue: "Seen %dx", comment: "Label showing how many times a suggestion was observed."), suggestion.occurrenceCount)]
         if !suggestion.appDisplayName.isEmpty {
             parts.append(suggestion.appDisplayName)
         }
@@ -512,20 +512,20 @@ private struct DictionaryWordEditorRow: View {
 
     var body: some View {
         HStack(spacing: MuesliTheme.spacing8) {
-            TextField("Word", text: $draftWord)
+            TextField(String(localized: "dictionary.add_word.prompt", defaultValue: "Word", comment: "Prompt label for dictionary word input field."), text: $draftWord)
                 .textFieldStyle(.roundedBorder)
                 .frame(maxWidth: .infinity)
             Image(systemName: "arrow.right")
                 .font(.system(size: 10, weight: .semibold))
                 .foregroundStyle(MuesliTheme.textTertiary)
                 .frame(width: DictionaryRowMetrics.arrowWidth)
-            TextField("Replace with", text: $draftReplacement)
+            TextField(String(localized: "dictionary.edit_word.replace_with.prompt", defaultValue: "Replace with", comment: "Prompt label for replacement text when editing a word."), text: $draftReplacement)
                 .textFieldStyle(.roundedBorder)
                 .frame(maxWidth: .infinity)
             ThresholdEditor(value: $draftThreshold)
             DictionaryIconButton(
                 systemName: "checkmark",
-                label: "Save word",
+                label: String(localized: "dictionary.edit_word.save", defaultValue: "Save word", comment: "Button title to save edited dictionary word."),
                 tint: hasChanges && !trimmedWord.isEmpty ? MuesliTheme.accent : MuesliTheme.textTertiary,
                 isDisabled: trimmedWord.isEmpty || !hasChanges
             ) {
@@ -540,7 +540,7 @@ private struct DictionaryWordEditorRow: View {
             }
             DictionaryIconButton(
                 systemName: "trash",
-                label: "Delete word",
+                label: String(localized: "dictionary.edit_word.delete", defaultValue: "Delete word", comment: "Button title to delete a dictionary word."),
                 tint: MuesliTheme.recording,
                 weight: .regular
             ) {
@@ -587,8 +587,8 @@ private struct ThresholdEditor: View {
         .popover(isPresented: $isPresented, arrowEdge: .bottom) {
             thresholdPopover
         }
-        .help("Matching threshold")
-        .accessibilityLabel("Matching threshold")
+        .help(String(localized: "dictionary.threshold.help.title", defaultValue: "Matching threshold", comment: "Help title explaining dictionary matching threshold."))
+        .accessibilityLabel(String(localized: "dictionary.threshold.accessibility_label", defaultValue: "Matching threshold", comment: "Accessibility label for threshold control."))
         .accessibilityValue(Self.label(for: value))
     }
 
@@ -607,7 +607,7 @@ private struct ThresholdEditor: View {
     private var thresholdPopover: some View {
         VStack(alignment: .leading, spacing: MuesliTheme.spacing12) {
             HStack {
-                Text("Threshold")
+                Text(String(localized: "dictionary.threshold_popover.title", defaultValue: "Threshold", comment: "Title for threshold popover."))
                     .font(MuesliTheme.caption())
                     .foregroundStyle(MuesliTheme.textTertiary)
                 Spacer()
@@ -706,7 +706,7 @@ private struct ThresholdSlider: View {
         }
         .frame(height: thumbSize)
         .accessibilityElement()
-        .accessibilityLabel("Matching threshold")
+        .accessibilityLabel(String(localized: "dictionary.threshold.accessibility_label", defaultValue: "Matching threshold", comment: "Accessibility label for threshold control."))
         .accessibilityValue("\(Int(round(value * 100)))%")
         .accessibilityAdjustableAction { direction in
             switch direction {
