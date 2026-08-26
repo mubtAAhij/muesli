@@ -9,9 +9,9 @@ enum MeetingRecordingFileFormat: String, CaseIterable, Sendable {
     var displayName: String {
         switch self {
         case .m4a:
-            return "M4A (AAC, smaller)"
+            return String(localized: "meeting_recording_writer.format.m4a.display_name", defaultValue: "M4A (AAC, smaller)", comment: "Display name for M4A meeting recording format option")
         case .wav:
-            return "WAV (lossless)"
+            return String(localized: "meeting_recording_writer.format.wav.display_name", defaultValue: "WAV (lossless)", comment: "Display name for WAV meeting recording format option")
         }
     }
 
@@ -58,7 +58,7 @@ final class MeetingRecordingWriter {
             throw NSError(
                 domain: "MeetingRecordingWriter",
                 code: 1,
-                userInfo: [NSLocalizedDescriptionKey: "Could not open retained meeting recording file for writing."]
+                userInfo: [NSLocalizedDescriptionKey: String(localized: "meeting_recording_writer.error.could_not_open_retained_file_for_writing", defaultValue: "Could not open retained meeting recording file for writing.", comment: "Error when retained meeting recording file cannot be opened for writing")]
             )
         }
         fileHandle.write(Self.wavHeader(dataSize: 0))
@@ -223,7 +223,7 @@ final class MeetingRecordingWriter {
             throw NSError(
                 domain: "MeetingRecordingWriter",
                 code: 2,
-                userInfo: [NSLocalizedDescriptionKey: "Could not create M4A export session for meeting recording."]
+                userInfo: [NSLocalizedDescriptionKey: String(localized: "meeting_recording_writer.error.could_not_create_m4a_export_session", defaultValue: "Could not create M4A export session for meeting recording.", comment: "Error when M4A export session cannot be created for meeting recording")]
             )
         }
 
@@ -237,7 +237,7 @@ final class MeetingRecordingWriter {
                     continuation.resume(throwing: exportSessionBox.session.error ?? NSError(
                         domain: "MeetingRecordingWriter",
                         code: 3,
-                        userInfo: [NSLocalizedDescriptionKey: "Could not export meeting recording as M4A."]
+                        userInfo: [NSLocalizedDescriptionKey: String(localized: "meeting_recording_writer.error.could_not_export_as_m4a", defaultValue: "Could not export meeting recording as M4A.", comment: "Error when meeting recording export to M4A fails")]
                     ))
                     return
                 }
