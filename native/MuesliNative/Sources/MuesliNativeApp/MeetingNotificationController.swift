@@ -53,7 +53,7 @@ final class MeetingNotificationController {
         promptID: String? = nil,
         title: String,
         subtitle: String,
-        actionLabel: String = "Start Recording",
+        actionLabel: String = String(localized: "meeting_notification.button.start_recording", defaultValue: "Start Recording", comment: "Button title to start meeting recording from notification"),
         meetingURL: URL? = nil,
         preferredScreen: NSScreen? = nil,
         platform explicitPlatform: MeetingPlatform? = nil,
@@ -172,7 +172,7 @@ final class MeetingNotificationController {
         dismissButton.focusRingType = .none
         dismissButton.isBordered = false
         dismissButton.contentTintColor = NSColor.white.withAlphaComponent(0.86)
-        dismissButton.toolTip = "Dismiss"
+        dismissButton.toolTip = String(localized: "meeting_notification.button.dismiss", defaultValue: "Dismiss", comment: "Button title to dismiss meeting notification")
         contentView.addSubview(dismissButton)
         contentView.hoverFrames = [cardView.frame, dismissButton.frame]
 
@@ -213,7 +213,7 @@ final class MeetingNotificationController {
             subtitleLabel.frame.size.width = textMaxX - textX
 
             // Main "Join & Record" button
-            let joinButton = NSButton(title: "Join & Record", target: self, action: #selector(handleJoinAndRecord))
+            let joinButton = NSButton(title: String(localized: "meeting_notification.button.join_record", defaultValue: "Join & Record", comment: "Button title to join meeting and start recording"), target: self, action: #selector(handleJoinAndRecord))
             joinButton.font = .systemFont(ofSize: 11, weight: .medium)
             joinButton.frame = NSRect(x: buttonX, y: 15, width: buttonWidth, height: 30)
             joinButton.wantsLayer = true
@@ -415,11 +415,11 @@ final class MeetingNotificationController {
 
     @objc private func handleChevronClick(_ sender: NSButton) {
         let menu = NSMenu()
-        let joinOnlyItem = NSMenuItem(title: "Join Only", action: #selector(handleJoinOnly), keyEquivalent: "")
+        let joinOnlyItem = NSMenuItem(title: String(localized: "meeting_notification.button.join_only", defaultValue: "Join Only", comment: "Button title to join meeting without recording"), action: #selector(handleJoinOnly), keyEquivalent: "")
         joinOnlyItem.target = self
         menu.addItem(joinOnlyItem)
 
-        let recordOnlyItem = NSMenuItem(title: "Record Only", action: #selector(handleStartRecording), keyEquivalent: "")
+        let recordOnlyItem = NSMenuItem(title: String(localized: "meeting_notification.button.record_only", defaultValue: "Record Only", comment: "Button title to record meeting without joining"), action: #selector(handleStartRecording), keyEquivalent: "")
         recordOnlyItem.target = self
         menu.addItem(recordOnlyItem)
 
