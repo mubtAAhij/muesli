@@ -11,9 +11,9 @@ enum TranscriptCleanupError: LocalizedError {
         case let .missingConfiguration(message):
             return message
         case .rejectedOutput:
-            return "Transcript cleanup output was rejected by safety checks."
+            return String(localized: "transcript_cleanup.error.safety_rejected", defaultValue: "Transcript cleanup output was rejected by safety checks.", comment: "Error shown when cleanup output is blocked by safety checks")
         case let .emptyResponse(backend):
-            return "\(backend) returned an empty transcript cleanup response."
+            return String(format: String(localized: "transcript_cleanup.error.empty_response", defaultValue: "%@ returned an empty transcript cleanup response.", comment: "Error shown when selected cleanup backend returns empty result"), "\(backend)")
         case let .backendFailed(message):
             return message
         }
@@ -124,7 +124,7 @@ enum TranscriptCleanupClient {
         config: AppConfig
     ) async throws -> TranscriptCleanupResult {
         guard let llmBackend = backend.llmBackend else {
-            throw TranscriptCleanupError.missingConfiguration("Local cleanup is handled by Qwen3PostProcessor.")
+            throw TranscriptCleanupError.missingConfiguration(String(localized: "transcript_cleanup.error.local_cleanup_configuration", defaultValue: "Local cleanup is handled by Qwen3PostProcessor.", comment: "Message shown when local cleanup backend is delegated to post-processor"))
         }
 
         let model = configuredModel(for: backend, config: config)
@@ -160,7 +160,7 @@ enum TranscriptCleanupClient {
             raw = try await cleanWithOllama(systemPrompt: effectiveSystemPrompt, userPrompt: userPrompt, model: model, config: config)
         case .lmStudio:
             guard let requestURL = MeetingSummaryClient.resolveLMStudioURL(config: cleanupConfig(config, model: model)) else {
-                throw TranscriptCleanupError.missingConfiguration("Invalid LM Studio URL: \(config.lmStudioURL)")
+                throw TranscriptCleanupError.missingConfiguration(String(format: String(localized: "transcript_cleanup.error.invalid_lm_studio_url", defaultValue: "Invalid LM Studio URL: %@", comment: "Error shown when LM Studio endpoint URL is invalid"), "\(config.lmStudioURL)"))
             }
             raw = try await cleanWithChatCompletions(
                 backend: "LM Studio",
@@ -173,7 +173,7 @@ enum TranscriptCleanupClient {
         case .customLLM:
             let format = CustomLLMFormat(rawValue: config.customLLMFormat) ?? .openAI
             guard let requestURL = resolveConfiguredCustomLLMURL(config: config, format: format) else {
-                throw TranscriptCleanupError.missingConfiguration("Invalid custom URL: \(config.customLLMURL)")
+                throw TranscriptCleanupError.missingConfiguration(String(format: String(localized: "transcript_cleanup.error.invalid_custom_url", defaultValue: "Invalid custom URL: %@", comment: "Error shown when custom cleanup backend URL is invalid"), "\(config.customLLMURL)"))
             }
             switch format {
             case .openAI:
@@ -195,7 +195,7 @@ enum TranscriptCleanupClient {
                 )
             }
         default:
-            throw TranscriptCleanupError.missingConfiguration("Unsupported transcript cleanup backend: \(backend.label)")
+            throw TranscriptCleanupError.missingConfiguration(String(format: String(localized: "transcript_cleanup.error.unsupported_backend", defaultValue: "Unsupported transcript cleanup backend: %@", comment: "Error shown when selected cleanup backend is unsupported"), "\(backend.label)"))
         }
 
         let cleaned = cleanOutput(raw)
@@ -261,7 +261,7 @@ enum TranscriptCleanupClient {
         let key = config.openAIAPIKey.trimmingCharacters(in: .whitespacesAndNewlines)
         let apiKey = key.isEmpty ? (ProcessInfo.processInfo.environment["OPENAI_API_KEY"] ?? "") : key
         guard !apiKey.isEmpty else {
-            throw TranscriptCleanupError.missingConfiguration("OpenAI API key is not configured.")
+            throw TranscriptCleanupError.missingConfiguration(String(localized: "transcript_cleanup.error.openai_key_missing", defaultValue: "OpenAI API key is not configured.", comment: "Error shown when OpenAI API key is missing for cleanup request"))
         }
         var body: [String: Any] = [
             "model": model,
@@ -299,7 +299,7 @@ enum TranscriptCleanupClient {
     ) async throws -> String {
         let baseURL = resolveConfiguredOllamaURL(config: config)
         guard let baseURL else {
-            throw TranscriptCleanupError.missingConfiguration("Invalid Ollama URL: \(config.ollamaURL)")
+            throw TranscriptCleanupError.missingConfiguration(String(format: String(localized: "transcript_cleanup.error.invalid_ollama_url", defaultValue: "Invalid Ollama URL: %@", comment: "Error shown when Ollama endpoint URL is invalid"), "\(config.ollamaURL)"))
         }
         let chatURL = baseURL.appendingPathComponent("api/chat")
         let body: [String: Any] = [
@@ -426,8 +426,8 @@ enum TranscriptCleanupClient {
         guard (200..<300).contains(http.statusCode) else {
             let message = extractErrorMessage(from: data)
                 ?? String(data: data, encoding: .utf8)
-                ?? "HTTP \(http.statusCode)"
-            throw TranscriptCleanupError.backendFailed("\(backend) cleanup failed. \(message)")
+                ?? String(format: String(localized: "transcript_cleanup.error.http_status", defaultValue: "HTTP %d", comment: "HTTP status text used in transcript cleanup backend failures"), http.statusCode)
+            throw TranscriptCleanupError.backendFailed(String(format: String(localized: "transcript_cleanup.error.backend_failed", defaultValue: "%@ cleanup failed. %@", comment: "Error shown when cleanup backend reports a failure message"), "\(backend)", "\(message)"))
         }
     }
 
