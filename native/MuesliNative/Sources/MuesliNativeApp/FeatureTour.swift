@@ -111,9 +111,9 @@ enum FeatureTourCatalog {
         var steps = [
             FeatureTourStep(
                 id: "timeline",
-                eyebrow: "ONE TIMELINE",
-                title: "Dictations and meetings, together",
-                message: "Timeline puts your recent work in one chronological view. Open it from the sidebar whenever you want to retrace what you dictated or discussed.",
+                eyebrow: String(localized: "feature_tour.timeline.heading", defaultValue: "ONE TIMELINE", comment: "Feature tour heading for unified timeline section."),
+                title: String(localized: "feature_tour.timeline.title", defaultValue: "Dictations and meetings, together", comment: "Feature tour title for unified timeline section."),
+                message: String(localized: "feature_tour.timeline.body", defaultValue: "Timeline puts your recent work in one chronological view. Open it from the sidebar whenever you want to retrace what you dictated or discussed.", comment: "Feature tour body explaining timeline overview."),
                 systemImage: "clock.arrow.circlepath",
                 target: .timelineSidebar
             )
@@ -122,9 +122,9 @@ enum FeatureTourCatalog {
         if includeApplicationFilter {
             steps.append(FeatureTourStep(
                 id: "timeline-apps",
-                eyebrow: "FILTER BY APP",
-                title: "Find dictations by destination app",
-                message: "Use Apps to narrow Timeline to dictations sent to a specific destination, such as Mail, Notes, or your browser.",
+                eyebrow: String(localized: "feature_tour.timeline_apps.heading", defaultValue: "FILTER BY APP", comment: "Feature tour heading for timeline app filter section."),
+                title: String(localized: "feature_tour.timeline_apps.title", defaultValue: "Find dictations by destination app", comment: "Feature tour title for filtering timeline by destination app."),
+                message: String(localized: "feature_tour.timeline_apps.body", defaultValue: "Use Apps to narrow Timeline to dictations sent to a specific destination, such as Mail, Notes, or your browser.", comment: "Feature tour body explaining app-based timeline filtering."),
                 systemImage: "square.grid.2x2",
                 target: .timelineApplications
             ))
@@ -133,9 +133,9 @@ enum FeatureTourCatalog {
         if includeAppleSpeech {
             steps.append(FeatureTourStep(
                 id: "apple-speech",
-                eyebrow: "ON-DEVICE SPEECH",
-                title: "Try Apple's native on-device speech model",
-                message: "On macOS 26, Apple Speech can transcribe without a separate model download. Use your system language or choose another supported language in Models.",
+                eyebrow: String(localized: "feature_tour.apple_speech.heading", defaultValue: "ON-DEVICE SPEECH", comment: "Feature tour heading for Apple on-device speech section."),
+                title: String(localized: "feature_tour.apple_speech.title", defaultValue: "Try Apple's native on-device speech model", comment: "Feature tour title encouraging Apple on-device speech."),
+                message: String(localized: "feature_tour.apple_speech.body", defaultValue: "On macOS 26, Apple Speech can transcribe without a separate model download. Use your system language or choose another supported language in Models.", comment: "Feature tour body describing Apple Speech behavior on macOS 26."),
                 systemImage: "apple.logo",
                 target: .appleSpeechCard
             ))
@@ -144,9 +144,9 @@ enum FeatureTourCatalog {
         if includeMeetingPeople {
             steps.append(FeatureTourStep(
                 id: "meeting-people",
-                eyebrow: "MEETING ATTENDEES",
-                title: "Meeting attendees are now available!",
-                message: "See organizers and attendees from calendar events, or add people from Apple Contacts directly to a meeting.",
+                eyebrow: String(localized: "feature_tour.meeting_attendees.heading", defaultValue: "MEETING ATTENDEES", comment: "Feature tour heading for meeting attendees section."),
+                title: String(localized: "feature_tour.meeting_attendees.title", defaultValue: "Meeting attendees are now available!", comment: "Feature tour title announcing meeting attendees availability."),
+                message: String(localized: "feature_tour.meeting_attendees.body", defaultValue: "See organizers and attendees from calendar events, or add people from Apple Contacts directly to a meeting.", comment: "Feature tour body explaining attendee sources and contact integration."),
                 systemImage: "person.2.fill",
                 target: .meetingPeople
             ))
