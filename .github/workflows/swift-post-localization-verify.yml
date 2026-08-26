@@ -7,6 +7,10 @@ on:
         description: "Branch to verify (localized changes branch)"
         required: true
         type: string
+      commit_sha:
+        description: "Exact commit SHA to compile"
+        required: true
+        type: string
       job_id:
         description: "Apply job id (for traceability)"
         required: false
@@ -54,10 +58,20 @@ jobs:
     permissions:
       contents: read
     steps:
-      - name: Checkout target branch
+      - name: Checkout exact target commit
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.branch }}
+          ref: ${{ inputs.commit_sha }}
+
+      - name: Verify checked-out commit
+        run: |
+          set -euo pipefail
+          actual_sha="$(git rev-parse HEAD)"
+          if [ "$actual_sha" != "${{ inputs.commit_sha }}" ]; then
+            echo "::error::Expected commit ${{ inputs.commit_sha }}, checked out $actual_sha"
+            exit 1
+          fi
+          echo "[verify] Compiling ${{ inputs.branch }} at $actual_sha"
 
       - name: Select Xcode version
         uses: maxim-lobanov/setup-xcode@v1
