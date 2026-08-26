@@ -13,14 +13,14 @@ struct MeetingCandidate: Equatable {
 
         var displayName: String {
             switch self {
-            case .googleMeet: return "Google Meet"
-            case .zoom: return "Zoom"
-            case .teams: return "Teams"
-            case .webex: return "Webex"
-            case .facetime: return "FaceTime"
-            case .slack: return "Slack"
-            case .whatsApp: return "WhatsApp"
-            case .unknown: return "Meeting"
+            case .googleMeet: return String(localized: "meeting_candidate.platform.google_meet", defaultValue: "Google Meet", comment: "Platform label for Google Meet meeting candidate.")
+            case .zoom: return String(localized: "meeting_candidate.platform.zoom", defaultValue: "Zoom", comment: "Platform label for Zoom meeting candidate.")
+            case .teams: return String(localized: "meeting_candidate.platform.teams", defaultValue: "Teams", comment: "Platform label for Microsoft Teams meeting candidate.")
+            case .webex: return String(localized: "meeting_candidate.platform.webex", defaultValue: "Webex", comment: "Platform label for Webex meeting candidate.")
+            case .facetime: return String(localized: "meeting_candidate.platform.facetime", defaultValue: "FaceTime", comment: "Platform label for FaceTime meeting candidate.")
+            case .slack: return String(localized: "meeting_candidate.platform.slack", defaultValue: "Slack", comment: "Platform label for Slack meeting candidate.")
+            case .whatsApp: return String(localized: "meeting_candidate.platform.whatsapp", defaultValue: "WhatsApp", comment: "Platform label for WhatsApp meeting candidate.")
+            case .unknown: return String(localized: "meeting_candidate.platform.generic", defaultValue: "Meeting", comment: "Generic platform label when no specific meeting platform is detected.")
             }
         }
     }
@@ -244,15 +244,15 @@ final class MeetingCandidateResolver {
     }
 
     static let dedicatedApps: [String: (name: String, platform: MeetingCandidate.Platform)] = [
-        "us.zoom.xos": ("Zoom", .zoom),
-        "us.zoom.ZoomPhone": ("Zoom Phone", .zoom),
-        "com.apple.FaceTime": ("FaceTime", .facetime),
-        "com.microsoft.teams2": ("Teams", .teams),
-        "com.microsoft.teams": ("Teams", .teams),
-        "com.tinyspeck.slackmacgap": ("Slack", .slack),
-        "com.webex.meetingmanager": ("Webex", .webex),
-        "com.cisco.webexmeetingsapp": ("Webex", .webex),
-        "net.whatsapp.WhatsApp": ("WhatsApp", .whatsApp),
+        "us.zoom.xos": (String(localized: "meeting_candidate.dedicated_app.zoom", defaultValue: "Zoom", comment: "Dedicated app name for Zoom when identifying meeting candidates."), .zoom),
+        "us.zoom.ZoomPhone": (String(localized: "meeting_candidate.dedicated_app.zoom_phone", defaultValue: "Zoom Phone", comment: "Dedicated app name for Zoom Phone when identifying meeting candidates."), .zoom),
+        "com.apple.FaceTime": (String(localized: "meeting_candidate.dedicated_app.facetime", defaultValue: "FaceTime", comment: "Dedicated app name for FaceTime when identifying meeting candidates."), .facetime),
+        "com.microsoft.teams2": (String(localized: "meeting_candidate.dedicated_app.teams", defaultValue: "Teams", comment: "Dedicated app name for Microsoft Teams when identifying meeting candidates."), .teams),
+        "com.microsoft.teams": (String(localized: "meeting_candidate.dedicated_app.teams", defaultValue: "Teams", comment: "Dedicated app name for Microsoft Teams when identifying meeting candidates."), .teams),
+        "com.tinyspeck.slackmacgap": (String(localized: "meeting_candidate.dedicated_app.slack", defaultValue: "Slack", comment: "Dedicated app name for Slack when identifying meeting candidates."), .slack),
+        "com.webex.meetingmanager": (String(localized: "meeting_candidate.dedicated_app.webex", defaultValue: "Webex", comment: "Dedicated app name for Webex when identifying meeting candidates."), .webex),
+        "com.cisco.webexmeetingsapp": (String(localized: "meeting_candidate.dedicated_app.webex", defaultValue: "Webex", comment: "Dedicated app name for Webex when identifying meeting candidates."), .webex),
+        "net.whatsapp.WhatsApp": (String(localized: "meeting_candidate.dedicated_app.whatsapp", defaultValue: "WhatsApp", comment: "Dedicated app name for WhatsApp when identifying meeting candidates."), .whatsApp),
     ]
 
     static let weakDedicatedAppBundleIDs: Set<String> = [
@@ -266,11 +266,11 @@ final class MeetingCandidateResolver {
     ]
 
     static let browserApps: [String: String] = [
-        "com.google.Chrome": "Chrome",
-        "com.brave.Browser": "Brave",
-        "company.thebrowser.Browser": "Arc",
-        "com.microsoft.edgemac": "Edge",
-        "com.apple.Safari": "Safari",
+        "com.google.Chrome": String(localized: "meeting_candidate.browser_app.chrome", defaultValue: "Chrome", comment: "Browser app name for Chrome when identifying meeting candidates."),
+        "com.brave.Browser": String(localized: "meeting_candidate.browser_app.brave", defaultValue: "Brave", comment: "Browser app name for Brave when identifying meeting candidates."),
+        "company.thebrowser.Browser": String(localized: "meeting_candidate.browser_app.arc", defaultValue: "Arc", comment: "Browser app name for Arc when identifying meeting candidates."),
+        "com.microsoft.edgemac": String(localized: "meeting_candidate.browser_app.edge", defaultValue: "Edge", comment: "Browser app name for Edge when identifying meeting candidates."),
+        "com.apple.Safari": String(localized: "meeting_candidate.browser_app.safari", defaultValue: "Safari", comment: "Browser app name for Safari when identifying meeting candidates."),
     ]
 
     var selfBundleID: String = Bundle.main.bundleIdentifier ?? "com.muesli.app"
@@ -388,7 +388,7 @@ final class MeetingCandidateResolver {
             return candidate(
                 id: "cal:\(calendarEvent.id)",
                 platform: app?.platform ?? .unknown,
-                appName: app?.name ?? "Meeting",
+                appName: app?.name ?? String(localized: "meeting_candidate.fallback.meeting", defaultValue: "Meeting", comment: "Fallback meeting title when no candidate title can be determined."),
                 url: nil,
                 title: calendarEvent.title,
                 evidence: mediaEvidence(from: snapshot).union([.calendarEvent]),
