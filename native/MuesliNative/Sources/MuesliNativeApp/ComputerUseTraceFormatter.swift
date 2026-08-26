@@ -8,20 +8,20 @@ enum ComputerUseTraceFormatter {
         }
 
         var lines: [String] = [
-            "CUA Command",
+            String(localized: "computer_use_trace_formatter.cua_command", defaultValue: "CUA Command", comment: "Label for CUA command field in computer use trace summary"),
             record.rawText,
             "",
-            "Final Status",
+            String(localized: "computer_use_trace_formatter.final_status", defaultValue: "Final Status", comment: "Label for final status field in computer use trace summary"),
             displayFinalStatus(trace.finalStatus),
             "",
-            "Final Message",
+            String(localized: "computer_use_trace_formatter.final_message", defaultValue: "Final Message", comment: "Label for final message field in computer use trace summary"),
             trace.finalMessage,
             "",
-            "Step Trail",
+            String(localized: "computer_use_trace_formatter.step_trail", defaultValue: "Step Trail", comment: "Label for ordered step trail in computer use trace summary"),
         ]
 
         for event in trace.events {
-            let step = event.step.map { "Step \($0)" } ?? "Run"
+            let step = event.step.map { String(format: String(localized: "computer_use_trace_formatter.step_number", defaultValue: "Step %@", comment: "Label template for individual step number in computer use trace summary"), "\($0)") } ?? String(localized: "computer_use_trace_formatter.run", defaultValue: "Run", comment: "Label for execution run metadata in computer use trace summary")
             let status = displayStatus(for: event).map { " [\($0)]" } ?? ""
             lines.append("\(step) - \(event.title)\(status)")
             lines.append(event.body)
