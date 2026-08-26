@@ -3,7 +3,7 @@ import Foundation
 import MuesliCore
 
 enum MeetingContactIdentity {
-    static let unnamedFallback = "Unnamed contact"
+    static let unnamedFallback = String(localized: "meeting_contact_identity.unnamed_fallback", defaultValue: "Unnamed contact", comment: "Fallback label for contact without a name")
 
     static func displayName(for contact: CNContact) -> String {
         let nameDescriptor = CNContactFormatter.descriptorForRequiredKeys(for: .fullName)
