@@ -84,7 +84,7 @@ final class AppScopedDictationRecorder: DictationAudioRecording {
 
         private static func cancelledError() -> NSError {
             NSError(domain: "AppScopedDictationRecorder", code: 2, userInfo: [
-                NSLocalizedDescriptionKey: "Dictation microphone preparation was cancelled",
+                NSLocalizedDescriptionKey: String(localized: "app_scoped_dictation_recorder.error.microphone_preparation_cancelled", defaultValue: "Dictation microphone preparation was cancelled", comment: "Error when dictation microphone preparation is cancelled"),
             ])
         }
     }
@@ -431,13 +431,13 @@ final class AppScopedDictationRecorder: DictationAudioRecording {
 
     private static func cancelledPreparationError() -> NSError {
         NSError(domain: "AppScopedDictationRecorder", code: 2, userInfo: [
-            NSLocalizedDescriptionKey: "Dictation microphone preparation was cancelled",
+            NSLocalizedDescriptionKey: String(localized: "app_scoped_dictation_recorder.error.microphone_preparation_cancelled", defaultValue: "Dictation microphone preparation was cancelled", comment: "Error when dictation microphone preparation is cancelled"),
         ])
     }
 
     private static func cancelledStartupError() -> NSError {
         NSError(domain: "AppScopedDictationRecorder", code: 1, userInfo: [
-            NSLocalizedDescriptionKey: "Dictation recording was cancelled before microphone startup finished",
+            NSLocalizedDescriptionKey: String(localized: "app_scoped_dictation_recorder.error.cancelled_before_microphone_startup_finished", defaultValue: "Dictation recording was cancelled before microphone startup finished", comment: "Error when dictation is cancelled before microphone startup completes"),
         ])
     }
 
