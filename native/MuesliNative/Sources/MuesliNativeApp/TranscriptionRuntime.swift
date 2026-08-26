@@ -468,14 +468,14 @@ actor TranscriptionCoordinator {
             fputs("[muesli-native] WhisperKit warmup: running silent audio for CoreML compilation...\n", stderr)
             let warming = ModelDownloadProgress.preparing(
                 modelID: backend.model,
-                message: "Warming up model..."
+                message: String(localized: "transcription_runtime.status.warming_up_model", defaultValue: "Warming up model...", comment: "Status shown while transcription model is warming up.")
             )
             progress?(0.9, warming.message)
             progressSnapshot?(warming)
             try await whisperTranscriber.warmup()
             fputs("[muesli-native] WhisperKit warmup complete\n", stderr)
             progress?(1.0, nil)
-            progressSnapshot?(warming.replacing(phase: .ready, message: "Model ready"))
+            progressSnapshot?(warming.replacing(phase: .ready, message: String(localized: "transcription_runtime.status.model_ready", defaultValue: "Model ready", comment: "Status shown when transcription model is ready.")))
         case "nemotron35":
             if #available(macOS 15, *) {
                 let transcriber = try await getLoadedNemotron35Transcriber(progress: progress, progressSnapshot: progressSnapshot)
@@ -487,7 +487,7 @@ actor TranscriptionCoordinator {
                 fputs("[muesli-native] Nemotron 3.5 warmup complete\n", stderr)
             } else {
                 throw NSError(domain: "MuesliTranscriptionRuntime", code: 1, userInfo: [
-                    NSLocalizedDescriptionKey: "Nemotron 3.5 requires macOS 15 or later.",
+                    NSLocalizedDescriptionKey: String(localized: "transcription_runtime.error.nemotron35_requires_macos15", defaultValue: "Nemotron 3.5 requires macOS 15 or later.", comment: "Compatibility error for Nemotron 3.5 backend."),
                 ])
             }
         case "qwen":
@@ -498,7 +498,7 @@ actor TranscriptionCoordinator {
                 )
             } else {
                 throw NSError(domain: "MuesliTranscriptionRuntime", code: 2, userInfo: [
-                    NSLocalizedDescriptionKey: "Qwen3 ASR requires macOS 15 or later.",
+                    NSLocalizedDescriptionKey: String(localized: "transcription_runtime.error.qwen3_asr_requires_macos15", defaultValue: "Qwen3 ASR requires macOS 15 or later.", comment: "Compatibility error for Qwen3 ASR backend."),
                 ])
             }
         case "cohere":
@@ -506,7 +506,7 @@ actor TranscriptionCoordinator {
                 try await cohereTranscriber.prepare(progress: progress, progressSnapshot: progressSnapshot)
             } else {
                 throw NSError(domain: "MuesliTranscriptionRuntime", code: 4, userInfo: [
-                    NSLocalizedDescriptionKey: "Cohere Transcribe requires macOS 15 or later.",
+                    NSLocalizedDescriptionKey: String(localized: "transcription_runtime.error.cohere_transcribe_requires_macos15", defaultValue: "Cohere Transcribe requires macOS 15 or later.", comment: "Compatibility error for Cohere Transcribe backend."),
                 ])
             }
         case "indicasr":
@@ -514,7 +514,7 @@ actor TranscriptionCoordinator {
                 try await indicASRTranscriber.prepare(progress: progress, progressSnapshot: progressSnapshot)
             } else {
                 throw NSError(domain: "MuesliTranscriptionRuntime", code: 6, userInfo: [
-                    NSLocalizedDescriptionKey: "Indic ASR requires macOS 15 or later.",
+                    NSLocalizedDescriptionKey: String(localized: "transcription_runtime.error.indic_asr_requires_macos15", defaultValue: "Indic ASR requires macOS 15 or later.", comment: "Compatibility error for Indic ASR backend."),
                 ])
             }
         case "sensevoice":
@@ -527,7 +527,7 @@ actor TranscriptionCoordinator {
                 try await gemma4LiteRTTranscriber.prepare(progress: progress, progressSnapshot: progressSnapshot)
             } else {
                 throw NSError(domain: "MuesliTranscriptionRuntime", code: 7, userInfo: [
-                    NSLocalizedDescriptionKey: "Gemma 4 E2B requires macOS 15 or later.",
+                    NSLocalizedDescriptionKey: String(localized: "transcription_runtime.error.gemma4_e2b_requires_macos15", defaultValue: "Gemma 4 E2B requires macOS 15 or later.", comment: "Compatibility error for Gemma 4 E2B backend."),
                 ])
             }
         case "apple-speech":
@@ -542,7 +542,7 @@ actor TranscriptionCoordinator {
             }
         default:
             throw NSError(domain: "MuesliTranscriptionRuntime", code: 5, userInfo: [
-                NSLocalizedDescriptionKey: "Unknown transcription backend: \(backend.backend)",
+                NSLocalizedDescriptionKey: String(format: String(localized: "transcription_runtime.error.unknown_backend", defaultValue: "Unknown transcription backend: %@", comment: "Error message for unsupported transcription backend identifier."), "\(backend.backend)"),
             ])
         }
 
@@ -1288,7 +1288,7 @@ actor TranscriptionCoordinator {
             )
         } else {
             throw NSError(domain: "Muesli", code: 1, userInfo: [
-                NSLocalizedDescriptionKey: "Qwen3 ASR requires macOS 15 or later.",
+                NSLocalizedDescriptionKey: String(localized: "transcription_runtime.error.qwen3_asr_requires_macos15", defaultValue: "Qwen3 ASR requires macOS 15 or later.", comment: "Compatibility error for Qwen3 ASR backend in later code path."),
             ])
         }
     }
@@ -1323,7 +1323,7 @@ actor TranscriptionCoordinator {
             )
         } else {
             throw NSError(domain: "MuesliTranscriptionRuntime", code: 7, userInfo: [
-                NSLocalizedDescriptionKey: "Gemma 4 E2B requires macOS 15 or later.",
+                NSLocalizedDescriptionKey: String(localized: "transcription_runtime.error.gemma4_e2b_requires_macos15", defaultValue: "Gemma 4 E2B requires macOS 15 or later.", comment: "Compatibility error for Gemma 4 E2B backend in later code path."),
             ])
         }
     }
@@ -1345,7 +1345,7 @@ actor TranscriptionCoordinator {
             )
         } else {
             throw NSError(domain: "Muesli", code: 1, userInfo: [
-                NSLocalizedDescriptionKey: "Cohere Transcribe requires macOS 15 or later.",
+                NSLocalizedDescriptionKey: String(localized: "transcription_runtime.error.cohere_transcribe_requires_macos15", defaultValue: "Cohere Transcribe requires macOS 15 or later.", comment: "Compatibility error for Cohere Transcribe backend in later code path."),
             ])
         }
     }
@@ -1367,7 +1367,7 @@ actor TranscriptionCoordinator {
             )
         } else {
             throw NSError(domain: "Muesli", code: 1, userInfo: [
-                NSLocalizedDescriptionKey: "Indic ASR requires macOS 15 or later.",
+                NSLocalizedDescriptionKey: String(localized: "transcription_runtime.error.indic_asr_requires_macos15", defaultValue: "Indic ASR requires macOS 15 or later.", comment: "Compatibility error for Indic ASR backend in later code path."),
             ])
         }
     }
@@ -1387,7 +1387,7 @@ actor TranscriptionCoordinator {
             )
         } else {
             throw NSError(domain: "Muesli", code: 1, userInfo: [
-                NSLocalizedDescriptionKey: "Nemotron 3.5 requires macOS 15 or later.",
+                NSLocalizedDescriptionKey: String(localized: "transcription_runtime.error.nemotron35_requires_macos15", defaultValue: "Nemotron 3.5 requires macOS 15 or later.", comment: "Compatibility error for Nemotron 3.5 backend in later code path."),
             ])
         }
     }
