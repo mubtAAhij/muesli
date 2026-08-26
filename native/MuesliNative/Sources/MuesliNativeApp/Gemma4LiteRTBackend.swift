@@ -152,14 +152,14 @@ enum Gemma4LiteRTModelStore {
 
         if localOverrideURL(environment: environment) != nil {
             throw NSError(domain: "Gemma4LiteRTModelStore", code: 1, userInfo: [
-                NSLocalizedDescriptionKey: "Gemma 4 LiteRT-LM model is missing at \(modelURL.path).",
+                NSLocalizedDescriptionKey: String(format: String(localized: "gemma4_litert.error.model_missing_at_path", defaultValue: "Gemma 4 LiteRT-LM model is missing at %@.", comment: "Error when local model file cannot be found at expected path"), "\(modelURL.path)"),
             ])
         }
 
         try await downloadManagedModel(progress: progress, progressSnapshot: progressSnapshot, fileManager: fileManager)
         guard isAvailableLocally(environment: environment, fileManager: fileManager) else {
             throw NSError(domain: "Gemma4LiteRTModelStore", code: 2, userInfo: [
-                NSLocalizedDescriptionKey: "Gemma 4 LiteRT-LM did not download successfully.",
+                NSLocalizedDescriptionKey: String(localized: "gemma4_litert.error.download_failed", defaultValue: "Gemma 4 LiteRT-LM did not download successfully.", comment: "Error when model download completion check fails"),
             ])
         }
         progress?(0.8, "Gemma 4 E2B downloaded")
@@ -204,7 +204,7 @@ enum Gemma4LiteRTModelStore {
             let fraction = snapshot.fractionCompleted ?? 0.05
             let rate = ModelDownloadDisplayFormatting.rate(snapshot.bytesPerSecond)
             let speed = rate.isEmpty ? "" : " · " + rate
-            progress?(fraction, "Downloading Gemma 4 E2B" + speed)
+            progress?(fraction, String(localized: "gemma4_litert.download.downloading_model", defaultValue: "Downloading Gemma 4 E2B", comment: "Status text while model download is in progress") + speed)
             progressSnapshot?(snapshot)
         }
         try validateDownloadedLiteRTLMFile(at: destination, fileManager: fileManager)
@@ -229,13 +229,13 @@ enum Gemma4LiteRTModelStore {
         let attributes = try fileManager.attributesOfItem(atPath: url.path)
         guard attributes[.type] as? FileAttributeType == .typeRegular else {
             throw NSError(domain: "Gemma4LiteRTModelStore", code: 4, userInfo: [
-                NSLocalizedDescriptionKey: "Downloaded Gemma 4 LiteRT-LM model is not a regular file.",
+                NSLocalizedDescriptionKey: String(localized: "gemma4_litert.error.downloaded_model_not_regular_file", defaultValue: "Downloaded Gemma 4 LiteRT-LM model is not a regular file.", comment: "Error when downloaded model path is not a regular file"),
             ])
         }
         let size = (attributes[.size] as? NSNumber)?.int64Value ?? 0
         guard size >= minimumDownloadedModelSizeBytes else {
             throw NSError(domain: "Gemma4LiteRTModelStore", code: 4, userInfo: [
-                NSLocalizedDescriptionKey: "Downloaded Gemma 4 LiteRT-LM model is too small (\(size) bytes).",
+                NSLocalizedDescriptionKey: String(format: String(localized: "gemma4_litert.error.model_file_too_small", defaultValue: "Downloaded Gemma 4 LiteRT-LM model is too small (%d bytes).", comment: "Error when downloaded model file size is below minimum threshold"), size),
             ])
         }
     }
@@ -275,27 +275,27 @@ actor Gemma4LiteRTTranscriber {
         var errorDescription: String? {
             switch self {
             case .modelMissing(let path):
-                return "Gemma 4 LiteRT-LM model is missing at \(path). Download it from the Models tab or set \(Gemma4LiteRTModelStore.modelPathEnvVar)."
+                return String(format: String(localized: "gemma4_litert.error.model_missing_with_download_hint", defaultValue: "Gemma 4 LiteRT-LM model is missing at %@. Download it from the Models tab or set %@.", comment: "Error with guidance when model is missing and includes env var hint"), "\(path)", "\(Gemma4LiteRTModelStore.modelPathEnvVar)")
             case .failedToCreateSettings:
-                return "Gemma 4 LiteRT-LM failed to create engine settings."
+                return String(localized: "gemma4_litert.error.create_engine_settings_failed", defaultValue: "Gemma 4 LiteRT-LM failed to create engine settings.", comment: "Error when backend cannot create engine settings")
             case .failedToCreateEngine:
-                return "Gemma 4 LiteRT-LM failed to create the engine."
+                return String(localized: "gemma4_litert.error.create_engine_failed", defaultValue: "Gemma 4 LiteRT-LM failed to create the engine.", comment: "Error when backend cannot create engine instance")
             case .failedToCreateSessionConfig:
-                return "Gemma 4 LiteRT-LM failed to create session config."
+                return String(localized: "gemma4_litert.error.create_session_config_failed", defaultValue: "Gemma 4 LiteRT-LM failed to create session config.", comment: "Error when backend cannot create session configuration")
             case .failedToCreateConversationConfig:
-                return "Gemma 4 LiteRT-LM failed to create conversation config."
+                return String(localized: "gemma4_litert.error.create_conversation_config_failed", defaultValue: "Gemma 4 LiteRT-LM failed to create conversation config.", comment: "Error when backend cannot create conversation configuration")
             case .failedToCreateConversation:
-                return "Gemma 4 LiteRT-LM failed to create a conversation."
+                return String(localized: "gemma4_litert.error.create_conversation_failed", defaultValue: "Gemma 4 LiteRT-LM failed to create a conversation.", comment: "Error when backend cannot create conversation object")
             case .failedToCreateOptionalArgs:
-                return "Gemma 4 LiteRT-LM failed to create optional conversation arguments."
+                return String(localized: "gemma4_litert.error.create_optional_conversation_args_failed", defaultValue: "Gemma 4 LiteRT-LM failed to create optional conversation arguments.", comment: "Error when backend cannot build optional conversation arguments")
             case .failedToCreateMessage:
-                return "Gemma 4 LiteRT-LM failed to create a conversation message."
+                return String(localized: "gemma4_litert.error.create_conversation_message_failed", defaultValue: "Gemma 4 LiteRT-LM failed to create a conversation message.", comment: "Error when backend cannot create conversation message")
             case .audioTooLong(let seconds, let maxSeconds):
-                return "Gemma 4 supports audio clips up to \(Int(maxSeconds)) seconds; this clip is \(String(format: "%.1f", seconds)) seconds."
+                return String(format: String(localized: "gemma4_litert.error.audio_clip_too_long", defaultValue: "Gemma 4 supports audio clips up to %d seconds; this clip is %.1f seconds.", comment: "Error shown when provided audio clip exceeds supported duration"), Int(maxSeconds), String(format: "%.1f", seconds))
             case .invalidResponse:
-                return "Gemma 4 LiteRT-LM returned an invalid response."
+                return String(localized: "gemma4_litert.error.invalid_response", defaultValue: "Gemma 4 LiteRT-LM returned an invalid response.", comment: "Error when model response payload is invalid")
             case .notLoaded:
-                return "Gemma 4 LiteRT-LM is not loaded. Call prepare() first."
+                return String(localized: "gemma4_litert.error.not_loaded_call_prepare", defaultValue: "Gemma 4 LiteRT-LM is not loaded. Call prepare() first.", comment: "Error when inference is attempted before prepare step")
             }
         }
     }
@@ -336,7 +336,7 @@ actor Gemma4LiteRTTranscriber {
             progressSnapshot: progressSnapshot
         )
         try checkLoadGeneration(generation)
-        progressSnapshot?(ModelDownloadProgress.preparing(modelID: Gemma4LiteRTModelStore.repoID, message: "Preparing Gemma 4 LiteRT-LM..."))
+        progressSnapshot?(ModelDownloadProgress.preparing(modelID: Gemma4LiteRTModelStore.repoID, message: String(localized: "gemma4_litert.status.preparing", defaultValue: "Preparing Gemma 4 LiteRT-LM...", comment: "Status text shown while backend is preparing model runtime")))
         guard fileManager.fileExists(atPath: modelURL.path) else {
             throw TranscriberError.modelMissing(path: modelURL.path)
         }
@@ -345,7 +345,7 @@ actor Gemma4LiteRTTranscriber {
         try fileManager.createDirectory(at: cacheDirectory, withIntermediateDirectories: true)
         try checkLoadGeneration(generation)
 
-        progress?(0.9, "Loading Gemma 4 E2B...")
+        progress?(0.9, String(localized: "gemma4_litert.status.loading_model", defaultValue: "Loading Gemma 4 E2B...", comment: "Status text shown while model file is loading"))
         Gemma4LiteRTLogging.log("loading \(modelURL.path)")
         let backend = Gemma4LiteRTModelStore.resolvedBackend()
         // Google's Audio Scribe configuration accelerates the decoder with Metal while keeping
