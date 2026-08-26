@@ -24,24 +24,24 @@ struct StatsHeaderView: View {
                 icon: "flame.fill",
                 iconColor: Color(hex: 0xF5A623),
                 value: "\(dictationStats.currentStreakDays)",
-                label: "day streak",
-                accessibilityHint: "Open streak insights",
+                label: String(localized: "stats_header.card.day_streak.label", defaultValue: "day streak", comment: "Label under day streak stat card"),
+                accessibilityHint: String(localized: "stats_header.card.day_streak.accessibility_hint", defaultValue: "Open streak insights", comment: "Accessibility hint for day streak stat card"),
                 action: { onSelect(.streak) }
             )
             StatCard(
                 icon: "character.cursor.ibeam",
                 iconColor: MuesliTheme.accent,
                 value: formatWordCount(dictationStats.totalWords),
-                label: "words dictated",
-                accessibilityHint: "Open word activity insights",
+                label: String(localized: "stats_header.card.words_dictated.label", defaultValue: "words dictated", comment: "Label under words dictated stat card"),
+                accessibilityHint: String(localized: "stats_header.card.words_dictated.accessibility_hint", defaultValue: "Open word activity insights", comment: "Accessibility hint for words dictated stat card"),
                 action: { onSelect(.words) }
             )
             StatCard(
                 icon: "gauge.with.dots.needle.33percent",
                 iconColor: MuesliTheme.success,
                 value: String(format: "%.0f", dictationStats.averageWPM),
-                label: "avg WPM",
-                accessibilityHint: "Open speaking pace insights",
+                label: String(localized: "stats_header.card.avg_wpm.label", defaultValue: "avg WPM", comment: "Label under average words-per-minute stat card"),
+                accessibilityHint: String(localized: "stats_header.card.avg_wpm.accessibility_hint", defaultValue: "Open speaking pace insights", comment: "Accessibility hint for average speaking pace stat card"),
                 action: { onSelect(.pace) }
             )
             if showsMeetingStat {
@@ -49,8 +49,8 @@ struct StatsHeaderView: View {
                     icon: "person.2.fill",
                     iconColor: MuesliTheme.accent,
                     value: "\(meetingStats.totalMeetings)",
-                    label: "meetings",
-                    accessibilityHint: "Open meeting insights",
+                    label: String(localized: "stats_header.card.meetings.label", defaultValue: "meetings", comment: "Label under meetings stat card"),
+                    accessibilityHint: String(localized: "stats_header.card.meetings.accessibility_hint", defaultValue: "Open meeting insights", comment: "Accessibility hint for meetings stat card"),
                     action: { onSelect(.meetings) }
                 )
             }
