@@ -14,16 +14,16 @@ enum DiagnosticIncidentKind: String, Codable, CaseIterable, Sendable {
 
     var title: String {
         switch self {
-        case .manualReport: return "Manual problem report"
-        case .dictationAudioFailed: return "Dictation audio capture failed"
-        case .dictationTranscriptionFailed: return "Dictation transcription failed"
-        case .streamingDictationStartFailed: return "Streaming dictation failed to start"
-        case .streamingDictationRuntimeFailed: return "Streaming dictation failed"
-        case .meetingStartFailed: return "Meeting recording failed to start"
-        case .meetingMicrophoneCaptureFailed: return "Meeting microphone capture failed"
-        case .meetingSystemAudioCaptureFailed: return "Meeting system audio capture failed"
-        case .meetingProcessingFailed: return "Meeting processing failed"
-        case .meetingRecordingSaveFailed: return "Meeting recording save failed"
+        case .manualReport: return String(localized: "diagnostic_incident.title.manual_report", defaultValue: "Manual problem report", comment: "Diagnostic incident title for manually reported issue.")
+        case .dictationAudioFailed: return String(localized: "diagnostic_incident.title.dictation_audio_failed", defaultValue: "Dictation audio capture failed", comment: "Diagnostic incident title for dictation audio capture failure.")
+        case .dictationTranscriptionFailed: return String(localized: "diagnostic_incident.title.dictation_transcription_failed", defaultValue: "Dictation transcription failed", comment: "Diagnostic incident title for dictation transcription failure.")
+        case .streamingDictationStartFailed: return String(localized: "diagnostic_incident.title.streaming_dictation_start_failed", defaultValue: "Streaming dictation failed to start", comment: "Diagnostic incident title for streaming dictation start failure.")
+        case .streamingDictationRuntimeFailed: return String(localized: "diagnostic_incident.title.streaming_dictation_runtime_failed", defaultValue: "Streaming dictation failed", comment: "Diagnostic incident title for streaming dictation runtime failure.")
+        case .meetingStartFailed: return String(localized: "diagnostic_incident.title.meeting_start_failed", defaultValue: "Meeting recording failed to start", comment: "Diagnostic incident title for meeting recording start failure.")
+        case .meetingMicrophoneCaptureFailed: return String(localized: "diagnostic_incident.title.meeting_microphone_capture_failed", defaultValue: "Meeting microphone capture failed", comment: "Diagnostic incident title for meeting microphone capture failure.")
+        case .meetingSystemAudioCaptureFailed: return String(localized: "diagnostic_incident.title.meeting_system_audio_capture_failed", defaultValue: "Meeting system audio capture failed", comment: "Diagnostic incident title for meeting system audio capture failure.")
+        case .meetingProcessingFailed: return String(localized: "diagnostic_incident.title.meeting_processing_failed", defaultValue: "Meeting processing failed", comment: "Diagnostic incident title for meeting processing failure.")
+        case .meetingRecordingSaveFailed: return String(localized: "diagnostic_incident.title.meeting_recording_save_failed", defaultValue: "Meeting recording save failed", comment: "Diagnostic incident title for meeting recording save failure.")
         }
     }
 
@@ -194,11 +194,11 @@ struct DiagnosticIncident: Codable, Equatable, Identifiable, Sendable {
     }
 
     var issueTitle: String {
-        "[Diagnostic] \(kind.title)"
+        String(format: String(localized: "diagnostic.report.issue_title", defaultValue: "[Diagnostic] %@", comment: "Issue title prefix for generated diagnostic reports."), "\(kind.title)")
     }
 
     var issueBody: String {
-        """
+        String(format: String(localized: "diagnostic.report.issue_body_template", defaultValue: """
         ### What happened?
         Please describe what you were trying to do and what you expected to happen.
 
@@ -206,25 +206,25 @@ struct DiagnosticIncident: Codable, Equatable, Identifiable, Sendable {
         This report was generated from an allowlisted diagnostic summary. It does not include transcripts, audio, meeting titles, calendar titles, clipboard contents, screen/OCR text, API keys, auth tokens, local file paths, raw error messages, raw logs, or database contents.
 
         ### Anonymized diagnostics
-        - Incident: \(kind.rawValue)
-        - Severity: \(severity.rawValue)
-        - User impact: \(userImpact.rawValue)
-        - Stage: \(stage.rawValue)
-        - App: \(metadata.displayName)
-        - Version: \(metadata.appVersion)
-        - Build: \(metadata.buildNumber)
-        - Bundle ID: \(metadata.bundleID)
-        - macOS: \(metadata.macOSVersion)
-        - Architecture: \(metadata.architecture)
-        - Backend: \(backend)
-        - Model: \(model)
-        - Error signature: \(errorFingerprint.signature)
-        - Error domain: \(errorDomain)
-        - Error code: \(errorCode)
-        - Error meaning: \(errorFingerprint.summary)
-        - Diagnostic area: \(errorFingerprint.area)
-        - Incident ID: \(id.uuidString)
-        """
+        - Incident: %@
+        - Severity: %@
+        - User impact: %@
+        - Stage: %@
+        - App: %@
+        - Version: %@
+        - Build: %@
+        - Bundle ID: %@
+        - macOS: %@
+        - Architecture: %@
+        - Backend: %@
+        - Model: %@
+        - Error signature: %@
+        - Error domain: %@
+        - Error code: %@
+        - Error meaning: %@
+        - Diagnostic area: %@
+        - Incident ID: %@
+        """, comment: "Template body for generated diagnostic issue report with anonymized incident fields."), "\(kind.rawValue)", "\(severity.rawValue)", "\(userImpact.rawValue)", "\(stage.rawValue)", "\(metadata.displayName)", "\(metadata.appVersion)", "\(metadata.buildNumber)", "\(metadata.bundleID)", "\(metadata.macOSVersion)", "\(metadata.architecture)", "\(backend)", "\(model)", "\(errorFingerprint.signature)", "\(errorDomain)", "\(errorCode)", "\(errorFingerprint.summary)", "\(errorFingerprint.area)", "\(id.uuidString)")
     }
 
     var githubIssueURL: URL? {
