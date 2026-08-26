@@ -46,7 +46,7 @@ struct AppleSpeechLanguageOption: Identifiable, Hashable, Sendable {
         let localeName = locale.localizedString(forIdentifier: locale.identifier) ?? locale.identifier
         return AppleSpeechLanguageOption(
             id: systemIdentifier,
-            label: "System Language - \(localeName)"
+            label: String(format: String(localized: "apple_speech.language_option.system_language", defaultValue: "System Language - %@", comment: "Language option label showing the system language name."), "\(localeName)")
         )
     }
 
@@ -117,15 +117,15 @@ enum AppleSpeechAnalyzerError: LocalizedError, Sendable {
     var errorDescription: String? {
         switch self {
         case .unavailable:
-            return "Apple Speech requires macOS 26 and compatible Apple hardware."
+            return String(localized: "apple_speech.error.requires_supported_os_and_hardware", defaultValue: "Apple Speech requires macOS 26 and compatible Apple hardware.", comment: "Error when Apple Speech backend is unavailable on unsupported OS or hardware.")
         case .unsupportedLocale(let identifier):
-            return "Apple Speech does not support the \(identifier) locale on this Mac."
+            return String(format: String(localized: "apple_speech.error.locale_not_supported", defaultValue: "Apple Speech does not support the %@ locale on this Mac.", comment: "Error when selected locale is not supported by Apple Speech."), "\(identifier)")
         case .assetUnavailable(let identifier):
-            return "The Apple Speech model for \(identifier) is unavailable."
+            return String(format: String(localized: "apple_speech.error.model_unavailable", defaultValue: "The Apple Speech model for %@ is unavailable.", comment: "Error when model for selected Apple Speech locale cannot be loaded."), "\(identifier)")
         case .reservationUnavailable(let maximum):
-            return "Apple Speech cannot reserve another language on this Mac (limit: \(maximum))."
+            return String(format: String(localized: "apple_speech.error.language_reservation_limit_reached", defaultValue: "Apple Speech cannot reserve another language on this Mac (limit: %@).", comment: "Error when Apple Speech has reached the language reservation limit."), "\(maximum)")
         case .emptyTranscript:
-            return "Apple Speech completed without producing a transcript."
+            return String(localized: "apple_speech.error.no_transcript_produced", defaultValue: "Apple Speech completed without producing a transcript.", comment: "Error when Apple Speech finishes but returns no transcript text.")
         }
     }
 }
@@ -188,7 +188,7 @@ actor AppleSpeechAnalyzerTranscriber {
         ) { [self, callbacks] in
             try await performPrepare(locale: locale, callbacks: callbacks)
         }
-        callbacks.progress?(1, "Apple Speech ready")
+        callbacks.progress?(1, String(localized: "apple_speech.status.ready", defaultValue: "Apple Speech ready", comment: "Status shown when Apple Speech backend is ready."))
         callbacks.progressSnapshot?(readySnapshot())
         return prepared
     }
@@ -204,10 +204,10 @@ actor AppleSpeechAnalyzerTranscriber {
             return locale
         }
 
-        callbacks.progress?(0.05, "Preparing Apple Speech for \(locale.localizedString(forIdentifier: locale.identifier) ?? locale.identifier)...")
+        callbacks.progress?(0.05, String(format: String(localized: "apple_speech.status.preparing_for_locale", defaultValue: "Preparing Apple Speech for %@...", comment: "Status shown while Apple Speech prepares a specific locale."), "\(locale.localizedString(forIdentifier: locale.identifier) ?? locale.identifier)"))
         callbacks.progressSnapshot?(ModelDownloadProgress.preparing(
             modelID: Self.modelID,
-            message: "Preparing Apple Speech..."
+            message: String(localized: "apple_speech.status.preparing_generic", defaultValue: "Preparing Apple Speech...", comment: "Generic status shown while Apple Speech is preparing.")
         ))
 
         await reconcileInitialReservations(keeping: locale)
@@ -228,7 +228,7 @@ actor AppleSpeechAnalyzerTranscriber {
                 while !Task.isCancelled && !progressBox.progress.isFinished {
                     let fraction = min(max(progressBox.progress.fractionCompleted, 0), 1)
                     let mappedFraction = 0.1 + (fraction * 0.8)
-                    callbacks.progress?(mappedFraction, "Downloading Apple Speech...")
+                    callbacks.progress?(mappedFraction, String(localized: "apple_speech.status.downloading", defaultValue: "Downloading Apple Speech...", comment: "Status shown while Apple Speech resources are downloading."))
                     callbacks.progressSnapshot?(downloadSnapshot(fraction: fraction))
                     try? await Task.sleep(for: .milliseconds(200))
                 }
@@ -349,15 +349,15 @@ actor AppleSpeechAnalyzerTranscriber {
             bytesPerSecond: 0,
             estimatedSecondsRemaining: nil,
             retryCount: 0,
-            message: "Downloading Apple Speech..."
+            message: String(localized: "apple_speech.status.downloading", defaultValue: "Downloading Apple Speech...", comment: "Status shown while Apple Speech resources are downloading.")
         )
     }
 
     private func readySnapshot() -> ModelDownloadProgress {
         ModelDownloadProgress.preparing(
             modelID: Self.modelID,
-            message: "Apple Speech ready"
-        ).replacing(phase: .ready, message: "Apple Speech ready")
+            message: String(localized: "apple_speech.status.ready", defaultValue: "Apple Speech ready", comment: "Status shown when Apple Speech backend is ready.")
+        ).replacing(phase: .ready, message: String(localized: "apple_speech.status.ready", defaultValue: "Apple Speech ready", comment: "Status shown when Apple Speech backend is ready."))
     }
 }
 
