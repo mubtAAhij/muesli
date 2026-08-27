@@ -32,11 +32,11 @@ enum MeetingContactCreatorError: LocalizedError, Equatable {
     var errorDescription: String? {
         switch self {
         case .nameRequired:
-            return "Add a first or last name before saving this contact."
+            return String(localized: "meeting_contact_creator.error.missing_name", defaultValue: "Add a first or last name before saving this contact.", bundle: .module, comment: "Validation error when trying to save a contact without a name.")
         case .accessDenied:
-            return "Muesli does not have permission to add contacts. Enable Contacts access in System Settings."
+            return String(localized: "meeting_contact_creator.error.contacts_permission_required", defaultValue: "Muesli does not have permission to add contacts. Enable Contacts access in System Settings.", bundle: .module, comment: "Error shown when Contacts permission is missing for creating contacts.")
         case .missingIdentifier:
-            return "Apple Contacts saved the person without returning an identifier. Try choosing them from Contacts instead."
+            return String(localized: "meeting_contact_creator.error.missing_contact_identifier", defaultValue: "Apple Contacts saved the person without returning an identifier. Try choosing them from Contacts instead.", bundle: .module, comment: "Error shown when Contacts save returns no identifier.")
         }
     }
 }
