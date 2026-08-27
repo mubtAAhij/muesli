@@ -16,15 +16,15 @@ struct InsightsShareSheet: View {
         VStack(spacing: 20) {
             HStack {
                 VStack(alignment: .leading, spacing: 3) {
-                    Text("Share your activity")
+                    Text(String(localized: "insights_share.title", defaultValue: "Share your activity", bundle: .module, comment: "Title for insights sharing sheet."))
                         .font(.system(size: 20, weight: .semibold))
                         .tracking(-0.4)
-                    Text("A private snapshot with no transcripts or account details")
+                    Text(String(localized: "insights_share.subtitle.privacy", defaultValue: "A private snapshot with no transcripts or account details", bundle: .module, comment: "Subtitle explaining privacy of shared insights snapshot."))
                         .font(.system(size: 12))
                         .foregroundStyle(.secondary)
                 }
                 Spacer()
-                Button("Done") { dismiss() }
+                Button(String(localized: "common.done", defaultValue: "Done", bundle: .module, comment: "Done button title in insights share view.")) { dismiss() }
                     .keyboardShortcut(.cancelAction)
             }
 
@@ -43,14 +43,14 @@ struct InsightsShareSheet: View {
                         .overlay { ProgressView().controlSize(.small) }
                 }
             }
-            .accessibilityLabel("Preview of your Muesli activity image")
+            .accessibilityLabel(String(localized: "insights_share.preview.accessibility_label", defaultValue: "Preview of your Muesli activity image", bundle: .module, comment: "Accessibility label for preview image in insights share view."))
 
             if let saveErrorMessage {
                 HStack(alignment: .top, spacing: 10) {
                     Image(systemName: "exclamationmark.triangle.fill")
                         .foregroundStyle(.red)
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("The image couldn’t be saved")
+                        Text(String(localized: "insights_share.error.save_failed", defaultValue: "The image couldn’t be saved", bundle: .module, comment: "Error message shown when saving shared image fails."))
                             .font(.system(size: 12, weight: .semibold))
                         Text(saveErrorMessage)
                             .font(.system(size: 11))
@@ -64,7 +64,7 @@ struct InsightsShareSheet: View {
                         Image(systemName: "xmark")
                     }
                     .buttonStyle(.plain)
-                    .accessibilityLabel("Dismiss save error")
+                    .accessibilityLabel(String(localized: "insights_share.error.dismiss.accessibility_label", defaultValue: "Dismiss save error", bundle: .module, comment: "Accessibility label for dismissing save error banner."))
                 }
                 .padding(10)
                 .background(Color.red.opacity(0.08))
@@ -76,20 +76,20 @@ struct InsightsShareSheet: View {
                 Button {
                     copyImage()
                 } label: {
-                    Label("Copy Image", systemImage: "doc.on.doc")
+                    Label(String(localized: "insights_share.action.copy_image", defaultValue: "Copy Image", bundle: .module, comment: "Action button to copy generated insights image."), systemImage: "doc.on.doc")
                 }
                 .keyboardShortcut("c", modifiers: [.command, .shift])
 
                 Button {
                     saveImage()
                 } label: {
-                    Label("Save PNG", systemImage: "arrow.down.to.line")
+                    Label(String(localized: "insights_share.action.save_png", defaultValue: "Save PNG", bundle: .module, comment: "Action button to save generated insights image as PNG."), systemImage: "arrow.down.to.line")
                 }
 
                 Button {
                     shareImage()
                 } label: {
-                    Label("Share…", systemImage: "square.and.arrow.up")
+                    Label(String(localized: "insights_share.action.share", defaultValue: "Share…", bundle: .module, comment: "Action button to open system share sheet."), systemImage: "square.and.arrow.up")
                 }
                 .buttonStyle(.borderedProminent)
 
@@ -116,7 +116,7 @@ struct InsightsShareSheet: View {
         guard let image else { return }
         NSPasteboard.general.clearContents()
         NSPasteboard.general.writeObjects([image])
-        showConfirmation("Copied")
+        showConfirmation(String(localized: "insights_share.confirmation.copied", defaultValue: "Copied", bundle: .module, comment: "Transient confirmation text after copying image."))
     }
 
     private func saveImage() {
@@ -135,7 +135,7 @@ struct InsightsShareSheet: View {
                 switch result {
                 case .saved:
                     saveErrorMessage = nil
-                    showConfirmation("Saved")
+                    showConfirmation(String(localized: "insights_share.confirmation.saved", defaultValue: "Saved", bundle: .module, comment: "Transient confirmation text after saving image."))
                 case .failed(let message):
                     saveErrorMessage = message
                 }
@@ -205,7 +205,7 @@ enum InsightsShareRenderer {
             meetingWords: []
         )
         let renderer = ImageRenderer(
-            content: InsightsShareCard(snapshot: snapshot, rangeLabel: "YOUR RANGE", showsNumbers: false)
+            content: InsightsShareCard(snapshot: snapshot, rangeLabel: String(localized: "insights_share.card.your_range", defaultValue: "YOUR RANGE", bundle: .module, comment: "Insights card section header for selected date range."), showsNumbers: false)
                 .frame(width: size.width, height: size.height)
         )
         renderer.scale = 1
@@ -272,7 +272,7 @@ private struct InsightsShareCard: View {
                     .tracking(-5)
                     .monospacedDigit()
                     .foregroundStyle(pale)
-                Text("WORDS CAPTURED")
+                Text(String(localized: "insights_share.metric.words_captured", defaultValue: "WORDS CAPTURED", bundle: .module, comment: "Metric label for captured words count."))
                     .font(.system(size: 18, weight: .bold))
                     .tracking(2.8)
                     .foregroundStyle(muted)
@@ -280,13 +280,13 @@ private struct InsightsShareCard: View {
                 Spacer(minLength: 36)
 
                 HStack(spacing: 0) {
-                    shareDatum(value: showsNumbers ? snapshot.selected.meetings.formatted() : "—", label: "MEETINGS")
+                    shareDatum(value: showsNumbers ? snapshot.selected.meetings.formatted() : "—", label: String(localized: "insights_share.metric.meetings", defaultValue: "MEETINGS", bundle: .module, comment: "Metric label for meetings count."))
                     shareDivider
-                    shareDatum(value: showsNumbers ? "\(Int(snapshot.selected.averageWPM.rounded()))" : "—", label: "AVERAGE WPM")
+                    shareDatum(value: showsNumbers ? "\(Int(snapshot.selected.averageWPM.rounded()))" : "—", label: String(localized: "insights_share.metric.average_wpm", defaultValue: "AVERAGE WPM", bundle: .module, comment: "Metric label for average words per minute."))
                     shareDivider
-                    shareDatum(value: showsNumbers ? dayCount(snapshot.currentStreakDays) : "—", label: "CURRENT STREAK")
+                    shareDatum(value: showsNumbers ? dayCount(snapshot.currentStreakDays) : "—", label: String(localized: "insights_share.metric.current_streak", defaultValue: "CURRENT STREAK", bundle: .module, comment: "Metric label for current activity streak."))
                     shareDivider
-                    shareDatum(value: showsNumbers ? dayCount(snapshot.longestStreakDays) : "—", label: "LONGEST STREAK")
+                    shareDatum(value: showsNumbers ? dayCount(snapshot.longestStreakDays) : "—", label: String(localized: "insights_share.metric.longest_streak", defaultValue: "LONGEST STREAK", bundle: .module, comment: "Metric label for longest activity streak."))
                 }
                 .padding(.vertical, 24)
                 .background(Color(red: 0.035, green: 0.050, blue: 0.068).opacity(0.48))
@@ -296,7 +296,7 @@ private struct InsightsShareCard: View {
                 Spacer(minLength: 30)
 
                 HStack {
-                    Text("Private by design. Made on this Mac.")
+                    Text(String(localized: "insights_share.footer.privacy_tagline", defaultValue: "Private by design. Made on this Mac.", bundle: .module, comment: "Privacy-focused footer tagline for shared insights image."))
                         .font(.system(size: 15, weight: .medium))
                         .foregroundStyle(pale.opacity(0.88))
                         .shadow(color: Color.black.opacity(0.48), radius: 3, y: 1)
@@ -332,7 +332,7 @@ private struct InsightsShareCard: View {
     }
 
     private func dayCount(_ value: Int) -> String {
-        "\(value) \(value == 1 ? "DAY" : "DAYS")"
+        "\(value) \(value == 1 ? String(localized: "insights_share.day_count.day_singular", defaultValue: "DAY", bundle: .module, comment: "Singular day unit label in streak metric.") : String(localized: "insights_share.day_count.day_plural", defaultValue: "DAYS", bundle: .module, comment: "Plural day unit label in streak metric."))"
     }
 }
 
