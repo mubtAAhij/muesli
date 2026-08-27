@@ -980,19 +980,19 @@ final class CoreAudioSystemRecorder: SystemAudioCapturing, SystemAudioDiagnostic
         var errorDescription: String? {
             switch self {
             case .fileCreationFailed:
-                return "Could not create output file"
+                return String(localized: "system_audio.error.could_not_create_output_file", defaultValue: "Could not create output file", bundle: .module, comment: "Error when system audio recorder cannot create output file.")
             case .noDefaultOutputDevice:
-                return "No default audio output device found"
+                return String(localized: "system_audio.error.no_default_output_device", defaultValue: "No default audio output device found", bundle: .module, comment: "Error when no default audio output device is available.")
             case .tapCreationFailed(let s):
-                return "Process tap creation failed (status: \(s))"
+                return String(format: String(localized: "system_audio.error.process_tap_creation_failed", defaultValue: "Process tap creation failed (status: %d)", bundle: .module, comment: "Error when CoreAudio process tap creation fails with status code."), s)
             case .aggregateDeviceCreationFailed(let s):
-                return "Aggregate device creation failed (status: \(s))"
+                return String(format: String(localized: "system_audio.error.aggregate_device_creation_failed", defaultValue: "Aggregate device creation failed (status: %d)", bundle: .module, comment: "Error when CoreAudio aggregate device creation fails with status code."), s)
             case .coreAudioSetupFailed(let step, let s):
-                return "CoreAudio setup failed at '\(step)' (status: \(s))"
+                return String(format: String(localized: "system_audio.error.coreaudio_setup_failed_at_step", defaultValue: "CoreAudio setup failed at '%@' (status: %d)", bundle: .module, comment: "Error when CoreAudio setup fails at a specific step and status code."), "\(step)", s)
             case .deviceIOProcCreationFailed:
-                return "Could not create aggregate device IOProc"
+                return String(localized: "system_audio.error.could_not_create_aggregate_device_ioproc", defaultValue: "Could not create aggregate device IOProc", bundle: .module, comment: "Error when CoreAudio IOProc for aggregate device cannot be created.")
             case .tapFormatUnavailable(let s):
-                return "Could not read tap stream format (status: \(s))"
+                return String(format: String(localized: "system_audio.error.could_not_read_tap_stream_format", defaultValue: "Could not read tap stream format (status: %d)", bundle: .module, comment: "Error when tap stream format cannot be read with status code."), s)
             }
         }
     }
