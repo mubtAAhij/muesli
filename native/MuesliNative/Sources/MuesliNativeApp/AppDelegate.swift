@@ -49,7 +49,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             NSApplication.shared.registerForRemoteNotifications()
         } catch {
             let alert = NSAlert()
-            alert.messageText = String(format: String(localized: "app.startup.failed_to_start", defaultValue: "%@ failed to start", bundle: .module, comment: "Startup failure message including app display name."), "\(AppIdentity.displayName)")
+            alert.messageText = String(format: String(localized: "app.startup.failed_to_start", defaultValue: "%@ failed to start", bundle: Bundle.module, comment: "Startup failure message including app display name."), "\(AppIdentity.displayName)")
             alert.informativeText = error.localizedDescription
             alert.runModal()
             NSApplication.shared.terminate(nil)
@@ -130,14 +130,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let appMenuItem = NSMenuItem()
         let appMenu = NSMenu()
         let settingsItem = NSMenuItem(
-            title: String(localized: "app_menu.settings", defaultValue: "Settings…", bundle: .module, comment: "Application menu item title to open settings."),
+            title: String(localized: "app_menu.settings", defaultValue: "Settings…", bundle: Bundle.module, comment: "Application menu item title to open settings."),
             action: #selector(AppDelegate.openPreferences(_:)),
             keyEquivalent: ","
         )
         settingsItem.target = self
         appMenu.addItem(settingsItem)
         let whatsNewItem = NSMenuItem(
-            title: String(localized: "app_menu.whats_new", defaultValue: "What's New in Muesli", bundle: .module, comment: "Application menu item title to open what's new window."),
+            title: String(localized: "app_menu.whats_new", defaultValue: "What's New in Muesli", bundle: Bundle.module, comment: "Application menu item title to open what's new window."),
             action: #selector(AppDelegate.showWhatsNew(_:)),
             keyEquivalent: ""
         )
@@ -145,25 +145,25 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         appMenu.addItem(whatsNewItem)
         appMenu.addItem(.separator())
         appMenu.addItem(
-            withTitle: String(format: String(localized: "app_menu.hide_app", defaultValue: "Hide %@", bundle: .module, comment: "Application menu item title to hide current app."), "\(AppIdentity.displayName)"),
+            withTitle: String(format: String(localized: "app_menu.hide_app", defaultValue: "Hide %@", bundle: Bundle.module, comment: "Application menu item title to hide current app."), "\(AppIdentity.displayName)"),
             action: #selector(NSApplication.hide(_:)),
             keyEquivalent: "h"
         )
         let hideOthersItem = NSMenuItem(
-            title: String(localized: "app_menu.hide_others", defaultValue: "Hide Others", bundle: .module, comment: "Application menu item title to hide other apps."),
+            title: String(localized: "app_menu.hide_others", defaultValue: "Hide Others", bundle: Bundle.module, comment: "Application menu item title to hide other apps."),
             action: #selector(NSApplication.hideOtherApplications(_:)),
             keyEquivalent: "h"
         )
         hideOthersItem.keyEquivalentModifierMask = [.command, .option]
         appMenu.addItem(hideOthersItem)
         appMenu.addItem(
-            withTitle: String(localized: "app_menu.show_all", defaultValue: "Show All", bundle: .module, comment: "Application menu item title to show all apps."),
+            withTitle: String(localized: "app_menu.show_all", defaultValue: "Show All", bundle: Bundle.module, comment: "Application menu item title to show all apps."),
             action: #selector(NSApplication.unhideAllApplications(_:)),
             keyEquivalent: ""
         )
         appMenu.addItem(.separator())
         appMenu.addItem(
-            withTitle: String(format: String(localized: "app_menu.quit_app", defaultValue: "Quit %@", bundle: .module, comment: "Application menu item title to quit app."), "\(AppIdentity.displayName)"),
+            withTitle: String(format: String(localized: "app_menu.quit_app", defaultValue: "Quit %@", bundle: Bundle.module, comment: "Application menu item title to quit app."), "\(AppIdentity.displayName)"),
             action: #selector(NSApplication.terminate(_:)),
             keyEquivalent: "q"
         )
@@ -171,23 +171,23 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         mainMenu.addItem(appMenuItem)
 
         let editMenuItem = NSMenuItem()
-        let editMenu = NSMenu(title: String(localized: "app_menu.edit", defaultValue: "Edit", bundle: .module, comment: "Top-level Edit menu title."))
-        editMenu.addItem(withTitle: String(localized: "app_menu.undo", defaultValue: "Undo", bundle: .module, comment: "Edit menu command title for undo."), action: Selector(("undo:")), keyEquivalent: "z")
+        let editMenu = NSMenu(title: String(localized: "app_menu.edit", defaultValue: "Edit", bundle: Bundle.module, comment: "Top-level Edit menu title."))
+        editMenu.addItem(withTitle: String(localized: "app_menu.undo", defaultValue: "Undo", bundle: Bundle.module, comment: "Edit menu command title for undo."), action: Selector(("undo:")), keyEquivalent: "z")
 
-        let redo = NSMenuItem(title: String(localized: "app_menu.redo", defaultValue: "Redo", bundle: .module, comment: "Edit menu command title for redo."), action: Selector(("redo:")), keyEquivalent: "z")
+        let redo = NSMenuItem(title: String(localized: "app_menu.redo", defaultValue: "Redo", bundle: Bundle.module, comment: "Edit menu command title for redo."), action: Selector(("redo:")), keyEquivalent: "z")
         redo.keyEquivalentModifierMask = [.command, .shift]
         editMenu.addItem(redo)
 
         editMenu.addItem(.separator())
-        editMenu.addItem(withTitle: String(localized: "app_menu.cut", defaultValue: "Cut", bundle: .module, comment: "Edit menu command title for cut."), action: #selector(NSText.cut(_:)), keyEquivalent: "x")
-        editMenu.addItem(withTitle: String(localized: "app_menu.copy", defaultValue: "Copy", bundle: .module, comment: "Edit menu command title for copy."), action: #selector(NSText.copy(_:)), keyEquivalent: "c")
-        editMenu.addItem(withTitle: String(localized: "app_menu.paste", defaultValue: "Paste", bundle: .module, comment: "Edit menu command title for paste."), action: #selector(NSText.paste(_:)), keyEquivalent: "v")
-        editMenu.addItem(withTitle: String(localized: "app_menu.delete", defaultValue: "Delete", bundle: .module, comment: "Edit menu command title for delete."), action: #selector(NSText.delete(_:)), keyEquivalent: "")
+        editMenu.addItem(withTitle: String(localized: "app_menu.cut", defaultValue: "Cut", bundle: Bundle.module, comment: "Edit menu command title for cut."), action: #selector(NSText.cut(_:)), keyEquivalent: "x")
+        editMenu.addItem(withTitle: String(localized: "app_menu.copy", defaultValue: "Copy", bundle: Bundle.module, comment: "Edit menu command title for copy."), action: #selector(NSText.copy(_:)), keyEquivalent: "c")
+        editMenu.addItem(withTitle: String(localized: "app_menu.paste", defaultValue: "Paste", bundle: Bundle.module, comment: "Edit menu command title for paste."), action: #selector(NSText.paste(_:)), keyEquivalent: "v")
+        editMenu.addItem(withTitle: String(localized: "app_menu.delete", defaultValue: "Delete", bundle: Bundle.module, comment: "Edit menu command title for delete."), action: #selector(NSText.delete(_:)), keyEquivalent: "")
         editMenu.addItem(.separator())
-        editMenu.addItem(withTitle: String(localized: "app_menu.select_all", defaultValue: "Select All", bundle: .module, comment: "Edit menu command title for select all."), action: #selector(NSText.selectAll(_:)), keyEquivalent: "a")
+        editMenu.addItem(withTitle: String(localized: "app_menu.select_all", defaultValue: "Select All", bundle: Bundle.module, comment: "Edit menu command title for select all."), action: #selector(NSText.selectAll(_:)), keyEquivalent: "a")
         editMenu.addItem(.separator())
         let findItem = NSMenuItem(
-            title: String(localized: "app_menu.find", defaultValue: "Find", bundle: .module, comment: "Top-level Find menu title."),
+            title: String(localized: "app_menu.find", defaultValue: "Find", bundle: Bundle.module, comment: "Top-level Find menu title."),
             action: #selector(AppDelegate.focusSearch(_:)),
             keyEquivalent: "f"
         )
@@ -197,17 +197,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         editMenuItem.submenu = editMenu
         mainMenu.addItem(editMenuItem)
 
-        let viewMenuItem = NSMenuItem(title: String(localized: "app_menu.view.root", defaultValue: "View", bundle: .module, comment: "Top-level View menu title."), action: nil, keyEquivalent: "")
-        let viewMenu = NSMenu(title: String(localized: "app_menu.view", defaultValue: "View", bundle: .module, comment: "View submenu section title."))
+        let viewMenuItem = NSMenuItem(title: String(localized: "app_menu.view.root", defaultValue: "View", bundle: Bundle.module, comment: "Top-level View menu title."), action: nil, keyEquivalent: "")
+        let viewMenu = NSMenu(title: String(localized: "app_menu.view", defaultValue: "View", bundle: Bundle.module, comment: "View submenu section title."))
         let dictationsItem = NSMenuItem(
-            title: String(localized: "app_menu.dictations", defaultValue: "Dictations", bundle: .module, comment: "View menu item title for dictations section."),
+            title: String(localized: "app_menu.dictations", defaultValue: "Dictations", bundle: Bundle.module, comment: "View menu item title for dictations section."),
             action: #selector(AppDelegate.showDictations(_:)),
             keyEquivalent: "1"
         )
         dictationsItem.target = self
         viewMenu.addItem(dictationsItem)
         let meetingsItem = NSMenuItem(
-            title: String(localized: "app_menu.meetings", defaultValue: "Meetings", bundle: .module, comment: "View menu item title for meetings section."),
+            title: String(localized: "app_menu.meetings", defaultValue: "Meetings", bundle: Bundle.module, comment: "View menu item title for meetings section."),
             action: #selector(AppDelegate.showMeetings(_:)),
             keyEquivalent: "2"
         )
@@ -216,27 +216,27 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         viewMenuItem.submenu = viewMenu
         mainMenu.addItem(viewMenuItem)
 
-        let windowMenuItem = NSMenuItem(title: String(localized: "app_menu.window.root", defaultValue: "Window", bundle: .module, comment: "Top-level Window menu title."), action: nil, keyEquivalent: "")
-        let windowMenu = NSMenu(title: String(localized: "app_menu.window", defaultValue: "Window", bundle: .module, comment: "Window submenu section title."))
+        let windowMenuItem = NSMenuItem(title: String(localized: "app_menu.window.root", defaultValue: "Window", bundle: Bundle.module, comment: "Top-level Window menu title."), action: nil, keyEquivalent: "")
+        let windowMenu = NSMenu(title: String(localized: "app_menu.window", defaultValue: "Window", bundle: Bundle.module, comment: "Window submenu section title."))
         windowMenu.addItem(
-            withTitle: String(localized: "app_menu.minimize", defaultValue: "Minimize", bundle: .module, comment: "Window menu command title for minimizing active window."),
+            withTitle: String(localized: "app_menu.minimize", defaultValue: "Minimize", bundle: Bundle.module, comment: "Window menu command title for minimizing active window."),
             action: #selector(NSWindow.performMiniaturize(_:)),
             keyEquivalent: "m"
         )
         windowMenu.addItem(
-            withTitle: String(localized: "app_menu.zoom", defaultValue: "Zoom", bundle: .module, comment: "Window menu command title for zooming active window."),
+            withTitle: String(localized: "app_menu.zoom", defaultValue: "Zoom", bundle: Bundle.module, comment: "Window menu command title for zooming active window."),
             action: #selector(NSWindow.performZoom(_:)),
             keyEquivalent: ""
         )
         windowMenu.addItem(.separator())
         windowMenu.addItem(
-            withTitle: String(localized: "app_menu.close_window", defaultValue: "Close Window", bundle: .module, comment: "Window menu command title for closing active window."),
+            withTitle: String(localized: "app_menu.close_window", defaultValue: "Close Window", bundle: Bundle.module, comment: "Window menu command title for closing active window."),
             action: #selector(NSWindow.performClose(_:)),
             keyEquivalent: "w"
         )
         windowMenu.addItem(.separator())
         windowMenu.addItem(
-            withTitle: String(localized: "app_menu.bring_all_to_front", defaultValue: "Bring All to Front", bundle: .module, comment: "Window menu command title to bring all app windows to front."),
+            withTitle: String(localized: "app_menu.bring_all_to_front", defaultValue: "Bring All to Front", bundle: Bundle.module, comment: "Window menu command title to bring all app windows to front."),
             action: #selector(NSApplication.arrangeInFront(_:)),
             keyEquivalent: ""
         )
@@ -370,11 +370,11 @@ final class SparkleUpdateDelegate: NSObject, SPUUpdaterDelegate, SPUStandardUser
         lastPresentedAt = Date()
 
         let alert = NSAlert()
-        alert.messageText = String(localized: "update_guidance.title.update_did_not_finish", defaultValue: "Update did not finish", bundle: .module, comment: "Alert title shown when app update process does not complete.")
+        alert.messageText = String(localized: "update_guidance.title.update_did_not_finish", defaultValue: "Update did not finish", bundle: Bundle.module, comment: "Alert title shown when app update process does not complete.")
         alert.informativeText = UpdateFailureGuidance.message
         alert.alertStyle = .warning
-        alert.addButton(withTitle: String(localized: "update_guidance.open_download_page", defaultValue: "Open Download Page", bundle: .module, comment: "Alert action button title to open manual download page."))
-        alert.addButton(withTitle: String(localized: "common.ok", defaultValue: "OK", bundle: .module, comment: "Generic confirmation button title in update guidance alert."))
+        alert.addButton(withTitle: String(localized: "update_guidance.open_download_page", defaultValue: "Open Download Page", bundle: Bundle.module, comment: "Alert action button title to open manual download page."))
+        alert.addButton(withTitle: String(localized: "common.ok", defaultValue: "OK", bundle: Bundle.module, comment: "Generic confirmation button title in update guidance alert."))
 
         if alert.runModal() == .alertFirstButtonReturn,
            let url = URL(string: UpdateFailureGuidance.downloadPageURLString) {
@@ -421,7 +421,7 @@ enum UpdateFailureGuidance {
 
         If this keeps happening, download the latest DMG and replace Muesli manually. This can happen when the local updater cannot finish preparing or replacing the app.
         """,
-        bundle: .module,
+        bundle: Bundle.module,
         comment: "Detailed update recovery guidance when automatic updater cannot finish."
     )
 
