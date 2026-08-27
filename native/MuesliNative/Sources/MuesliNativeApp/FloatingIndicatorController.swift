@@ -154,7 +154,7 @@ final class FloatingIndicatorController: NSObject {
     var onPositionSaved: ((CGPoint) -> Void)?
     var isToggleDictation = false
     private var stopLayer: CALayer?
-    private var transcribingTitle = String(localized: "floating_indicator.status.transcribing", defaultValue: "Transcribing", bundle: .module, comment: "Floating indicator status shown while dictation is transcribing.")
+    private var transcribingTitle = String(localized: "floating_indicator.status.transcribing", defaultValue: "Transcribing", bundle: Bundle.module, comment: "Floating indicator status shown while dictation is transcribing.")
     private var computerUseTranscriptText: String?
     private var loadingSpinner: NSProgressIndicator?
     private var isShowingLoading = false
@@ -388,7 +388,7 @@ final class FloatingIndicatorController: NSObject {
     func showComputerUseTranscript(_ transcript: String, config: AppConfig) {
         let normalized = Self.normalizedComputerUseTranscript(transcript)
         computerUseTranscriptText = normalized.isEmpty ? nil : normalized
-        transcribingTitle = normalized.isEmpty ? String(localized: "floating_indicator.status.starting_cua", defaultValue: "Starting CUA", bundle: .module, comment: "Floating indicator status shown while CUA is starting.") : normalized
+        transcribingTitle = normalized.isEmpty ? String(localized: "floating_indicator.status.starting_cua", defaultValue: "Starting CUA", bundle: Bundle.module, comment: "Floating indicator status shown while CUA is starting.") : normalized
         setState(.transcribing, config: config)
     }
 
@@ -401,7 +401,7 @@ final class FloatingIndicatorController: NSObject {
         }
         self.state = state
         if state != .transcribing {
-            transcribingTitle = String(localized: "floating_indicator.status.transcribing", defaultValue: "Transcribing", bundle: .module, comment: "Floating indicator status shown while dictation is transcribing.")
+            transcribingTitle = String(localized: "floating_indicator.status.transcribing", defaultValue: "Transcribing", bundle: Bundle.module, comment: "Floating indicator status shown while dictation is transcribing.")
             computerUseTranscriptText = nil
         }
         if state != .recording {
@@ -1644,7 +1644,7 @@ final class FloatingIndicatorController: NSObject {
                 .clear,
                 .colorWith(hex: 0xFFFFFF, alpha: isHovered ? 0.14 : 0.22),
                 "",
-                isHovered ? String(format: String(localized: "floating_indicator.instruction.hold_hotkey_to_dictate", defaultValue: "Hold %@ to dictate", bundle: .module, comment: "Instruction text telling user to hold configured hotkey to dictate."), "\(config.dictationHotkey.label)") : "",
+                isHovered ? String(format: String(localized: "floating_indicator.instruction.hold_hotkey_to_dictate", defaultValue: "Hold %@ to dictate", bundle: Bundle.module, comment: "Instruction text telling user to hold configured hotkey to dictate."), "\(config.dictationHotkey.label)") : "",
                 .colorWith(hex: 0xFFFFFF, alpha: 0.75),
                 .colorWith(hex: 0xFFFFFF, alpha: 0.75),
                 isHovered ? 1.0 : 0.90
@@ -1751,7 +1751,7 @@ final class FloatingIndicatorController: NSObject {
     }
 
     static func idleHoverPillSize(hotkeyLabel: String, screenWidth: CGFloat) -> NSSize {
-        let title = String(format: String(localized: "floating_indicator.title.hold_hotkey_to_dictate", defaultValue: "Hold %@ to dictate", bundle: .module, comment: "Floating indicator title prompting user to hold hotkey to dictate."), "\(hotkeyLabel)")
+        let title = String(format: String(localized: "floating_indicator.title.hold_hotkey_to_dictate", defaultValue: "Hold %@ to dictate", bundle: Bundle.module, comment: "Floating indicator title prompting user to hold hotkey to dictate."), "\(hotkeyLabel)")
         let font = NSFont.systemFont(ofSize: 11, weight: .regular)
         let textWidth = ceil((title as NSString).size(withAttributes: [.font: font]).width)
         let preferredWidth = 42 + textWidth + 22
