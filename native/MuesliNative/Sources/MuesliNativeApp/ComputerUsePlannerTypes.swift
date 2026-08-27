@@ -573,19 +573,19 @@ struct ComputerUseToolInvocation: Codable, Equatable {
             return "move cursor to \(coordinateSummary(x, y))"
         case .click:
             if let elementIndex {
-                return "click element \(elementIndexLabel(elementIndex))"
+                return String(format: String(localized: "computer_use_planner_types.action.click_element", defaultValue: "click element %@", bundle: .module, comment: "Action summary describing clicking a specific indexed element."), "\(elementIndexLabel(elementIndex))")
             }
             if !trimmed(elementID).isEmpty {
-                return "click \(trimmed(label).isEmpty ? trimmed(elementID) : trimmed(label))"
+                return String(format: String(localized: "computer_use_planner_types.action.click_target", defaultValue: "click %@", bundle: .module, comment: "Action summary describing clicking a labeled or identified target."), "\(trimmed(label).isEmpty ? trimmed(elementID) : trimmed(label))")
             }
-            return "click \(trimmed(label).isEmpty ? "point" : trimmed(label)) at \(coordinateSummary(x, y))"
+            return String(format: String(localized: "computer_use_planner_types.action.click_target_at_coordinates", defaultValue: "click %@ at %@", bundle: .module, comment: "Action summary describing clicking a target at specific coordinates."), "\(trimmed(label).isEmpty ? String(localized: "computer_use_planner_types.target.point", defaultValue: "point", bundle: .module, comment: "Fallback target label when clicking at coordinates without a named element.") : trimmed(label))", "\(coordinateSummary(x, y))")
         case .clickElement:
             if let elementIndex {
-                return "click element \(elementIndexLabel(elementIndex))"
+                return String(format: String(localized: "computer_use_planner_types.action.click_element", defaultValue: "click element %@", bundle: .module, comment: "Action summary describing clicking a specific indexed element."), "\(elementIndexLabel(elementIndex))")
             }
-            return "click \(trimmed(label).isEmpty ? trimmed(elementID) : trimmed(label))"
+            return String(format: String(localized: "computer_use_planner_types.action.click_target", defaultValue: "click %@", bundle: .module, comment: "Action summary describing clicking a labeled or identified target."), "\(trimmed(label).isEmpty ? trimmed(elementID) : trimmed(label))")
         case .clickPoint:
-            return "click \(trimmed(label).isEmpty ? "point" : trimmed(label)) at \(coordinateSummary(x, y))"
+            return String(format: String(localized: "computer_use_planner_types.action.click_target_at_coordinates", defaultValue: "click %@ at %@", bundle: .module, comment: "Action summary describing clicking a target at specific coordinates."), "\(trimmed(label).isEmpty ? String(localized: "computer_use_planner_types.target.point", defaultValue: "point", bundle: .module, comment: "Fallback target label when clicking at coordinates without a named element.") : trimmed(label))", "\(coordinateSummary(x, y))")
         case .performSecondaryAction:
             let target = elementIndex.map(elementIndexLabel) ?? trimmed(elementID)
             return "perform \(trimmed(actionName)) on \(target)"
