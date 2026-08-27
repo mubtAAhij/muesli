@@ -14,7 +14,7 @@ actor FluidAudioTranscriber {
         var errorDescription: String? {
             switch self {
             case .notLoaded:
-                return "FluidAudio models not loaded. Call loadModels() first."
+                return String(localized: "fluid_audio_backend.error.models_not_loaded", defaultValue: "FluidAudio models not loaded. Call loadModels() first.", bundle: .module, comment: "Error when attempting to use FluidAudio backend before models are loaded.")
             }
         }
     }
@@ -37,7 +37,7 @@ actor FluidAudioTranscriber {
         ) { modelDirectory in
             let preparing = ModelDownloadProgress.preparing(
                 modelID: plan.modelID,
-                message: "Loading Parakeet into Core ML..."
+                message: String(localized: "fluid_audio_backend.status.loading_parakeet_coreml", defaultValue: "Loading Parakeet into Core ML...", bundle: .module, comment: "Status message while loading Parakeet model into Core ML.")
             )
             progress?(0.95, preparing.message)
             progressSnapshot?(preparing)
@@ -50,10 +50,10 @@ actor FluidAudioTranscriber {
         self.loadedVersion = version
         let preparing = ModelDownloadProgress.preparing(
             modelID: plan.modelID,
-            message: "Loading Parakeet into Core ML..."
+            message: String(localized: "fluid_audio_backend.status.loading_parakeet_coreml", defaultValue: "Loading Parakeet into Core ML...", bundle: .module, comment: "Status message while loading Parakeet model into Core ML.")
         )
         progress?(1, nil)
-        progressSnapshot?(preparing.replacing(phase: .ready, message: "Model ready"))
+        progressSnapshot?(preparing.replacing(phase: .ready, message: String(localized: "fluid_audio_backend.status.model_ready", defaultValue: "Model ready", bundle: .module, comment: "Status message when FluidAudio model is ready.")))
         fputs("[fluidaudio] models ready\n", stderr)
     }
 

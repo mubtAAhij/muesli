@@ -44,19 +44,19 @@ struct SidebarView: View {
         switch appState.sparkleUpdateStatus {
         case .available:
             return UpdateCTA(
-                label: "Update",
+                label: String(localized: "sidebar.update.cta_title", defaultValue: "Update", bundle: .module, comment: "Call-to-action title for update status in sidebar."),
                 icon: "arrow.down",
                 foreground: updateCTAForeground,
-                accessibilityLabel: "Update available",
-                tooltip: "Open About for update instructions"
+                accessibilityLabel: String(localized: "sidebar.update.available", defaultValue: "Update available", bundle: .module, comment: "Sidebar status text indicating an update is available."),
+                tooltip: String(localized: "sidebar.update.open_about_for_instructions", defaultValue: "Open About for update instructions", bundle: .module, comment: "Help text directing user to About screen for update steps.")
             )
         case .downloaded:
             return UpdateCTA(
-                label: "Ready",
+                label: String(localized: "sidebar.update.ready_title", defaultValue: "Ready", bundle: .module, comment: "Sidebar update status title when update is ready."),
                 icon: "arrow.clockwise",
                 foreground: updateCTAForeground,
-                accessibilityLabel: "Update ready to install",
-                tooltip: "Open About for update instructions"
+                accessibilityLabel: String(localized: "sidebar.update.ready_message", defaultValue: "Update ready to install", bundle: .module, comment: "Sidebar status message when downloaded update is ready to install."),
+                tooltip: String(localized: "sidebar.update.open_about_for_instructions", defaultValue: "Open About for update instructions", bundle: .module, comment: "Help text directing user to About screen for update steps.")
             )
         case .idle, .checking, .busy, .installing, .upToDate, .disabled, .failed:
             return nil
@@ -102,19 +102,19 @@ struct SidebarView: View {
             sidebarHeader
             searchBar
 
-            sidebarItem(tab: .timeline, icon: "clock.fill", label: "Timeline")
-            sidebarItem(tab: .dictations, icon: "mic.fill", label: "Dictations")
+            sidebarItem(tab: .timeline, icon: "clock.fill", label: String(localized: "sidebar.timeline", defaultValue: "Timeline", bundle: .module, comment: "Sidebar item title for timeline section."))
+            sidebarItem(tab: .dictations, icon: "mic.fill", label: String(localized: "sidebar.dictations", defaultValue: "Dictations", bundle: .module, comment: "Sidebar item title for dictations section."))
             meetingsSection
-            sidebarItem(tab: .dictionary, icon: "character.book.closed", label: "Dictionary")
-            sidebarItem(tab: .models, icon: "square.and.arrow.down", label: "Models")
-            sidebarItem(tab: .shortcuts, icon: "keyboard", label: "Shortcuts")
+            sidebarItem(tab: .dictionary, icon: "character.book.closed", label: String(localized: "sidebar.dictionary", defaultValue: "Dictionary", bundle: .module, comment: "Sidebar item title for custom dictionary section."))
+            sidebarItem(tab: .models, icon: "square.and.arrow.down", label: String(localized: "sidebar.models", defaultValue: "Models", bundle: .module, comment: "Sidebar item title for models section."))
+            sidebarItem(tab: .shortcuts, icon: "keyboard", label: String(localized: "sidebar.shortcuts", defaultValue: "Shortcuts", bundle: .module, comment: "Sidebar item title for shortcuts section."))
 
             Spacer()
 
             modelPreparationStatus
             spreadTheWordSection
-            sidebarItem(tab: .settings, icon: "gearshape", label: "Settings")
-            sidebarItem(tab: .about, icon: "info.circle", label: "About", updateCTA: pendingUpdateCTA)
+            sidebarItem(tab: .settings, icon: "gearshape", label: String(localized: "sidebar.settings", defaultValue: "Settings", bundle: .module, comment: "Sidebar item title for settings section."))
+            sidebarItem(tab: .about, icon: "info.circle", label: String(localized: "sidebar.about", defaultValue: "About", bundle: .module, comment: "Sidebar item title for about section."), updateCTA: pendingUpdateCTA)
             darkModeToggle
                 .padding(.bottom, MuesliTheme.spacing16)
         }
@@ -131,13 +131,13 @@ struct SidebarView: View {
             }
         }
         .alert(
-            "Delete \"\(folderToDelete?.name ?? "")\"?",
+            String(format: String(localized: "sidebar.folder.delete.confirmation_title", defaultValue: "Delete \"%@\"?", bundle: .module, comment: "Confirmation alert title asking to delete a specific folder."), "\(folderToDelete?.name ?? "")"),
             isPresented: $showDeleteConfirmation
         ) {
-            Button("Cancel", role: .cancel) {
+            Button(String(localized: "common.cancel", defaultValue: "Cancel", bundle: .module, comment: "Cancel button title in delete folder confirmation alert."), role: .cancel) {
                 folderToDelete = nil
             }
-            Button("Delete", role: .destructive) {
+            Button(String(localized: "sidebar.folder.delete.confirmation_action", defaultValue: "Delete", bundle: .module, comment: "Destructive button title confirming folder deletion."), role: .destructive) {
                 if let folder = folderToDelete {
                     controller.deleteFolder(id: folder.id)
                     controller.showMeetingsHome(folderID: appState.selectedFolderID)
@@ -149,9 +149,9 @@ struct SidebarView: View {
                 appState.directMeetingCountsByFolder[folder.id] ?? 0
             } ?? 0
             if directCount > 0 {
-                Text("\(directCount) meeting\(directCount == 1 ? "" : "s") in this folder will be moved to Unfiled. Subfolders will be kept.")
+                Text(String(format: String(localized: "sidebar.folder.delete.move_to_unfiled_message", defaultValue: "%#@meetingCount@ in this folder will be moved to Unfiled. Subfolders will be kept.", bundle: .module, comment: "Delete-folder warning when direct meetings will be moved to Unfiled while keeping subfolders."), directCount))
             } else {
-                Text("This folder will be permanently removed. Subfolders will be kept.")
+                Text(String(localized: "sidebar.folder.delete.warning", defaultValue: "This folder will be permanently removed. Subfolders will be kept.", bundle: .module, comment: "Delete-folder warning when no direct meetings need moving."))
             }
         }
     }
@@ -177,7 +177,7 @@ struct SidebarView: View {
                     .foregroundStyle(MuesliTheme.textPrimary)
             }
             if !userName.isEmpty {
-                Text("Hi, \(userName)")
+                Text(String(format: String(localized: "sidebar.greeting.with_name", defaultValue: "Hi, %@", bundle: .module, comment: "Greeting text in sidebar that includes the current user name."), "\(userName)"))
                     .font(MuesliTheme.caption())
                     .foregroundStyle(MuesliTheme.textTertiary)
                     .padding(.leading, 34)
@@ -194,7 +194,7 @@ struct SidebarView: View {
             Image(systemName: "magnifyingglass")
                 .font(.system(size: 12))
                 .foregroundStyle(MuesliTheme.textTertiary)
-            TextField("Search...", text: searchTextBinding)
+            TextField(String(localized: "sidebar.search.placeholder", defaultValue: "Search...", bundle: .module, comment: "Placeholder text for sidebar search field."), text: searchTextBinding)
                 .textFieldStyle(.plain)
                 .font(MuesliTheme.callout())
                 .foregroundStyle(MuesliTheme.textPrimary)
@@ -245,7 +245,7 @@ struct SidebarView: View {
                             .font(.system(size: 14, weight: .medium))
                             .foregroundStyle(isSelected ? MuesliTheme.accent : MuesliTheme.textSecondary)
                             .frame(width: sidebarIconColumnWidth)
-                        Text("Meetings")
+                        Text(String(localized: "sidebar.meetings.title", defaultValue: "Meetings", bundle: .module, comment: "Section title for meetings list in sidebar."))
                             .font(MuesliTheme.headline())
                             .foregroundStyle(isSelected ? MuesliTheme.textPrimary : MuesliTheme.textSecondary)
                         Spacer(minLength: 0)
@@ -274,7 +274,7 @@ struct SidebarView: View {
                         .frame(width: meetingsTrailingColumnWidth, height: 18)
                 }
                 .buttonStyle(.plain)
-                .help("New Meeting Folder")
+                .help(String(localized: "sidebar.meetings.new_folder.help", defaultValue: "New Meeting Folder", bundle: .module, comment: "Menu/help label for creating a new meeting folder."))
             }
             .padding(.horizontal, sidebarRowHorizontalPadding)
             .padding(.vertical, MuesliTheme.spacing8)
@@ -292,7 +292,7 @@ struct SidebarView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     meetingFilterRow(
                         icon: "tray.2",
-                        label: "All Meetings",
+                        label: String(localized: "sidebar.meetings.filter.all", defaultValue: "All Meetings", bundle: .module, comment: "Filter option label to show all meetings."),
                         count: appState.totalMeetingCount,
                         isSelected: appState.selectedTab == .meetings && appState.selectedFolderID == nil
                     ) {
@@ -331,20 +331,20 @@ struct SidebarView: View {
                                 commitOrder: { ids in controller.reorderFolders(ids: ids) }
                             ))
                             .contextMenu {
-                                Button("New Subfolder") {
+                                Button(String(localized: "sidebar.folder.new_subfolder", defaultValue: "New Subfolder", bundle: .module, comment: "Context menu action to create a subfolder.")) {
                                     createNewSubfolder(parentID: folder.id)
                                 }
-                                Button("Rename") {
+                                Button(String(localized: "sidebar.meetings.rename", defaultValue: "Rename", bundle: .module, comment: "Context menu action to rename a folder or item.")) {
                                     renamingFolderID = folder.id
                                     renamingFolderName = folder.name
                                 }
                                 if folder.parentID != nil {
-                                    Button("Move to Top Level") {
+                                    Button(String(localized: "sidebar.folder.move_to_top_level", defaultValue: "Move to Top Level", bundle: .module, comment: "Context menu action to move folder to top level.")) {
                                         controller.moveFolder(id: folder.id, toParent: nil)
                                     }
                                 }
                                 Divider()
-                                Button("Delete", role: .destructive) {
+                                Button(String(localized: "sidebar.folder.delete.context_action", defaultValue: "Delete", bundle: .module, comment: "Context menu destructive action to delete a folder."), role: .destructive) {
                                     folderToDelete = folder
                                     showDeleteConfirmation = true
                                 }
@@ -416,7 +416,7 @@ struct SidebarView: View {
         )
         if wordMilestone != nil {
             VStack(alignment: .leading, spacing: 2) {
-                Text("Spread the Word")
+                Text(String(localized: "sidebar.spread_the_word.title", defaultValue: "Spread the Word", bundle: .module, comment: "Header title for share/promote section in sidebar."))
                     .font(.system(size: 11, weight: .semibold, design: .rounded))
                     .foregroundStyle(MuesliTheme.textTertiary)
                     .padding(.horizontal, sidebarRowHorizontalPadding)
@@ -425,13 +425,13 @@ struct SidebarView: View {
                 socialShareRow(
                     imageName: "x-logo",
                     fallbackIcon: "bubble.left.and.bubble.right.fill",
-                    label: "Tweet about Muesli",
+                    label: String(localized: "sidebar.spread_the_word.tweet", defaultValue: "Tweet about Muesli", bundle: .module, comment: "Button label to share Muesli on X/Twitter."),
                     action: { controller.openContributionSidebarShare(.tweetAboutMuesli) }
                 )
                 socialShareRow(
                     imageName: "linkedin-logo",
                     fallbackIcon: "person.crop.square.fill",
-                    label: "Post on LinkedIn",
+                    label: String(localized: "sidebar.spread_the_word.linkedin", defaultValue: "Post on LinkedIn", bundle: .module, comment: "Button label to share Muesli on LinkedIn."),
                     action: { controller.openContributionSidebarShare(.postOnLinkedIn) }
                 )
             }
@@ -641,7 +641,7 @@ struct SidebarView: View {
                 .font(.system(size: 11, weight: .medium))
                 .foregroundStyle(MuesliTheme.accent)
                 .frame(width: sidebarIconColumnWidth)
-            TextField("Folder name", text: $renamingFolderName)
+            TextField(String(localized: "sidebar.folder.rename.placeholder", defaultValue: "Folder name", bundle: .module, comment: "Placeholder for folder name text field."), text: $renamingFolderName)
                 .font(MuesliTheme.callout())
                 .textFieldStyle(.plain)
                 .onSubmit {
@@ -687,24 +687,24 @@ struct SidebarView: View {
     }
 
     private func createNewFolder() {
-        if let id = controller.createFolder(name: "New Folder") {
+        if let id = controller.createFolder(name: String(localized: "sidebar.folder.new_folder.title.primary", defaultValue: "New Folder", bundle: .module, comment: "Primary title for creating a new folder.")) {
             withAnimation(.easeInOut(duration: 0.15)) {
                 meetingsExpanded = true
             }
             renamingFolderID = id
-            renamingFolderName = "New Folder"
+            renamingFolderName = String(localized: "sidebar.folder.new_folder.title.secondary", defaultValue: "New Folder", bundle: .module, comment: "Secondary new-folder title instance in sidebar flow.")
             controller.showMeetingsHome(folderID: id)
         }
     }
 
     private func createNewSubfolder(parentID: Int64) {
-        if let id = controller.createSubfolder(name: "New Folder", parentID: parentID) {
+        if let id = controller.createSubfolder(name: String(localized: "sidebar.folder.new_folder.title.tertiary", defaultValue: "New Folder", bundle: .module, comment: "Tertiary new-folder title instance in sidebar flow."), parentID: parentID) {
             withAnimation(.easeInOut(duration: 0.15)) {
                 meetingsExpanded = true
                 collapsedFolderIDs.remove(parentID)
             }
             renamingFolderID = id
-            renamingFolderName = "New Folder"
+            renamingFolderName = String(localized: "sidebar.folder.new_folder.title.quaternary", defaultValue: "New Folder", bundle: .module, comment: "Quaternary new-folder title instance in sidebar flow.")
             controller.showMeetingsHome(folderID: id)
         }
     }

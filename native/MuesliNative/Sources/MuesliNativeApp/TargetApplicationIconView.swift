@@ -39,7 +39,7 @@ struct TargetApplicationIconView: View {
     var size: CGFloat = 20
 
     private var accessibilityText: String {
-        "Dictated into \(appName)"
+        String(format: String(localized: "target_application_icon_view.accessibility.dictated_into_app", defaultValue: "Dictated into %@", bundle: .module, comment: "Accessibility label describing destination app for a dictation."), "\(appName)")
     }
 
     var body: some View {
@@ -76,7 +76,7 @@ struct TargetApplicationFilterMenu: View {
                 onSelect(nil)
             } label: {
                 HStack {
-                    Text("All apps")
+                    Text(String(localized: "target_application_icon_view.all_apps", defaultValue: "All apps", bundle: .module, comment: "Filter option representing all destination applications."))
                     if selection == nil {
                         Image(systemName: "checkmark")
                     }
@@ -112,7 +112,7 @@ struct TargetApplicationFilterMenu: View {
                 } else {
                     Image(systemName: "square.grid.2x2")
                         .font(.system(size: 11))
-                    Text("Apps")
+                    Text(String(localized: "target_application_icon_view.apps", defaultValue: "Apps", bundle: .module, comment: "Section header for destination application filter."))
                         .font(.system(size: 11, weight: .medium))
                 }
             }
@@ -124,8 +124,8 @@ struct TargetApplicationFilterMenu: View {
         }
         .menuStyle(.borderlessButton)
         .fixedSize()
-        .help(selection.map { "Showing dictations for \($0.name)" } ?? "Filter by destination app")
-        .accessibilityLabel("Destination application filter")
-        .accessibilityValue(selection?.name ?? "All apps")
+        .help(selection.map { String(format: String(localized: "target_application_icon_view.accessibility_value.showing_dictations_for_app", defaultValue: "Showing dictations for %@", bundle: .module, comment: "Accessibility value indicating currently selected destination app filter."), "\($0.name)") } ?? String(localized: "target_application_icon_view.filter_help", defaultValue: "Filter by destination app", bundle: .module, comment: "Help text for filtering dictations by destination application."))
+        .accessibilityLabel(String(localized: "target_application_icon_view.accessibility.destination_filter", defaultValue: "Destination application filter", bundle: .module, comment: "Accessibility label for destination application filter control."))
+        .accessibilityValue(selection?.name ?? String(localized: "target_application_icon_view.all_apps", defaultValue: "All apps", bundle: .module, comment: "Filter option representing all destination applications."))
     }
 }

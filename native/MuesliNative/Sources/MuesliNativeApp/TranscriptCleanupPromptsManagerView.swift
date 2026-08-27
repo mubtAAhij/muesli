@@ -31,7 +31,7 @@ struct TranscriptCleanupPromptsManagerView: View {
 
             ScrollView {
                 VStack(alignment: .leading, spacing: MuesliTheme.spacing16) {
-                    presetSection(title: "Built-in Presets") {
+                    presetSection(title: String(localized: "transcript_cleanup.prompts.section.built_in", defaultValue: "Built-in Presets", bundle: .module, comment: "Section header for built-in cleanup prompt presets.")) {
                         VStack(spacing: MuesliTheme.spacing8) {
                             ForEach(builtInPresets) { preset in
                                 builtInPresetRow(preset)
@@ -39,7 +39,7 @@ struct TranscriptCleanupPromptsManagerView: View {
                         }
                     }
 
-                    presetSection(title: "Custom Presets") {
+                    presetSection(title: String(localized: "transcript_cleanup.prompts.section.custom", defaultValue: "Custom Presets", bundle: .module, comment: "Section header for user-created cleanup prompt presets.")) {
                         if customPresets.isEmpty {
                             emptyState
                         } else {
@@ -62,16 +62,16 @@ struct TranscriptCleanupPromptsManagerView: View {
         .frame(minWidth: 760, minHeight: 560)
         .background(MuesliTheme.backgroundBase)
         .alert(
-            "Delete \"\(promptToDelete?.name ?? "")\"?",
+            String(format: String(localized: "transcript_cleanup.prompts.delete.confirmation_title", defaultValue: "Delete \"%@\"?", bundle: .module, comment: "Confirmation title for deleting a specific cleanup preset."), "\(promptToDelete?.name ?? "")"),
             isPresented: Binding(
                 get: { promptToDelete != nil },
                 set: { if !$0 { promptToDelete = nil } }
             )
         ) {
-            Button("Cancel", role: .cancel) {
+            Button(String(localized: "transcript_cleanup.prompts.cancel", defaultValue: "Cancel", bundle: .module, comment: "Cancel action in delete preset confirmation dialog."), role: .cancel) {
                 promptToDelete = nil
             }
-            Button("Delete", role: .destructive) {
+            Button(String(localized: "transcript_cleanup.prompts.delete", defaultValue: "Delete", bundle: .module, comment: "Destructive action to confirm deleting a cleanup preset."), role: .destructive) {
                 guard let preset = promptToDelete else { return }
                 controller.deleteTranscriptCleanupPrompt(id: preset.id)
                 if editingPromptID == preset.id {
@@ -80,17 +80,17 @@ struct TranscriptCleanupPromptsManagerView: View {
                 promptToDelete = nil
             }
         } message: {
-            Text("This prompt preset will be permanently removed. Existing dictations are not affected.")
+            Text(String(localized: "transcript_cleanup.prompts.delete_warning", defaultValue: "This prompt preset will be permanently removed. Existing dictations are not affected.", bundle: .module, comment: "Warning message shown before permanently deleting a cleanup preset."))
         }
     }
 
     private var header: some View {
         HStack(alignment: .top) {
             VStack(alignment: .leading, spacing: 4) {
-                Text("Manage Cleanup Presets")
+                Text(String(localized: "transcript_cleanup.prompts.header.title", defaultValue: "Manage Cleanup Presets", bundle: .module, comment: "Main title for cleanup presets manager view."))
                     .font(MuesliTheme.title2())
                     .foregroundStyle(MuesliTheme.textPrimary)
-                Text("Create reusable prompts for local and cloud dictation cleanup.")
+                Text(String(localized: "transcript_cleanup.prompts.header.subtitle", defaultValue: "Create reusable prompts for local and cloud dictation cleanup.", bundle: .module, comment: "Subtitle describing purpose of cleanup presets manager."))
                     .font(MuesliTheme.callout())
                     .foregroundStyle(MuesliTheme.textSecondary)
             }
@@ -99,21 +99,21 @@ struct TranscriptCleanupPromptsManagerView: View {
 
             HStack(spacing: MuesliTheme.spacing8) {
                 if isCreatingPrompt || editingPromptID != nil {
-                    actionButton("Cancel", systemImage: "xmark") {
+                    actionButton(String(localized: "transcript_cleanup.prompts.cancel", defaultValue: "Cancel", bundle: .module, comment: "Cancel button label while editing a cleanup preset."), systemImage: "xmark") {
                         resetPromptEditor()
                     }
                 } else {
-                    actionButton("New preset", systemImage: "plus") {
+                    actionButton(String(localized: "transcript_cleanup.prompts.new_preset", defaultValue: "New preset", bundle: .module, comment: "Button label to start creating a new cleanup preset."), systemImage: "plus") {
                         beginCreatingPrompt()
                     }
                 }
 
-                actionButton("Done", systemImage: "checkmark") {
+                actionButton(String(localized: "transcript_cleanup.prompts.done", defaultValue: "Done", bundle: .module, comment: "Done button label for cleanup presets manager."), systemImage: "checkmark") {
                     onClose()
                 }
                 .disabled(isEditingPromptInProgress)
                 .opacity(isEditingPromptInProgress ? 0.55 : 1)
-                .help(isEditingPromptInProgress ? "Finish or cancel prompt editing before closing." : "Close prompt manager")
+                .help(isEditingPromptInProgress ? String(localized: "transcript_cleanup.prompts.help.finish_or_cancel_before_closing", defaultValue: "Finish or cancel prompt editing before closing.", bundle: .module, comment: "Help message when trying to close manager during prompt editing.") : String(localized: "transcript_cleanup.prompts.help.close_manager", defaultValue: "Close prompt manager", bundle: .module, comment: "Help action label to close cleanup prompt manager."))
             }
         }
     }
@@ -132,7 +132,7 @@ struct TranscriptCleanupPromptsManagerView: View {
             Image(systemName: "text.badge.plus")
                 .font(.system(size: 11))
                 .foregroundStyle(MuesliTheme.textTertiary)
-            Text("No custom cleanup presets yet.")
+            Text(String(localized: "transcript_cleanup.prompts.empty_state.none", defaultValue: "No custom cleanup presets yet.", bundle: .module, comment: "Empty state message when no custom cleanup presets exist."))
                 .font(MuesliTheme.callout())
                 .foregroundStyle(MuesliTheme.textTertiary)
         }
@@ -153,12 +153,12 @@ struct TranscriptCleanupPromptsManagerView: View {
             isActive: activePromptID == preset.id,
             systemImage: "sparkles"
         ) {
-            actionButton("Use", systemImage: "checkmark") {
+            actionButton(String(localized: "transcript_cleanup.prompts.use", defaultValue: "Use", bundle: .module, comment: "Action label to apply selected cleanup preset."), systemImage: "checkmark") {
                 controller.selectTranscriptCleanupPrompt(id: preset.id)
             }
             .disabled(activePromptID == preset.id)
 
-            actionButton("Duplicate", systemImage: "doc.on.doc") {
+            actionButton(String(localized: "transcript_cleanup.prompts.duplicate", defaultValue: "Duplicate", bundle: .module, comment: "Action label to duplicate a cleanup preset."), systemImage: "doc.on.doc") {
                 beginDuplicatingPrompt(name: preset.name, prompt: preset.prompt)
             }
         }
@@ -171,16 +171,16 @@ struct TranscriptCleanupPromptsManagerView: View {
             isActive: activePromptID == preset.id,
             systemImage: "text.badge.checkmark"
         ) {
-            actionButton("Use", systemImage: "checkmark") {
+            actionButton(String(localized: "transcript_cleanup.prompts.use", defaultValue: "Use", bundle: .module, comment: "Action label to apply selected cleanup preset."), systemImage: "checkmark") {
                 controller.selectTranscriptCleanupPrompt(id: preset.id)
             }
             .disabled(activePromptID == preset.id)
 
-            actionButton("Edit", systemImage: "pencil") {
+            actionButton(String(localized: "transcript_cleanup.prompts.edit", defaultValue: "Edit", bundle: .module, comment: "Action label to edit a cleanup preset."), systemImage: "pencil") {
                 beginEditingPrompt(preset)
             }
 
-            actionButton("Delete", systemImage: "trash", role: .destructive) {
+            actionButton(String(localized: "transcript_cleanup.prompts.delete", defaultValue: "Delete", bundle: .module, comment: "Action label to delete a cleanup preset from list."), systemImage: "trash", role: .destructive) {
                 promptToDelete = preset
             }
         }
@@ -204,7 +204,7 @@ struct TranscriptCleanupPromptsManagerView: View {
                             .font(MuesliTheme.captionMedium())
                             .foregroundStyle(MuesliTheme.textPrimary)
                         if isActive {
-                            Text("Active")
+                            Text(String(localized: "transcript_cleanup.prompts.status.active", defaultValue: "Active", bundle: .module, comment: "Status badge text indicating currently active cleanup preset."))
                                 .font(.system(size: 10, weight: .semibold))
                                 .foregroundStyle(MuesliTheme.accent)
                                 .padding(.horizontal, 6)
@@ -235,15 +235,15 @@ struct TranscriptCleanupPromptsManagerView: View {
 
     private var promptEditor: some View {
         VStack(alignment: .leading, spacing: MuesliTheme.spacing12) {
-            Text(isCreatingPrompt ? "New preset" : "Edit preset")
+            Text(isCreatingPrompt ? String(localized: "transcript_cleanup.prompts.editor.title.new", defaultValue: "New preset", bundle: .module, comment: "Editor title when creating a new cleanup preset.") : String(localized: "transcript_cleanup.prompts.editor.title.edit", defaultValue: "Edit preset", bundle: .module, comment: "Editor title when modifying an existing cleanup preset."))
                 .font(MuesliTheme.captionMedium())
                 .foregroundStyle(MuesliTheme.textPrimary)
 
             VStack(alignment: .leading, spacing: 6) {
-                Text("Name")
+                Text(String(localized: "transcript_cleanup.prompts.editor.name_label", defaultValue: "Name", bundle: .module, comment: "Label for preset name input field."))
                     .font(MuesliTheme.caption())
                     .foregroundStyle(MuesliTheme.textSecondary)
-                TextField("Context-aware cleanup", text: $draftPromptName)
+                TextField(String(localized: "transcript_cleanup.prompts.editor.name_placeholder", defaultValue: "Context-aware cleanup", bundle: .module, comment: "Placeholder text for cleanup preset name field."), text: $draftPromptName)
                     .textFieldStyle(.roundedBorder)
                     .overlay {
                         RoundedRectangle(cornerRadius: 6)
@@ -265,7 +265,7 @@ struct TranscriptCleanupPromptsManagerView: View {
             }
 
             VStack(alignment: .leading, spacing: 6) {
-                Text("Prompt")
+                Text(String(localized: "transcript_cleanup.prompts.editor.prompt_label", defaultValue: "Prompt", bundle: .module, comment: "Label for cleanup prompt body field."))
                     .font(MuesliTheme.caption())
                     .foregroundStyle(MuesliTheme.textSecondary)
                 TextEditor(text: $draftPrompt)
@@ -289,7 +289,7 @@ struct TranscriptCleanupPromptsManagerView: View {
                         }
                     }
                 if showPromptValidationError {
-                    Text("Enter cleanup instructions for this preset.")
+                    Text(String(localized: "transcript_cleanup.prompts.editor.instructions", defaultValue: "Enter cleanup instructions for this preset.", bundle: .module, comment: "Instructional text shown in preset editor."))
                         .font(MuesliTheme.caption())
                         .foregroundStyle(MuesliTheme.recording)
                 }
@@ -298,7 +298,7 @@ struct TranscriptCleanupPromptsManagerView: View {
             HStack {
                 Spacer()
                 actionButton(
-                    isCreatingPrompt ? "Create preset" : "Save changes",
+                    isCreatingPrompt ? String(localized: "transcript_cleanup.prompts.create_preset", defaultValue: "Create preset", bundle: .module, comment: "Primary action button title to create new preset.") : String(localized: "transcript_cleanup.prompts.save_changes", defaultValue: "Save changes", bundle: .module, comment: "Primary action button title to save edited preset."),
                     systemImage: isCreatingPrompt ? "plus.circle" : "checkmark.circle"
                 ) {
                     savePromptEditor()
@@ -325,7 +325,7 @@ struct TranscriptCleanupPromptsManagerView: View {
     private func beginDuplicatingPrompt(name: String, prompt: String) {
         isCreatingPrompt = true
         editingPromptID = nil
-        draftPromptName = suggestedUniqueName(for: "\(name) Copy")
+        draftPromptName = suggestedUniqueName(for: String(format: String(localized: "transcript_cleanup.prompts.duplicate_name", defaultValue: "%@ Copy", bundle: .module, comment: "Generated duplicate preset name suffix appended to original name."), "\(name)"))
         draftPrompt = prompt
         clearValidationErrors()
     }
@@ -352,9 +352,9 @@ struct TranscriptCleanupPromptsManagerView: View {
         nameValidationMessage = nil
         showPromptValidationError = trimmedPrompt.isEmpty
         if trimmedName.isEmpty {
-            nameValidationMessage = "Enter a preset name."
+            nameValidationMessage = String(localized: "transcript_cleanup_prompts.validation.enter_preset_name", defaultValue: "Enter a preset name.", bundle: .module, comment: "Validation error when preset name is missing.")
         } else if presetNameExists(trimmedName, excludingID: editingPromptID) {
-            nameValidationMessage = "Use a unique preset name."
+            nameValidationMessage = String(localized: "transcript_cleanup_prompts.validation.unique_preset_name", defaultValue: "Use a unique preset name.", bundle: .module, comment: "Validation error when preset name conflicts with existing preset.")
         }
         guard nameValidationMessage == nil, !trimmedPrompt.isEmpty else { return }
 
@@ -394,7 +394,7 @@ struct TranscriptCleanupPromptsManagerView: View {
 
     private func suggestedUniqueName(for baseName: String) -> String {
         let trimmedBase = baseName.trimmingCharacters(in: .whitespacesAndNewlines)
-        let fallbackBase = trimmedBase.isEmpty ? "Custom Cleanup" : trimmedBase
+        let fallbackBase = trimmedBase.isEmpty ? String(localized: "transcript_cleanup_prompts.fallback_base_name", defaultValue: "Custom Cleanup", bundle: .module, comment: "Fallback base name for auto-generated custom cleanup preset names.") : trimmedBase
         if !presetNameExists(fallbackBase, excludingID: nil) {
             return fallbackBase
         }

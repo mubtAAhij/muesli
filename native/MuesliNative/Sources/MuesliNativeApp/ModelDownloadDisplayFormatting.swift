@@ -4,10 +4,10 @@ import Foundation
 enum ModelDownloadDisplayFormatting {
     static func bytes(_ bytes: Int64) -> String {
         let value = Double(max(0, bytes))
-        if value >= 1_000_000_000 { return String(format: "%.1f GB", value / 1_000_000_000) }
-        if value >= 1_000_000 { return String(format: "%.1f MB", value / 1_000_000) }
-        if value >= 1_000 { return String(format: "%.1f KB", value / 1_000) }
-        return "\(bytes) B"
+        if value >= 1_000_000_000 { return String(format: String(localized: "model_download_display.bytes.gb", defaultValue: "%.1f GB", bundle: .module, comment: "Formatted file size in gigabytes."), value / 1_000_000_000) }
+        if value >= 1_000_000 { return String(format: String(localized: "model_download_display.bytes.mb", defaultValue: "%.1f MB", bundle: .module, comment: "Formatted file size in megabytes."), value / 1_000_000) }
+        if value >= 1_000 { return String(format: String(localized: "model_download_display.bytes.kb", defaultValue: "%.1f KB", bundle: .module, comment: "Formatted file size in kilobytes."), value / 1_000) }
+        return String(format: String(localized: "model_download_display.bytes.b", defaultValue: "%d B", bundle: .module, comment: "Formatted file size in bytes."), bytes)
     }
 
     static func eta(_ seconds: Double) -> String? {
@@ -18,19 +18,19 @@ enum ModelDownloadDisplayFormatting {
         let maximumDisplayableSeconds = Double(365 * 24 * 60 * 60)
         guard roundedSeconds <= maximumDisplayableSeconds else { return nil }
         let totalSeconds = Int(roundedSeconds)
-        if totalSeconds < 60 { return "\(totalSeconds)s" }
+        if totalSeconds < 60 { return String(format: String(localized: "model_download_display.eta.seconds", defaultValue: "%ds", bundle: .module, comment: "Estimated time remaining in seconds."), totalSeconds) }
         let minutes = totalSeconds / 60
         let remainingSeconds = totalSeconds % 60
-        if minutes < 60 { return "\(minutes)m \(String(format: "%02d", remainingSeconds))s" }
+        if minutes < 60 { return String(format: String(localized: "model_download_display.eta.minutes_seconds", defaultValue: "%dm %02ds", bundle: .module, comment: "Estimated time remaining in minutes and seconds."), minutes, String(format: "%02d", remainingSeconds)) }
         let hours = minutes / 60
-        return "\(hours)h \(String(format: "%02d", minutes % 60))m"
+        return String(format: String(localized: "model_download_display.eta.hours_minutes", defaultValue: "%dh %02dm", bundle: .module, comment: "Estimated time remaining in hours and minutes."), hours, String(format: "%02d", minutes % 60))
     }
 
     static func rate(_ bytesPerSecond: Double) -> String {
         guard bytesPerSecond > 0 else { return "" }
         if bytesPerSecond >= 1_000_000_000 {
-            return String(format: "%.1f GB/s", bytesPerSecond / 1_000_000_000)
+            return String(format: String(localized: "model_download_display.rate.gb_per_second", defaultValue: "%.1f GB/s", bundle: .module, comment: "Download transfer rate in gigabytes per second."), bytesPerSecond / 1_000_000_000)
         }
-        return String(format: "%.1f MB/s", bytesPerSecond / 1_000_000)
+        return String(format: String(localized: "model_download_display.rate.mb_per_second", defaultValue: "%.1f MB/s", bundle: .module, comment: "Download transfer rate in megabytes per second."), bytesPerSecond / 1_000_000)
     }
 }

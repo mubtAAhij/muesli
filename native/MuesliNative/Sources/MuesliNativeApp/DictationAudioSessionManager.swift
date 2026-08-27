@@ -97,7 +97,7 @@ final class DictationAudioSessionManager: @unchecked Sendable {
         var errorDescription: String? {
             switch self {
             case .noAudioBuffer:
-                return "Microphone capture did not deliver audio."
+                return String(localized: "dictation_audio.error.microphone_capture_no_audio", defaultValue: "Microphone capture did not deliver audio.", bundle: .module, comment: "Error message when microphone capture yields no audio.")
             }
         }
     }

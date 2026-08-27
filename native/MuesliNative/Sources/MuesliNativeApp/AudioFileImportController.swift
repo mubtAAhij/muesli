@@ -34,8 +34,8 @@ enum AudioFileImportController {
         await withCheckedContinuation { continuation in
             DispatchQueue.main.async {
                 let panel = NSOpenPanel()
-                panel.title = "Import Audio File for Transcription"
-                panel.message = "Choose an audio file (m4a, mp4, wav, mp3)"
+                panel.title = String(localized: "audio.import.dialog.title", defaultValue: "Import Audio File for Transcription", bundle: .module, comment: "Title of open panel for importing audio for transcription.")
+                panel.message = String(localized: "audio.import.dialog.prompt", defaultValue: "Choose an audio file (m4a, mp4, wav, mp3)", bundle: .module, comment: "Prompt text in open panel for supported audio file formats.")
                 panel.allowedContentTypes = allowedTypes
                 panel.allowsMultipleSelection = false
                 panel.canChooseDirectories = false
@@ -70,13 +70,13 @@ enum AudioFileImportController {
         var errorDescription: String? {
             switch self {
             case .unsupportedFormat:
-                return "This audio file format is not supported."
+                return String(localized: "audio.import.error.unsupported_format", defaultValue: "This audio file format is not supported.", bundle: .module, comment: "Error shown when selected audio format is unsupported.")
             case .conversionFailed(let detail):
-                return "Could not convert the audio file. \(detail)"
+                return String(format: String(localized: "audio.import.error.convert_failed_detail", defaultValue: "Could not convert the audio file. %@", bundle: .module, comment: "Error shown when audio conversion fails with detail text."), "\(detail)")
             case .noAudioTracks:
-                return "The selected file does not contain any audio tracks."
+                return String(localized: "audio.import.error.no_audio_tracks", defaultValue: "The selected file does not contain any audio tracks.", bundle: .module, comment: "Error shown when selected media file has no audio tracks.")
             case .readError(let detail):
-                return "Could not read the audio file. \(detail)"
+                return String(format: String(localized: "audio.import.error.read_failed_detail", defaultValue: "Could not read the audio file. %@", bundle: .module, comment: "Error shown when reading audio file fails with detail text."), "\(detail)")
             }
         }
     }
@@ -114,7 +114,7 @@ enum AudioFileImportController {
         let resolvedDuration = duration ?? Double(samples.count) / Double(WavWriter.sampleRate)
         guard resolvedDuration > 0, resolvedDuration.isFinite else {
             try? FileManager.default.removeItem(at: wavURL)
-            throw ImportError.readError("Invalid audio duration.")
+            throw ImportError.readError(String(localized: "audio.import.error.invalid_audio_duration", defaultValue: "Invalid audio duration.", bundle: .module, comment: "Error shown when imported audio duration is invalid."))
         }
         return (wavURL, resolvedDuration)
     }
@@ -144,7 +144,7 @@ enum AudioFileImportController {
         controller: MuesliController,
         progress: @escaping (String) -> Void
     ) async throws -> ImportResult {
-        progress("Converting audio file...")
+        progress(String(localized: "audio.import.progress.converting", defaultValue: "Converting audio file...", bundle: .module, comment: "Progress text while converting imported audio."))
         let (wavURL, duration) = try await convertToWAV(sourceURL: sourceURL)
         defer { try? FileManager.default.removeItem(at: wavURL) }
 
@@ -155,7 +155,7 @@ enum AudioFileImportController {
         let backend = context.backend
         let transcriptionCoordinator = context.transcriptionCoordinator
 
-        progress("Loading transcription model...")
+        progress(String(localized: "audio.import.progress.loading_model", defaultValue: "Loading transcription model...", bundle: .module, comment: "Progress text while loading transcription model."))
         try await transcriptionCoordinator.preloadRequired(
             backend: backend,
             enablePostProcessor: false,
@@ -172,7 +172,7 @@ enum AudioFileImportController {
                 let vadResults = try await vadManager.process(wavURL)
                 let hasSpeech = vadResults.contains { $0.probability > 0.5 }
                 if !hasSpeech {
-                    throw ImportError.readError("No speech detected in the selected audio file.")
+                    throw ImportError.readError(String(localized: "audio.import.error.no_speech_detected", defaultValue: "No speech detected in the selected audio file.", bundle: .module, comment: "Error shown when no speech is detected in selected audio."))
                 }
             } catch let error as ImportError {
                 throw error
@@ -183,7 +183,7 @@ enum AudioFileImportController {
 
         try Task.checkCancellation()
 
-        progress("Transcribing audio...")
+        progress(String(localized: "audio.import.progress.transcribing", defaultValue: "Transcribing audio...", bundle: .module, comment: "Progress text while transcribing imported audio."))
         let transcription = try await transcriptionCoordinator.transcribeMeeting(
             at: wavURL,
             backend: backend,
@@ -194,7 +194,7 @@ enum AudioFileImportController {
         )
         let rawTranscript = transcription.text.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !rawTranscript.isEmpty else {
-            throw ImportError.readError("No speech was transcribed from the selected audio file.")
+            throw ImportError.readError(String(localized: "audio.import.error.no_speech_transcribed", defaultValue: "No speech was transcribed from the selected audio file.", bundle: .module, comment: "Error shown when transcription output has no speech."))
         }
 
         try Task.checkCancellation()
@@ -203,7 +203,7 @@ enum AudioFileImportController {
         var diarizedTranscript = rawTranscript
         if let diarizerManager = await transcriptionCoordinator.getDiarizerManager(),
            diarizerManager.isAvailable {
-            progress("Identifying speakers...")
+            progress(String(localized: "audio.import.progress.identifying_speakers", defaultValue: "Identifying speakers...", bundle: .module, comment: "Progress text while identifying speakers in transcription."))
             do {
                 let converter = AudioConverter()
                 let samples = try converter.resampleAudioFile(wavURL)
@@ -230,7 +230,7 @@ enum AudioFileImportController {
 
         let wordCount = DictationStore.countWords(in: diarizedTranscript)
         let generatedTitle: String
-        progress("Generating title...")
+        progress(String(localized: "audio.import.progress.generating_title", defaultValue: "Generating title...", bundle: .module, comment: "Progress text while generating title for imported transcription."))
         if let autoTitle = await MeetingSummaryClient.generateTitle(transcript: diarizedTranscript, config: config),
            !autoTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             generatedTitle = autoTitle.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -240,7 +240,7 @@ enum AudioFileImportController {
 
         try Task.checkCancellation()
 
-        progress("Generating summary...")
+        progress(String(localized: "audio.import.progress.generating_summary", defaultValue: "Generating summary...", bundle: .module, comment: "Progress text while generating summary for imported transcription."))
         let templateSnapshot = context.templateSnapshot
         let formattedNotes: String
         do {
@@ -267,7 +267,7 @@ enum AudioFileImportController {
         // Persist the converted WAV as a saved recording so retranscription works
         let savedRecordingPath = try persistRecording(wavURL: wavURL, title: generatedTitle)
 
-        progress("Saving...")
+        progress(String(localized: "audio.import.progress.saving", defaultValue: "Saving...", bundle: .module, comment: "Progress text while saving imported transcription result."))
         let now = Date()
         let startTime = now.addingTimeInterval(-duration)
         let meetingID = try await controller.persistImportedAudioMeeting(
@@ -320,7 +320,7 @@ enum AudioFileImportController {
         }
         let duration = Double(file.length) / fileFormat.sampleRate
         guard duration > 0, duration.isFinite else {
-            throw ImportError.readError("Invalid audio duration.")
+            throw ImportError.readError(String(localized: "audio.import.error.invalid_audio_duration", defaultValue: "Invalid audio duration.", bundle: .module, comment: "Error shown when normalized audio duration is invalid."))
         }
         return CompatibleWAVInfo(duration: duration)
     }
@@ -353,12 +353,12 @@ enum AudioFileImportController {
         let output = AVAssetReaderTrackOutput(track: audioTrack, outputSettings: outputSettings)
         output.alwaysCopiesSampleData = false
         guard reader.canAdd(output) else {
-            throw ImportError.conversionFailed("Could not read audio samples from the selected file.")
+            throw ImportError.conversionFailed(String(localized: "audio.import.error.could_not_read_samples", defaultValue: "Could not read audio samples from the selected file.", bundle: .module, comment: "Error shown when PCM samples cannot be read from selected file."))
         }
         reader.add(output)
 
         guard reader.startReading() else {
-            throw ImportError.readError(reader.error?.localizedDescription ?? "Unknown read error")
+            throw ImportError.readError(reader.error?.localizedDescription ?? String(localized: "audio.import.error.unknown_read_error", defaultValue: "Unknown read error", bundle: .module, comment: "Fallback error text for unknown audio read error."))
         }
 
         let converter = AudioConverter()
@@ -372,7 +372,7 @@ enum AudioFileImportController {
         }
 
         guard reader.status == .completed else {
-            throw ImportError.readError(reader.error?.localizedDescription ?? "Read did not complete")
+            throw ImportError.readError(reader.error?.localizedDescription ?? String(localized: "audio.import.error.read_not_complete", defaultValue: "Read did not complete", bundle: .module, comment: "Error text when audio read request does not complete."))
         }
         return samples
     }

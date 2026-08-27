@@ -15,7 +15,7 @@ struct MeetingThreadContext {
 /// `follow_up_to_id`, unlike resume, which reopens the same row. A meeting can
 /// have multiple follow-ups; related meetings are ordered chronologically.
 enum MeetingFollowUpPolicy {
-    static let titlePrefix = "Follow-up: "
+    static let titlePrefix = String(localized: "meeting_follow_up_policy.title_prefix", defaultValue: "Follow-up: %@", bundle: Bundle.module, comment: "Prefix format prepended to a follow-up meeting title.")
 
     /// Follow-ups hang off finalized meetings only, mirroring resume gating.
     static func canStartFollowUp(status: MeetingStatus) -> Bool {
@@ -31,7 +31,7 @@ enum MeetingFollowUpPolicy {
         while base.hasPrefix(barePrefix) {
             base = String(base.dropFirst(barePrefix.count)).trimmingCharacters(in: .whitespaces)
         }
-        guard !base.isEmpty else { return "Follow-up meeting" }
+        guard !base.isEmpty else { return String(localized: "meeting_follow_up_policy.follow_up_title", defaultValue: "Follow-up meeting", bundle: Bundle.module, comment: "Fallback title for a follow-up meeting when no source title is available.") }
         return titlePrefix + base
     }
 
@@ -51,6 +51,6 @@ enum MeetingFollowUpPolicy {
         let trimmed = notes.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return nil }
         guard trimmed.count > maxCarriedNotesLength else { return trimmed }
-        return String(trimmed.prefix(maxCarriedNotesLength)) + "\n[…previous notes truncated]"
+        return String(trimmed.prefix(maxCarriedNotesLength)) + "\n" + String(localized: "meeting_follow_up_policy.carried_context.truncated_marker", defaultValue: "[…previous notes truncated]", bundle: Bundle.module, comment: "Marker inserted when carried meeting notes are truncated.")
     }
 }

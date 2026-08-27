@@ -13,8 +13,8 @@ actor WhisperKitTranscriber {
 
         var errorDescription: String? {
             switch self {
-            case .notLoaded: return "WhisperKit model not loaded."
-            case .transcriptionFailed(let msg): return "Transcription failed: \(msg)"
+            case .notLoaded: return String(localized: "whisper_cpp_backend.error.model_not_loaded", defaultValue: "WhisperKit model not loaded.", bundle: .module, comment: "Error when WhisperKit model has not been loaded.")
+            case .transcriptionFailed(let msg): return String(format: String(localized: "whisper_cpp_backend.error.transcription_failed", defaultValue: "Transcription failed: %@", bundle: .module, comment: "Error when transcription fails; includes failure message."), "\(msg)")
             }
         }
     }
@@ -36,7 +36,7 @@ actor WhisperKitTranscriber {
         ) { modelFolder in
             let preparing = ModelDownloadProgress.preparing(
                 modelID: plan.modelID,
-                message: "Loading WhisperKit into Core ML..."
+                message: String(localized: "whisper_cpp_backend.status.loading_coreml", defaultValue: "Loading WhisperKit into Core ML...", bundle: .module, comment: "Status message while loading WhisperKit into Core ML.")
             )
             progress?(0.95, preparing.message)
             progressSnapshot?(preparing)

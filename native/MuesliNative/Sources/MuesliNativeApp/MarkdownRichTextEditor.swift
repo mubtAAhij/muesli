@@ -24,7 +24,7 @@ struct MarkdownRichTextEditor: NSViewRepresentable {
     @Binding var command: MarkdownEditorCommand?
     var shouldFocus: Bool = false
     var isEditable: Bool = true
-    var placeholder: String = "Write notes here..."
+    var placeholder: String = String(localized: "markdown.editor.placeholder.write_notes_here", defaultValue: "Write notes here...", bundle: Bundle.module, comment: "Placeholder shown in the markdown editor when empty.")
     var onTextChange: ((String) -> Void)?
 
     func makeCoordinator() -> Coordinator {

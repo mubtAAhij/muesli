@@ -238,7 +238,7 @@ struct MuesliAudioTranscriptionResult {
         if let summary, !summary.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             sections.append(summary)
         }
-        sections.append("## Raw Transcript\n\n\(transcript)")
+        sections.append(String(format: String(localized: "transcribe_command.raw_transcript.heading", defaultValue: "## Raw Transcript\n\n%@", comment: "Markdown raw transcript section emitted by transcribe command."), "\(transcript)"))
         return sections.joined(separator: "\n\n")
     }
 }
@@ -403,7 +403,7 @@ struct MuesliAudioTranscriptionPipeline {
             sections.append("## Summary")
             sections.append("No generated summary was requested.")
         }
-        sections.append("## Raw Transcript\n\n\(transcript)")
+        sections.append(String(format: String(localized: "transcribe_command.raw_transcript.heading", defaultValue: "## Raw Transcript\n\n%@", comment: "Markdown raw transcript section emitted by transcribe command."), "\(transcript)"))
         return sections.joined(separator: "\n\n")
     }
 
@@ -518,7 +518,7 @@ struct MuesliAudioFilePreparer: AudioPreparing {
         let resolvedDuration = duration ?? Double(decoded.sampleCount) / Double(CLIWavWriter.sampleRate)
         guard resolvedDuration > 0, resolvedDuration.isFinite else {
             try? FileManager.default.removeItem(at: decoded.wavURL)
-            throw PreparationError.readError("Invalid audio duration.")
+            throw PreparationError.readError(String(localized: "transcribe_command.error.invalid_audio_duration", defaultValue: "Invalid audio duration.", comment: "Error shown when input audio duration cannot be interpreted."))
         }
         return PreparedAudioFile(wavURL: decoded.wavURL, durationSeconds: resolvedDuration, deleteWhenDone: true)
     }
@@ -538,7 +538,7 @@ struct MuesliAudioFilePreparer: AudioPreparing {
         }
         let duration = Double(file.length) / format.sampleRate
         guard duration > 0, duration.isFinite else {
-            throw PreparationError.readError("Invalid audio duration.")
+            throw PreparationError.readError(String(localized: "transcribe_command.error.invalid_audio_duration", defaultValue: "Invalid audio duration.", comment: "Error shown when input audio duration cannot be interpreted."))
         }
         return CompatibleWAVInfo(duration: duration)
     }
@@ -672,10 +672,10 @@ actor FluidAudioCLITranscriber: AudioTranscribing {
         let manager = try await ManagedASRModelDownloader.loadValidated(
             plan,
             progress: { fraction, message in
-                progress(message ?? "model \(Int((fraction * 100).rounded()))%")
+                progress(message ?? String(format: String(localized: "transcribe_command.status.model_download_progress", defaultValue: "model %d%", comment: "Status text for model download progress percentage."), Int((fraction * 100).rounded())))
             }
         ) { modelDirectory in
-            progress("preparing model")
+            progress(String(localized: "transcribe_command.status.preparing_model", defaultValue: "preparing model", comment: "Status text while model is being prepared."))
             let models = try await AsrModels.load(from: modelDirectory, version: asrModelVersion)
             let manager = AsrManager(config: .default)
             try await manager.loadModels(models)
@@ -683,7 +683,7 @@ actor FluidAudioCLITranscriber: AudioTranscribing {
         }
         asrManager = manager
         loadedModel = model
-        progress("model ready")
+        progress(String(localized: "transcribe_command.status.model_ready", defaultValue: "model ready", comment: "Status text when model is fully ready."))
     }
 }
 
@@ -701,21 +701,21 @@ actor SenseVoiceCLITranscriber: AudioTranscribing {
             manager = try await ManagedASRModelDownloader.loadValidated(
                 plan,
                 progress: { fraction, message in
-                    progress(message ?? "model \(Int((fraction * 100).rounded()))%")
+                    progress(message ?? String(format: String(localized: "transcribe_command.status.model_download_progress", defaultValue: "model %d%", comment: "Status text for model download progress percentage."), Int((fraction * 100).rounded())))
                 }
             ) { modelDirectory in
-                progress("preparing model")
+                progress(String(localized: "transcribe_command.status.preparing_model", defaultValue: "preparing model", comment: "Status text while model is being prepared."))
                 let models = try SenseVoiceModels.load(from: modelDirectory, precision: Self.precision)
                 return SenseVoiceManager(models: models)
             }
-            progress("model ready")
+            progress(String(localized: "transcribe_command.status.model_ready", defaultValue: "model ready", comment: "Status text when model is fully ready."))
         }
         guard let manager else {
-            throw CLIError.invalidInput("SenseVoice model was not loaded.", fix: "Run the command again after the model finishes downloading.")
+            throw CLIError.invalidInput("SenseVoice model was not loaded.", fix: String(localized: "transcribe_command.status.run_again_after_model_download", defaultValue: "Run the command again after the model finishes downloading.", comment: "Guidance shown when transcription must be retried after model download."))
         }
         let start = CFAbsoluteTimeGetCurrent()
         let text = try await manager.transcribe(audioURL: wavURL)
-        progress("transcription complete in \(String(format: "%.2f", CFAbsoluteTimeGetCurrent() - start))s")
+        progress(String(format: String(localized: "transcribe_command.status.transcription_complete_duration", defaultValue: "transcription complete in %.2fs", comment: "Completion status including transcription duration in seconds."), String(format: "%.2f", CFAbsoluteTimeGetCurrent() - start)))
         return HeadlessTranscription(text: text, durationSeconds: nil)
     }
 }
@@ -740,23 +740,23 @@ actor Qwen3AsrCLITranscriber: AudioTranscribing {
             manager = try await ManagedASRModelDownloader.loadValidated(
                 plan,
                 progress: { fraction, message in
-                    progress(message ?? "model \(Int((fraction * 100).rounded()))%")
+                    progress(message ?? String(format: String(localized: "transcribe_command.status.model_download_progress", defaultValue: "model %d%", comment: "Status text for model download progress percentage."), Int((fraction * 100).rounded())))
                 }
             ) { modelDir in
-                progress("preparing model")
+                progress(String(localized: "transcribe_command.status.preparing_model", defaultValue: "preparing model", comment: "Status text while model is being prepared."))
                 let mgr = Qwen3AsrManager()
                 try await mgr.loadModels(from: modelDir)
                 return mgr
             }
-            progress("model ready")
+            progress(String(localized: "transcribe_command.status.model_ready", defaultValue: "model ready", comment: "Status text when model is fully ready."))
         }
         guard let manager else {
-            throw CLIError.invalidInput("Qwen3 ASR model was not loaded.", fix: "Run the command again after the model finishes downloading.")
+            throw CLIError.invalidInput("Qwen3 ASR model was not loaded.", fix: String(localized: "transcribe_command.status.run_again_after_model_download", defaultValue: "Run the command again after the model finishes downloading.", comment: "Guidance shown when transcription must be retried after model download."))
         }
         let start = CFAbsoluteTimeGetCurrent()
         let samples = try AudioConverter().resampleAudioFile(wavURL)
         let text = try await (manager as! Qwen3AsrManager).transcribe(audioSamples: samples)
-        progress("transcription complete in \(String(format: "%.2f", CFAbsoluteTimeGetCurrent() - start))s")
+        progress(String(format: String(localized: "transcribe_command.status.transcription_complete_duration", defaultValue: "transcription complete in %.2fs", comment: "Completion status including transcription duration in seconds."), String(format: "%.2f", CFAbsoluteTimeGetCurrent() - start)))
         return HeadlessTranscription(text: text, durationSeconds: nil)
     }
 
@@ -780,7 +780,7 @@ actor Nemotron35CLITranscriber: AudioTranscribing {
         _ = try await manager.process(samples: samples)
         let text = try await manager.finish()
         await manager.reset()
-        progress("transcription complete in \(String(format: "%.2f", CFAbsoluteTimeGetCurrent() - start))s")
+        progress(String(format: String(localized: "transcribe_command.status.transcription_complete_duration", defaultValue: "transcription complete in %.2fs", comment: "Completion status including transcription duration in seconds."), String(format: "%.2f", CFAbsoluteTimeGetCurrent() - start)))
         return HeadlessTranscription(
             text: text,
             durationSeconds: Double(samples.count) / Double(CLIWavWriter.sampleRate)
@@ -794,14 +794,14 @@ actor Nemotron35CLITranscriber: AudioTranscribing {
             if let message {
                 progress(message)
             } else {
-                progress("model \(Int((fraction * 100).rounded()))%")
+                progress(String(format: String(localized: "transcribe_command.status.model_download_progress", defaultValue: "model %d%", comment: "Status text for model download progress percentage."), Int((fraction * 100).rounded())))
             }
         }
         let shared = try await StreamingNemotronMultilingualAsrManager.preloadShared(from: modelDirectory)
         let newManager = StreamingNemotronMultilingualAsrManager()
         try await newManager.loadFromShared(shared)
         manager = newManager
-        progress("model ready")
+        progress(String(localized: "transcribe_command.status.model_ready", defaultValue: "model ready", comment: "Status text when model is fully ready."))
         return newManager
     }
 }
@@ -845,7 +845,7 @@ actor WhisperCLITranscriber: AudioTranscribing {
         whisperKit = try await ManagedASRModelDownloader.loadValidated(
             plan,
             progress: { fraction, message in
-                progress(message ?? "model \(Int((fraction * 100).rounded()))%")
+                progress(message ?? String(format: String(localized: "transcribe_command.status.model_download_progress", defaultValue: "model %d%", comment: "Status text for model download progress percentage."), Int((fraction * 100).rounded())))
             }
         ) { modelFolder in
             progress("preparing model")
@@ -858,7 +858,7 @@ actor WhisperCLITranscriber: AudioTranscribing {
             ))
         }
         loadedModel = modelName
-        progress("model ready")
+        progress(String(localized: "transcribe_command.status.model_ready", defaultValue: "model ready", comment: "Status text when model is fully ready."))
     }
 }
 
@@ -918,7 +918,7 @@ actor StreamingEouCLITranscriber: AudioTranscribing {
         let newManager = try await ManagedASRModelDownloader.loadValidated(
             plan,
             progress: { fraction, message in
-                progress(message ?? "model \(Int((fraction * 100).rounded()))%")
+                progress(message ?? String(format: String(localized: "transcribe_command.status.model_download_progress", defaultValue: "model %d%", comment: "Status text for model download progress percentage."), Int((fraction * 100).rounded())))
             }
         ) { directory in
             let candidate = StreamingEouAsrManager(chunkSize: Self.chunkSize)
@@ -926,7 +926,7 @@ actor StreamingEouCLITranscriber: AudioTranscribing {
             return candidate
         }
         manager = newManager
-        progress("model ready")
+        progress(String(localized: "transcribe_command.status.model_ready", defaultValue: "model ready", comment: "Status text when model is fully ready."))
         return newManager
     }
 
