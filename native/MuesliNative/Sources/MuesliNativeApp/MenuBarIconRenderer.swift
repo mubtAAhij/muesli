@@ -11,18 +11,18 @@ enum MenuBarIconRenderer {
     static let canonicalMarkMask: CGImage? = loadCanonicalMarkMask()
 
     static let options: [(id: String, label: String)] = [
-        ("muesli", "Muesli Logo"),
+        ("muesli", String(localized: "menu_bar_icon.option.muesli_logo", defaultValue: "Muesli Logo", bundle: .module, comment: "Menu bar icon option label for Muesli logo style.")),
         ("mic.fill", "Microphone"),
-        ("waveform", "Waveform"),
-        ("bubble.left.fill", "Bubble"),
-        ("text.bubble", "Speech Bubble"),
-        ("pencil.line", "Pencil"),
-        ("brain.head.profile", "Brain"),
-        ("sparkles", "Sparkles"),
-        ("headphones", "Headphones"),
-        ("person.wave.2", "Meeting"),
-        ("character.bubble", "Character"),
-        ("doc.text", "Document"),
+        ("waveform", String(localized: "menu_bar_icon.option.waveform", defaultValue: "Waveform", bundle: .module, comment: "Menu bar icon option label for waveform style.")),
+        ("bubble.left.fill", String(localized: "menu_bar_icon.option.bubble", defaultValue: "Bubble", bundle: .module, comment: "Menu bar icon option label for bubble style.")),
+        ("text.bubble", String(localized: "menu_bar_icon.option.speech_bubble", defaultValue: "Speech Bubble", bundle: .module, comment: "Menu bar icon option label for speech bubble style.")),
+        ("pencil.line", String(localized: "menu_bar_icon.option.pencil", defaultValue: "Pencil", bundle: .module, comment: "Menu bar icon option label for pencil style.")),
+        ("brain.head.profile", String(localized: "menu_bar_icon.option.brain", defaultValue: "Brain", bundle: .module, comment: "Menu bar icon option label for brain style.")),
+        ("sparkles", String(localized: "menu_bar_icon.option.sparkles", defaultValue: "Sparkles", bundle: .module, comment: "Menu bar icon option label for sparkles style.")),
+        ("headphones", String(localized: "menu_bar_icon.option.headphones", defaultValue: "Headphones", bundle: .module, comment: "Menu bar icon option label for headphones style.")),
+        ("person.wave.2", String(localized: "menu_bar_icon.option.meeting", defaultValue: "Meeting", bundle: .module, comment: "Menu bar icon option label for meeting style.")),
+        ("character.bubble", String(localized: "menu_bar_icon.option.character", defaultValue: "Character", bundle: .module, comment: "Menu bar icon option label for character style.")),
+        ("doc.text", String(localized: "menu_bar_icon.option.document", defaultValue: "Document", bundle: .module, comment: "Menu bar icon option label for document style.")),
     ]
 
     /// Returns the configured menu bar/floating indicator icon. The Muesli mark
