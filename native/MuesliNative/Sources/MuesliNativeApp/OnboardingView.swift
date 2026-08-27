@@ -88,9 +88,9 @@ struct OnboardingView: View {
 
     private var onboardingModelDescription: String {
         if BackendOption.onboardingDefault == .appleSpeechAnalyzer {
-            return "Use Apple Speech, or choose another local model to download while you continue setup."
+            return String(localized: "onboarding.model.description.apple_speech_or_local", defaultValue: "Use Apple Speech, or choose another local model to download while you continue setup.", bundle: .module, comment: "Onboarding model step description offering Apple Speech or downloading another local model")
         }
-        return "Start with a fast local model. Larger models can download while you continue setup."
+        return String(localized: "onboarding.model.description.fast_local_model", defaultValue: "Start with a fast local model. Larger models can download while you continue setup.", bundle: .module, comment: "Onboarding model step description recommending a fast local model first")
     }
 
     init(
@@ -183,7 +183,7 @@ struct OnboardingView: View {
 
                 HStack(spacing: MuesliTheme.spacing12) {
                     if canGoBack {
-                        Button("Back") {
+                        Button(String(localized: "onboarding.navigation.back", defaultValue: "Back", bundle: .module, comment: "Onboarding navigation button label to return to previous step")) {
                             goToPreviousStep()
                         }
                         .buttonStyle(.plain)
@@ -251,19 +251,19 @@ struct OnboardingView: View {
     private var primaryButton: some View {
         switch currentStep {
         case 0:
-            onboardingButton("Continue", enabled: !userName.trimmingCharacters(in: .whitespaces).isEmpty) {
+            onboardingButton(String(localized: "onboarding.navigation.continue", defaultValue: "Continue", bundle: .module, comment: "Onboarding navigation button label to proceed to next step"), enabled: !userName.trimmingCharacters(in: .whitespaces).isEmpty) {
                 goToNextStep()
             }
         case 1:
-            onboardingButton(selectedBackend.isDownloaded ? "Continue" : "Download & Continue", enabled: true) {
+            onboardingButton(selectedBackend.isDownloaded ? String(localized: "onboarding.navigation.continue", defaultValue: "Continue", bundle: .module, comment: "Onboarding navigation button label to proceed to next step") : String(localized: "onboarding.navigation.download_and_continue", defaultValue: "Download & Continue", bundle: .module, comment: "Onboarding navigation button label to start download and continue setup"), enabled: true) {
                 startDownload()
             }
         case 2:
-            onboardingButton("Continue", enabled: true) {
+            onboardingButton(String(localized: "onboarding.navigation.continue", defaultValue: "Continue", bundle: .module, comment: "Onboarding navigation button label to proceed to next step"), enabled: true) {
                 goToNextStep()
             }
         case 3:
-            onboardingButton(currentStepIndex == orderedSteps.count - 1 ? "Finish" : "Continue", enabled: requiredPermissionsGranted) {
+            onboardingButton(currentStepIndex == orderedSteps.count - 1 ? String(localized: "onboarding.navigation.finish", defaultValue: "Finish", bundle: .module, comment: "Onboarding navigation button label to complete setup") : String(localized: "onboarding.navigation.continue", defaultValue: "Continue", bundle: .module, comment: "Onboarding navigation button label to proceed to next step"), enabled: requiredPermissionsGranted) {
                 if selectedUseCase.includesPushToTalk {
                     saveProgressAndRestart()
                 } else if currentStepIndex == orderedSteps.count - 1 {
@@ -274,7 +274,7 @@ struct OnboardingView: View {
             }
         case 4:
             if dictationTestResult != nil {
-                onboardingButton(selectedUseCase.includesMeetings ? "Continue" : "Finish", enabled: true) {
+                onboardingButton(selectedUseCase.includesMeetings ? String(localized: "onboarding.navigation.continue", defaultValue: "Continue", bundle: .module, comment: "Onboarding navigation button label to proceed to next step") : String(localized: "onboarding.navigation.finish", defaultValue: "Finish", bundle: .module, comment: "Onboarding navigation button label to complete setup"), enabled: true) {
                     if selectedUseCase.includesMeetings {
                         goToNextStep()
                     } else {
@@ -290,7 +290,7 @@ struct OnboardingView: View {
                             finishOnboarding(withKey: false)
                         }
                     }
-                    onboardingButton(selectedUseCase.includesMeetings ? "Continue" : "Finish", enabled: false) {
+                    onboardingButton(selectedUseCase.includesMeetings ? String(localized: "onboarding.navigation.continue", defaultValue: "Continue", bundle: .module, comment: "Onboarding navigation button label to proceed to next step") : String(localized: "onboarding.navigation.finish", defaultValue: "Finish", bundle: .module, comment: "Onboarding navigation button label to complete setup"), enabled: false) {
                         if selectedUseCase.includesMeetings {
                             goToNextStep()
                         } else {
@@ -302,14 +302,14 @@ struct OnboardingView: View {
         case 5:
             HStack(spacing: MuesliTheme.spacing12) {
                 skipButton { goToNextStep() }
-                onboardingButton("Continue", enabled: true) {
+                onboardingButton(String(localized: "onboarding.navigation.continue", defaultValue: "Continue", bundle: .module, comment: "Onboarding navigation button label to proceed to next step"), enabled: true) {
                     goToNextStep()
                 }
             }
         case 6:
             HStack(spacing: MuesliTheme.spacing12) {
                 skipButton { finishOnboarding(withKey: true) }
-                onboardingButton("Finish", enabled: true) {
+                onboardingButton(String(localized: "onboarding.navigation.finish", defaultValue: "Finish", bundle: .module, comment: "Onboarding navigation button label to complete setup"), enabled: true) {
                     finishOnboarding(withKey: true)
                 }
             }
@@ -349,7 +349,7 @@ struct OnboardingView: View {
 
     @ViewBuilder
     private func skipButton(action: @escaping () -> Void) -> some View {
-        Button("Skip", action: action)
+        Button(String(localized: "onboarding.navigation.skip", defaultValue: "Skip", bundle: .module, comment: "Onboarding navigation button label to skip optional step"), action: action)
             .buttonStyle(.plain)
             .font(MuesliTheme.body())
             .foregroundStyle(MuesliTheme.textSecondary)
@@ -438,20 +438,20 @@ struct OnboardingView: View {
     private var modelDownloadIndicatorTitle: String {
         if let snapshot = modelDownloadSnapshot {
             switch snapshot.phase {
-            case .downloading: return "Downloading \(selectedBackend.label)"
-            case .preparing: return "Preparing \(selectedBackend.label)"
-            case .ready: return "\(selectedBackend.label) ready"
-            case .paused: return "Download paused"
-            case .failed: return "Download failed"
+            case .downloading: return String(format: String(localized: "onboarding.model_download.downloading", defaultValue: "Downloading %@", bundle: .module, comment: "Onboarding model download status showing selected backend being downloaded"), "\(selectedBackend.label)")
+            case .preparing: return String(format: String(localized: "onboarding.model_download.preparing", defaultValue: "Preparing %@", bundle: .module, comment: "Onboarding model download status showing selected backend preparing"), "\(selectedBackend.label)")
+            case .ready: return String(format: String(localized: "onboarding.model_download.backend_ready", defaultValue: "%@ ready", bundle: .module, comment: "Onboarding model download status showing selected backend is ready"), "\(selectedBackend.label)")
+            case .paused: return String(localized: "onboarding.model_download.paused", defaultValue: "Download paused", bundle: .module, comment: "Onboarding model download status shown when download is paused")
+            case .failed: return String(localized: "onboarding.model_download.failed", defaultValue: "Download failed", bundle: .module, comment: "Status text when model download fails")
             }
         }
         if modelDownloadError != nil {
-            return "Download failed"
+            return String(localized: "onboarding.model_download.failed_secondary", defaultValue: "Download failed", bundle: .module, comment: "Secondary status text when model download fails")
         }
         if isShowingModelReadyIndicator {
-            return "\(selectedBackend.label) ready"
+            return String(format: String(localized: "onboarding.model_download.backend_ready", defaultValue: "%@ ready", bundle: .module, comment: "Status indicating selected backend is ready"), "\(selectedBackend.label)")
         }
-        return "Preparing \(selectedBackend.label)"
+        return String(format: String(localized: "onboarding.model_download.preparing_backend", defaultValue: "Preparing %@", bundle: .module, comment: "Status indicating selected backend is preparing"), "\(selectedBackend.label)")
     }
 
     private func modelDownloadIndicatorDetail(progress: Double?) -> String {
@@ -459,7 +459,7 @@ struct OnboardingView: View {
             return modelDownloadError
         }
         if isShowingModelReadyIndicator {
-            return "Ready to test"
+            return String(localized: "onboarding.model_download.ready_to_test", defaultValue: "Ready to test", bundle: .module, comment: "Status indicating model is ready for dictation test")
         }
         if let snapshot = modelDownloadSnapshot {
             return modelDownloadSnapshotDetail(snapshot)
@@ -468,9 +468,9 @@ struct OnboardingView: View {
             return modelDownloadStatus
         }
         if let progress {
-            return "\(Int((progress * 100).rounded()))% complete"
+            return String(format: String(localized: "onboarding.model_download.percent_complete", defaultValue: "%d%% complete", bundle: .module, comment: "Download progress shown as rounded percent complete"), Int((progress * 100).rounded()))
         }
-        return "Downloading..."
+        return String(localized: "onboarding.model_download.downloading_ellipsis", defaultValue: "Downloading...", bundle: .module, comment: "Status text while model is downloading")
     }
 
     private func modelDownloadSnapshotDetail(_ snapshot: ModelDownloadProgress) -> String {
@@ -481,20 +481,20 @@ struct OnboardingView: View {
         if snapshot.totalFileCount > 0 {
             let completed = min(max(snapshot.completedFileCount, 0), snapshot.totalFileCount)
             let remaining = snapshot.totalFileCount - completed
-            details.append("\(completed) of \(snapshot.totalFileCount) files")
+            details.append(String(format: String(localized: "onboarding.model_download.files_completed", defaultValue: "%d of %d files", bundle: .module, comment: "Progress count of completed files out of total files"), completed, snapshot.totalFileCount))
             if remaining > 0 {
-                details.append("\(remaining) left")
+                details.append(String(format: String(localized: "onboarding.model_download.remaining_time", defaultValue: "%@ left", bundle: .module, comment: "Remaining estimated time for current download"), "\(remaining)"))
             }
         }
         if let total = snapshot.totalBytes, total > 0 {
             details.append("\(ModelDownloadDisplayFormatting.bytes(snapshot.completedBytes)) / \(ModelDownloadDisplayFormatting.bytes(total))")
             if snapshot.completedBytes < total {
-                details.append("\(ModelDownloadDisplayFormatting.bytes(total - snapshot.completedBytes)) left")
+                details.append(String(format: String(localized: "onboarding.model_download.bytes_left_total", defaultValue: "%@ left", bundle: .module, comment: "Remaining total bytes left in download"), "\(ModelDownloadDisplayFormatting.bytes(total - snapshot.completedBytes))"))
             }
         } else if let currentTotal = snapshot.currentFileTotalBytes, currentTotal > 0 {
             details.append("\(ModelDownloadDisplayFormatting.bytes(snapshot.currentFileCompletedBytes)) / \(ModelDownloadDisplayFormatting.bytes(currentTotal))")
             if snapshot.currentFileCompletedBytes < currentTotal {
-                details.append("\(ModelDownloadDisplayFormatting.bytes(currentTotal - snapshot.currentFileCompletedBytes)) left")
+                details.append(String(format: String(localized: "onboarding.model_download.current_file_bytes_left", defaultValue: "%@ left", bundle: .module, comment: "Remaining bytes left for the current file download"), "\(ModelDownloadDisplayFormatting.bytes(currentTotal - snapshot.currentFileCompletedBytes))"))
             }
         }
         if snapshot.phase == .downloading {
@@ -503,23 +503,23 @@ struct OnboardingView: View {
             }
             if let eta = snapshot.estimatedSecondsRemaining,
                let formattedETA = ModelDownloadDisplayFormatting.eta(eta) {
-                details.append("\(formattedETA) left")
+                details.append(String(format: String(localized: "onboarding.model_download.eta_left", defaultValue: "%@ left", bundle: .module, comment: "Estimated time remaining until download completion"), "\(formattedETA)"))
             }
             if snapshot.retryCount > 0 {
-                details.append("retry \(snapshot.retryCount)/3")
+                details.append(String(format: String(localized: "onboarding.model_download.retry_status", defaultValue: "retry %d/3", bundle: .module, comment: "Retry attempt status for model download"), snapshot.retryCount))
             }
         } else if let message = snapshot.message, !message.isEmpty {
             details.append(message)
         }
-        return details.isEmpty ? (snapshot.message ?? "Downloading...") : details.joined(separator: " · ")
+        return details.isEmpty ? (snapshot.message ?? String(localized: "onboarding.model_download.downloading_ellipsis_secondary", defaultValue: "Downloading...", bundle: .module, comment: "Secondary status text while model is downloading")) : details.joined(separator: " · ")
     }
 
     private var dictationTestSubtitle: AttributedString {
         let markdown: String
         if isSelectedModelReadyForDictationTest {
             markdown = selectedUseCase.includesVoiceNotes
-                ? "Hold **\(selectedHotkey.label)** to record a voice note, then release.\nYour words should appear below."
-                : "Hold **\(selectedHotkey.label)** and say something, then release.\nYour words should appear below."
+                ? String(format: String(localized: "onboarding.dictation_test.subtitle_voice_note", defaultValue: "Hold **%@** to record a voice note, then release.\nYour words should appear below.", bundle: .module, comment: "Instruction subtitle for voice note dictation test"), "\(selectedHotkey.label)")
+                : String(format: String(localized: "onboarding.dictation_test.subtitle_say_something", defaultValue: "Hold **%@** and say something, then release.\nYour words should appear below.", bundle: .module, comment: "Instruction subtitle for dictation say-something test"), "\(selectedHotkey.label)")
         } else {
             markdown = dictationTestPreparationSubtitleMarkdown
         }
@@ -527,26 +527,26 @@ struct OnboardingView: View {
     }
 
     private var dictationTestPreparationSubtitleMarkdown: String {
-        let unlockCopy = selectedUseCase.includesVoiceNotes ? "Voice note test" : "Dictation"
+        let unlockCopy = selectedUseCase.includesVoiceNotes ? String(localized: "onboarding.dictation_test.unlock_copy.voice_note_test", defaultValue: "Voice note test", bundle: .module, comment: "Unlock copy title for voice note test mode") : String(localized: "onboarding.dictation_test.unlock_copy.dictation", defaultValue: "Dictation", bundle: .module, comment: "Unlock copy label for dictation mode")
         if isModelPreparingAfterDownload {
-            return "Optimizing **\(selectedBackend.label)** for this Mac.\n\(unlockCopy) will unlock when it is ready."
+            return String(format: String(localized: "onboarding.dictation_test.preparation.optimizing_subtitle", defaultValue: "Optimizing **%@** for this Mac.\n%@ will unlock when it is ready.", bundle: .module, comment: "Preparation subtitle while optimizing backend for this Mac"), "\(selectedBackend.label)", "\(unlockCopy)")
         }
-        return "Preparing **\(selectedBackend.label)** for your first test.\n\(unlockCopy) will unlock when the model is ready."
+        return String(format: String(localized: "onboarding.dictation_test.preparation.preparing_subtitle", defaultValue: "Preparing **%@** for your first test.\n%@ will unlock when the model is ready.", bundle: .module, comment: "Preparation subtitle while preparing backend for first test"), "\(selectedBackend.label)", "\(unlockCopy)")
     }
 
     private var modelPreparationHints: [String] {
         if selectedBackend.backend == "whisper" {
             return [
-                "Compiling CoreML files for the Neural Engine",
-                "Preparing the first dictation test",
-                "Future launches will skip most of this",
-                "We'll bring Muesli forward when ready",
+                String(localized: "onboarding.model_preparation.hint.compiling_coreml", defaultValue: "Compiling CoreML files for the Neural Engine", bundle: .module, comment: "Hint shown while preparing model files for Neural Engine"),
+                String(localized: "onboarding.model_preparation.hint.preparing_first_dictation_test", defaultValue: "Preparing the first dictation test", bundle: .module, comment: "Hint shown while preparing first dictation test"),
+                String(localized: "onboarding.model_preparation.hint.future_launches_skip_most", defaultValue: "Future launches will skip most of this", bundle: .module, comment: "Hint explaining setup work is mostly one-time"),
+                String(localized: "onboarding.model_preparation.hint.bring_forward_when_ready", defaultValue: "We'll bring Muesli forward when ready", bundle: .module, comment: "Hint indicating app will continue automatically when ready"),
             ]
         }
         return [
-            "Preparing the first dictation test",
-            "Future launches will skip most of this",
-            "We'll bring Muesli forward when ready",
+            String(localized: "onboarding.model_preparation.status.preparing_first_dictation_test", defaultValue: "Preparing the first dictation test", bundle: .module, comment: "Primary status while preparing first dictation test"),
+            String(localized: "onboarding.model_preparation.status.future_launches_skip_most", defaultValue: "Future launches will skip most of this", bundle: .module, comment: "Primary status note that setup is mostly one-time"),
+            String(localized: "onboarding.model_preparation.status.bring_forward_when_ready", defaultValue: "We'll bring Muesli forward when ready", bundle: .module, comment: "Primary status note for automatic continuation"),
         ]
     }
 
@@ -561,21 +561,21 @@ struct OnboardingView: View {
                 .frame(width: 80, height: 48)
 
             VStack(spacing: MuesliTheme.spacing8) {
-                Text("Welcome to Muesli")
+                Text(String(localized: "onboarding.welcome.title", defaultValue: "Welcome to Muesli", bundle: .module, comment: "Main title on onboarding welcome screen"))
                     .font(MuesliTheme.title1())
                     .foregroundStyle(MuesliTheme.textPrimary)
 
-                Text("Local-first dictation and meeting transcription for macOS.")
+                Text(String(localized: "onboarding.welcome.subtitle", defaultValue: "Local-first dictation and meeting transcription for macOS.", bundle: .module, comment: "Subtitle on onboarding welcome screen"))
                     .font(MuesliTheme.body())
                     .foregroundStyle(MuesliTheme.textSecondary)
             }
 
             VStack(alignment: .leading, spacing: MuesliTheme.spacing8) {
-                Text("Your name")
+                Text(String(localized: "onboarding.welcome.name_label", defaultValue: "Your name", bundle: .module, comment: "Label for user name input on welcome screen"))
                     .font(MuesliTheme.caption())
                     .foregroundStyle(MuesliTheme.textTertiary)
 
-                OnboardingTextField(text: $userName, placeholder: "Enter your name", onSubmit: {
+                OnboardingTextField(text: $userName, placeholder: String(localized: "onboarding.welcome.name_placeholder", defaultValue: "Enter your name", bundle: .module, comment: "Placeholder text for user name input"), onSubmit: {
                     if !userName.trimmingCharacters(in: .whitespaces).isEmpty {
                         goToNextStep()
                     }
@@ -584,7 +584,7 @@ struct OnboardingView: View {
             }
 
             VStack(spacing: MuesliTheme.spacing8) {
-                Text("What will you use Muesli for?")
+                Text(String(localized: "onboarding.welcome.use_case_prompt", defaultValue: "What will you use Muesli for?", bundle: .module, comment: "Prompt asking user for primary onboarding use case"))
                     .font(MuesliTheme.caption())
                     .foregroundStyle(MuesliTheme.textTertiary)
 
@@ -597,8 +597,8 @@ struct OnboardingView: View {
                 ) {
                     useCaseCard(
                         icon: "waveform",
-                        title: "Voice Notes",
-                        subtitle: "Record in Muesli",
+                        title: String(localized: "onboarding.welcome.use_case.voice_notes.title", defaultValue: "Voice Notes", bundle: .module, comment: "Title for voice notes use-case option"),
+                        subtitle: String(localized: "onboarding.welcome.use_case.voice_notes.subtitle", defaultValue: "Record in Muesli", bundle: .module, comment: "Subtitle for voice notes use-case option"),
                         selected: selectedUseCase == .voiceNotes
                     ) {
                         selectedUseCase = .voiceNotes
@@ -606,8 +606,8 @@ struct OnboardingView: View {
 
                     useCaseCard(
                         icon: "keyboard.fill",
-                        title: "Dictation",
-                        subtitle: "Paste into apps",
+                        title: String(localized: "onboarding.welcome.use_case.dictation.title", defaultValue: "Dictation", bundle: .module, comment: "Title for dictation use-case option"),
+                        subtitle: String(localized: "onboarding.welcome.use_case.dictation.subtitle", defaultValue: "Paste into apps", bundle: .module, comment: "Subtitle for dictation use-case option"),
                         selected: selectedUseCase == .dictation
                     ) {
                         selectedUseCase = .dictation
@@ -615,8 +615,8 @@ struct OnboardingView: View {
 
                     useCaseCard(
                         icon: "person.2.fill",
-                        title: "Meetings",
-                        subtitle: "Notes and summaries",
+                        title: String(localized: "onboarding.welcome.use_case.meetings.title", defaultValue: "Meetings", bundle: .module, comment: "Title for meetings use-case option"),
+                        subtitle: String(localized: "onboarding.welcome.use_case.meetings.subtitle", defaultValue: "Notes and summaries", bundle: .module, comment: "Subtitle for meetings use-case option"),
                         selected: selectedUseCase == .meetings
                     ) {
                         selectedUseCase = .meetings
@@ -624,8 +624,8 @@ struct OnboardingView: View {
 
                     useCaseCard(
                         icon: "rectangle.3.group.fill",
-                        title: "Everything",
-                        subtitle: "Dictation + meetings",
+                        title: String(localized: "onboarding.welcome.use_case.everything.title", defaultValue: "Everything", bundle: .module, comment: "Title for all-in-one use-case option"),
+                        subtitle: String(localized: "onboarding.welcome.use_case.everything.subtitle", defaultValue: "Dictation + meetings", bundle: .module, comment: "Subtitle for all-in-one use-case option"),
                         selected: selectedUseCase == .dictationAndMeetings
                     ) {
                         selectedUseCase = .dictationAndMeetings
@@ -674,7 +674,7 @@ struct OnboardingView: View {
     private var modelStep: some View {
         VStack(spacing: MuesliTheme.spacing16) {
             VStack(spacing: MuesliTheme.spacing8) {
-                Text("Choose your transcription model")
+                Text(String(localized: "onboarding.model.choose_transcription_model", defaultValue: "Choose your transcription model", bundle: .module, comment: "Title prompting user to choose transcription model during onboarding"))
                     .font(MuesliTheme.title1())
                     .foregroundStyle(MuesliTheme.textPrimary)
 
@@ -695,7 +695,7 @@ struct OnboardingView: View {
                         }
                     } label: {
                         HStack(spacing: 4) {
-                            Text("Other models")
+                            Text(String(localized: "onboarding.model.other_models", defaultValue: "Other models", bundle: .module, comment: "Section heading for non-primary model choices"))
                                 .font(MuesliTheme.caption())
                             Image(systemName: showMoreModels ? "chevron.up" : "chevron.down")
                                 .font(.system(size: 9, weight: .semibold))
@@ -710,7 +710,7 @@ struct OnboardingView: View {
                             modelCard(option: option)
                         }
 
-                        Text("More models are available after onboarding.")
+                        Text(String(localized: "onboarding.model.more_models_after_onboarding", defaultValue: "More models are available after onboarding.", bundle: .module, comment: "Hint that additional models can be selected after onboarding"))
                             .font(.system(size: 11, weight: .medium, design: .rounded))
                             .foregroundStyle(MuesliTheme.textTertiary)
                             .multilineTextAlignment(.center)
@@ -731,11 +731,11 @@ struct OnboardingView: View {
 
     private var cohereLanguageCard: some View {
         VStack(alignment: .leading, spacing: MuesliTheme.spacing8) {
-            Text("Cohere language")
+            Text(String(localized: "onboarding.cohere.language_title", defaultValue: "Cohere language", bundle: .module, comment: "Title for Cohere language selection section"))
                 .font(MuesliTheme.headline())
                 .foregroundStyle(MuesliTheme.textPrimary)
 
-            Text("Cohere does not auto-detect language, so pick the language you want it to transcribe.")
+            Text(String(localized: "onboarding.cohere.language_description", defaultValue: "Cohere does not auto-detect language, so pick the language you want it to transcribe.", bundle: .module, comment: "Description explaining Cohere language must be selected manually"))
                 .font(MuesliTheme.caption())
                 .foregroundStyle(MuesliTheme.textSecondary)
 
@@ -779,7 +779,7 @@ struct OnboardingView: View {
                             .font(MuesliTheme.headline())
                             .foregroundStyle(MuesliTheme.textPrimary)
                         if option == BackendOption.onboardingDefault {
-                            Text("Recommended")
+                            Text(String(localized: "onboarding.model.recommended", defaultValue: "Recommended", bundle: .module, comment: "Badge text indicating recommended model option"))
                                 .font(.system(size: 9, weight: .semibold))
                                 .foregroundStyle(.white)
                                 .padding(.horizontal, 5)
@@ -816,18 +816,18 @@ struct OnboardingView: View {
     /// successful transcription before meeting-specific permissions appear.
     private var permissionSteps: [(icon: String, name: String, description: String, granted: Bool, action: () -> Void)] {
         var steps: [(String, String, String, Bool, () -> Void)] = [
-            ("mic.fill", "Microphone", "Record audio for voice notes, dictation, and meetings", micGranted, {
+            ("mic.fill", "Microphone", String(localized: "onboarding.permissions.step.microphone.description", defaultValue: "Record audio for voice notes, dictation, and meetings", bundle: .module, comment: "Permission step description for microphone access"), micGranted, {
                 AVCaptureDevice.requestAccess(for: .audio) { _ in }
             })
         ]
         if selectedUseCase.includesPushToTalk {
             if selectedUseCase.includesDictation {
                 steps += [
-                    ("hand.raised.fill", "Accessibility", "Paste transcribed text into other apps", accessibilityGranted, requestAccessibilityPermission),
+                    ("hand.raised.fill", "Accessibility", String(localized: "onboarding.permissions.step.accessibility.description", defaultValue: "Paste transcribed text into other apps", bundle: .module, comment: "Permission step description for accessibility access"), accessibilityGranted, requestAccessibilityPermission),
                 ]
             }
             steps += [
-            ("keyboard.fill", "Input Monitoring", "Detect hotkey for push-to-talk recording", inputMonitoringGranted, {
+            ("keyboard.fill", "Input Monitoring", String(localized: "onboarding.permissions.step.input_monitoring.description", defaultValue: "Detect hotkey for push-to-talk recording", bundle: .module, comment: "Permission step description for input monitoring"), inputMonitoringGranted, {
                 if !CGRequestListenEventAccess() {
                     self.openSystemSettings("Privacy_ListenEvent")
                 }
@@ -862,7 +862,7 @@ struct OnboardingView: View {
                 let isConfirmingGrant = recentlyGrantedPermissionName == step.name
 
                 VStack(spacing: MuesliTheme.spacing8) {
-                    Text("Permission \(displayIndex + 1) of \(total)")
+                    Text(String(format: String(localized: "onboarding.permissions.progress.permission_of_total", defaultValue: "Permission %d of %d", bundle: .module, comment: "Progress label showing current permission step out of total"), displayIndex + 1, total))
                         .font(.system(size: 11, weight: .semibold))
                         .foregroundStyle(MuesliTheme.textTertiary)
                         .textCase(.uppercase)
@@ -925,14 +925,14 @@ struct OnboardingView: View {
                 }
 
                 if isWaitingForNativePermissionPrompt(step.name) {
-                    Text("Respond to the macOS permission prompt")
+                    Text(String(localized: "onboarding.permissions.respond_prompt", defaultValue: "Respond to the macOS permission prompt", bundle: .module, comment: "Instruction to respond to system permission prompt"))
                         .font(.system(size: 11))
                         .foregroundStyle(MuesliTheme.textTertiary)
                 } else {
                     Button {
                         openSystemSettingsForPermission(at: displayIndex)
                     } label: {
-                        Text("Not seeing a prompt? Open System Settings")
+                        Text(String(localized: "onboarding.permissions.open_system_settings_hint", defaultValue: "Not seeing a prompt? Open System Settings", bundle: .module, comment: "Hint to open System Settings when prompt is not visible"))
                             .font(.system(size: 11))
                             .foregroundStyle(MuesliTheme.accent)
                     }
@@ -943,7 +943,7 @@ struct OnboardingView: View {
                     Button {
                         openApplicationsFolder()
                     } label: {
-                        Text("Need to add Muesli manually? Open Applications")
+                        Text(String(localized: "onboarding.permissions.manual_add_hint", defaultValue: "Need to add Muesli manually? Open Applications", bundle: .module, comment: "Hint to open Applications when manually adding Muesli to permissions"))
                             .font(.system(size: 11))
                             .foregroundStyle(MuesliTheme.textTertiary)
                     }
@@ -955,9 +955,9 @@ struct OnboardingView: View {
                         switchToVoiceNotesOnly()
                     } label: {
                         VStack(spacing: 2) {
-                            Text("Use Voice Notes instead")
+                            Text(String(localized: "onboarding.permissions.use_voice_notes", defaultValue: "Use Voice Notes instead", bundle: .module, comment: "Action text to switch onboarding flow to voice notes path"))
                                 .font(.system(size: 12, weight: .semibold))
-                            Text("Keeps the hotkey, skips paste permission")
+                            Text(String(localized: "onboarding.permissions.voice_notes_subtitle", defaultValue: "Keeps the hotkey, skips paste permission", bundle: .module, comment: "Subtitle describing voice notes permission path behavior"))
                                 .font(.system(size: 10, weight: .medium))
                                 .foregroundStyle(MuesliTheme.textTertiary)
                         }
@@ -973,7 +973,7 @@ struct OnboardingView: View {
                         .font(.system(size: 48))
                         .foregroundStyle(MuesliTheme.success)
 
-                    Text("All permissions granted")
+                    Text(String(localized: "onboarding.permissions.all_granted", defaultValue: "All permissions granted", bundle: .module, comment: "Status text shown when every required onboarding permission is granted"))
                         .font(MuesliTheme.title1())
                         .foregroundStyle(MuesliTheme.textPrimary)
                 }
@@ -987,10 +987,10 @@ struct OnboardingView: View {
     }
 
     private func permissionButtonTitle(for permissionName: String, isConfirmingGrant: Bool) -> String {
-        if isConfirmingGrant { return "Granted" }
-        if isWaitingForNativePermissionPrompt(permissionName) { return "Waiting for macOS..." }
-        if grantingPermissionName == permissionName { return "Open Settings" }
-        return "Grant Permission"
+        if isConfirmingGrant { return String(localized: "onboarding.permissions.button.granted", defaultValue: "Granted", bundle: .module, comment: "Permission button label when permission has already been granted") }
+        if isWaitingForNativePermissionPrompt(permissionName) { return String(localized: "onboarding.permissions.button.waiting_for_macos", defaultValue: "Waiting for macOS...", bundle: .module, comment: "Permission button label while waiting for system prompt state") }
+        if grantingPermissionName == permissionName { return String(localized: "onboarding.permissions.button.open_settings", defaultValue: "Open Settings", bundle: .module, comment: "Permission button label to open system settings") }
+        return String(localized: "onboarding.permissions.button.grant_permission", defaultValue: "Grant Permission", bundle: .module, comment: "Permission button label to request required permission")
     }
 
     private func isWaitingForNativePermissionPrompt(_ permissionName: String) -> Bool {
@@ -1068,7 +1068,7 @@ struct OnboardingView: View {
                     .foregroundStyle(MuesliTheme.success)
                     .transition(.scale.combined(with: .opacity))
             } else {
-                Button("Grant") {
+                Button(String(localized: "onboarding.permissions.grant_button", defaultValue: "Grant", bundle: .module, comment: "Compact permission action button text")) {
                     action()
                 }
                 .buttonStyle(.plain)
@@ -1208,11 +1208,11 @@ struct OnboardingView: View {
             Spacer()
 
             VStack(spacing: MuesliTheme.spacing8) {
-                Text("Dictation Shortcut")
+                Text(String(localized: "onboarding.hotkey.title", defaultValue: "Dictation Shortcut", bundle: .module, comment: "Title for onboarding step that configures dictation hotkey"))
                     .font(MuesliTheme.title1())
                     .foregroundStyle(MuesliTheme.textPrimary)
 
-                Text("Choose the key you'll hold to dictate. Press and hold the key to record, release to transcribe.")
+                Text(String(localized: "onboarding.hotkey.instructions", defaultValue: "Choose the key you'll hold to dictate. Press and hold the key to record, release to transcribe.", bundle: .module, comment: "Instructions for selecting and using push-to-talk hotkey"))
                     .font(MuesliTheme.body())
                     .foregroundStyle(MuesliTheme.textSecondary)
                     .multilineTextAlignment(.center)
@@ -1240,7 +1240,7 @@ struct OnboardingView: View {
                         startRecordingHotkey()
                     }
                 } label: {
-                    Text(isRecordingHotkey ? "Press a modifier key..." : "Change Shortcut")
+                    Text(isRecordingHotkey ? String(localized: "onboarding.hotkey.press_modifier_prompt", defaultValue: "Press a modifier key...", bundle: .module, comment: "Prompt shown while waiting for user to press a modifier key") : String(localized: "onboarding.hotkey.change_shortcut", defaultValue: "Change Shortcut", bundle: .module, comment: "Button text to change selected dictation shortcut"))
                         .font(MuesliTheme.body())
                         .foregroundStyle(isRecordingHotkey ? MuesliTheme.accent : MuesliTheme.textPrimary)
                 }
@@ -1255,7 +1255,7 @@ struct OnboardingView: View {
                 )
             }
 
-            Text("Supported: Left Cmd, Right Cmd, Fn, Ctrl, Option, Shift")
+            Text(String(localized: "onboarding.hotkey.supported_keys", defaultValue: "Supported: Left Cmd, Right Cmd, Fn, Ctrl, Option, Shift", bundle: .module, comment: "Help text listing supported modifier keys for hotkey selection"))
                 .font(MuesliTheme.caption())
                 .foregroundStyle(MuesliTheme.textTertiary)
 
@@ -1292,7 +1292,7 @@ struct OnboardingView: View {
             Spacer()
 
             VStack(spacing: MuesliTheme.spacing8) {
-                Text(selectedUseCase.includesVoiceNotes ? "Test Voice Note" : "Test Dictation")
+                Text(selectedUseCase.includesVoiceNotes ? String(localized: "onboarding.dictation_test.voice_note", defaultValue: "Test Voice Note", bundle: .module, comment: "Button text to start voice note dictation test") : String(localized: "onboarding.dictation_test.test_dictation", defaultValue: "Test Dictation", bundle: .module, comment: "Button title to start dictation test during onboarding"))
                     .font(MuesliTheme.title1())
                     .foregroundStyle(MuesliTheme.textPrimary)
 
@@ -1302,7 +1302,7 @@ struct OnboardingView: View {
                     .multilineTextAlignment(.center)
 
                 if isSelectedModelReadyForDictationTest {
-                    Text("Try saying: \"testing this one out\"")
+                    Text(String(localized: "onboarding.dictation_test.try_saying_example", defaultValue: "Try saying: \"testing this one out\"", bundle: .module, comment: "Example phrase prompt for dictation test"))
                         .font(.system(size: 13, weight: .medium, design: .rounded))
                         .foregroundStyle(MuesliTheme.accent)
                         .padding(.top, 2)
@@ -1314,10 +1314,10 @@ struct OnboardingView: View {
                     if isModelPreparingAfterDownload {
                         IndeterminatePreparationBar()
                             .frame(width: 260, height: 7)
-                        Text(modelDownloadStatus ?? "Preparing \(selectedBackend.label)...")
+                        Text(modelDownloadStatus ?? String(format: String(localized: "onboarding.dictation_test.status.preparing_backend", defaultValue: "Preparing %@...", bundle: .module, comment: "Status text while selected backend is preparing for dictation test"), "\(selectedBackend.label)"))
                             .font(.system(size: 11, weight: .medium, design: .rounded))
                             .foregroundStyle(MuesliTheme.textTertiary)
-                        Text("This usually takes 20-60 seconds the first time.")
+                        Text(String(localized: "onboarding.dictation_test.first_run_timing", defaultValue: "This usually takes 20-60 seconds the first time.", bundle: .module, comment: "Timing hint for initial dictation model warmup"))
                             .font(.system(size: 10, weight: .medium, design: .rounded))
                             .foregroundStyle(MuesliTheme.textTertiary)
                         RotatingPreparationHint(messages: modelPreparationHints)
@@ -1325,17 +1325,17 @@ struct OnboardingView: View {
                     } else if let modelDownloadProgress {
                         ProgressView(value: modelDownloadProgress, total: 1.0)
                             .frame(width: 260)
-                        Text(modelDownloadStatus ?? "\(Int((modelDownloadProgress * 100).rounded()))% complete")
+                        Text(modelDownloadStatus ?? String(format: String(localized: "onboarding.dictation_test.model_download.percent_complete", defaultValue: "%d%% complete", bundle: .module, comment: "Progress label for model download during dictation test setup"), Int((modelDownloadProgress * 100).rounded())))
                             .font(.system(size: 11, weight: .medium, design: .rounded))
                             .foregroundStyle(MuesliTheme.textTertiary)
                     } else {
                         ProgressView()
                             .controlSize(.regular)
-                        Text(modelDownloadStatus ?? "Preparing \(selectedBackend.label)...")
+                        Text(modelDownloadStatus ?? String(format: String(localized: "onboarding.dictation_test.status.preparing_backend_secondary", defaultValue: "Preparing %@...", bundle: .module, comment: "Secondary status text while selected backend is preparing"), "\(selectedBackend.label)"))
                             .font(.system(size: 11, weight: .medium, design: .rounded))
                             .foregroundStyle(MuesliTheme.textTertiary)
                     }
-                    Text("The dictation test is disabled until download and warmup complete.")
+                    Text(String(localized: "onboarding.dictation_test.disabled_until_warmup", defaultValue: "The dictation test is disabled until download and warmup complete.", bundle: .module, comment: "Disabled-state explanation for dictation test button"))
                         .font(MuesliTheme.caption())
                         .foregroundStyle(MuesliTheme.textTertiary)
                         .multilineTextAlignment(.center)
@@ -1346,7 +1346,7 @@ struct OnboardingView: View {
                             .foregroundStyle(.red)
                             .lineLimit(2)
 
-                        Button("Retry Download") {
+                        Button(String(localized: "onboarding.dictation_test.retry_download", defaultValue: "Retry Download", bundle: .module, comment: "Button title to retry model download")) {
                             self.modelDownloadError = nil
                             self.modelDownloadSnapshot = nil
                             ensureModelDownloadStarted()
@@ -1358,7 +1358,7 @@ struct OnboardingView: View {
                 }
             } else {
                 VStack(spacing: MuesliTheme.spacing16) {
-                    Text(dictationTestResult ?? "Your transcription will appear here...")
+                    Text(dictationTestResult ?? String(localized: "onboarding.dictation_test.placeholder.transcription_output", defaultValue: "Your transcription will appear here...", bundle: .module, comment: "Placeholder text shown before any dictation output appears"))
                         .font(dictationTestResult != nil ? .system(size: 14, design: .monospaced) : .system(size: 13, design: .rounded))
                         .foregroundStyle(dictationTestResult != nil ? MuesliTheme.textPrimary : MuesliTheme.textTertiary)
                         .italic(dictationTestResult == nil)
@@ -1375,7 +1375,7 @@ struct OnboardingView: View {
                         HStack(spacing: 8) {
                             ProgressView()
                                 .controlSize(.small)
-                            Text("Listening... release \(selectedHotkey.label) when done")
+                            Text(String(format: String(localized: "onboarding.dictation_test.status.listening_release_hotkey", defaultValue: "Listening... release %@ when done", bundle: .module, comment: "Live status while recording; instructs user to release hotkey"), "\(selectedHotkey.label)"))
                                 .font(MuesliTheme.caption())
                                 .foregroundStyle(MuesliTheme.textSecondary)
                         }
@@ -1383,7 +1383,7 @@ struct OnboardingView: View {
                         HStack(spacing: 6) {
                             Image(systemName: "keyboard")
                                 .font(.system(size: 14))
-                            Text("Hold \(selectedHotkey.label) to start")
+                            Text(String(format: String(localized: "onboarding.dictation_test.status.hold_hotkey_to_start", defaultValue: "Hold %@ to start", bundle: .module, comment: "Instruction shown before starting dictation capture"), "\(selectedHotkey.label)"))
                                 .font(MuesliTheme.body())
                         }
                         .foregroundStyle(MuesliTheme.textTertiary)
@@ -1400,7 +1400,7 @@ struct OnboardingView: View {
                         HStack(spacing: 6) {
                             Image(systemName: "checkmark.circle.fill")
                                 .foregroundStyle(MuesliTheme.success)
-                            Text("Dictation is working!")
+                            Text(String(localized: "onboarding.dictation_test.success", defaultValue: "Dictation is working!", bundle: .module, comment: "Success confirmation shown after a good dictation test"))
                                 .font(MuesliTheme.body())
                                 .foregroundStyle(MuesliTheme.success)
                         }
@@ -1421,7 +1421,7 @@ struct OnboardingView: View {
             }
             controller.dictationTestCallback = { text in
                 if text.isEmpty {
-                    dictationTestError = "No speech detected. Try again."
+                    dictationTestError = String(localized: "onboarding.dictation_test.no_speech_detected", defaultValue: "No speech detected. Try again.", bundle: .module, comment: "Error shown when no speech is detected in dictation test")
                 } else {
                     withAnimation { dictationTestResult = text }
                     advanceAfterSuccessfulDictationTest(text: text)
@@ -1459,30 +1459,30 @@ struct OnboardingView: View {
             Spacer()
 
             VStack(spacing: MuesliTheme.spacing8) {
-                Text("Meeting Summaries")
+                Text(String(localized: "onboarding.meeting_summary.title", defaultValue: "Meeting Summaries", bundle: .module, comment: "Title for onboarding step about meeting summary features"))
                     .font(MuesliTheme.title1())
                     .foregroundStyle(MuesliTheme.textPrimary)
 
-                Text("Connect an LLM provider to get AI-powered meeting notes.\nYou can set this up later in Settings.")
+                Text(String(localized: "onboarding.meeting_summary.connect_llm_description", defaultValue: "Connect an LLM provider to get AI-powered meeting notes.\nYou can set this up later in Settings.", bundle: .module, comment: "Description explaining optional LLM provider setup for meeting summaries"))
                     .font(MuesliTheme.body())
                     .foregroundStyle(MuesliTheme.textSecondary)
                     .multilineTextAlignment(.center)
             }
 
             HStack(spacing: 0) {
-                providerTab("ChatGPT", selected: summaryBackend == .chatGPT) {
+                providerTab(String(localized: "onboarding.meeting_summary.provider.chatgpt", defaultValue: "ChatGPT", bundle: .module, comment: "Provider option label for ChatGPT"), selected: summaryBackend == .chatGPT) {
                     summaryBackend = .chatGPT
                     apiKey = ""
                 }
-                providerTab("OpenAI", selected: summaryBackend == .openAI) {
+                providerTab(String(localized: "onboarding.meeting_summary.provider.openai", defaultValue: "OpenAI", bundle: .module, comment: "Provider option label for OpenAI"), selected: summaryBackend == .openAI) {
                     summaryBackend = .openAI
                     apiKey = ""
                 }
-                providerTab("OpenRouter", selected: summaryBackend == .openRouter) {
+                providerTab(String(localized: "onboarding.meeting_summary.provider.openrouter", defaultValue: "OpenRouter", bundle: .module, comment: "Provider option label for OpenRouter"), selected: summaryBackend == .openRouter) {
                     summaryBackend = .openRouter
                     apiKey = ""
                 }
-                providerTab("Ollama", selected: summaryBackend == .ollama) {
+                providerTab(String(localized: "onboarding.meeting_summary.provider.ollama", defaultValue: "Ollama", bundle: .module, comment: "Provider option label for Ollama"), selected: summaryBackend == .ollama) {
                     summaryBackend = .ollama
                     apiKey = ""
                 }
@@ -1496,7 +1496,7 @@ struct OnboardingView: View {
             .frame(width: 320)
 
             if summaryBackend == .chatGPT {
-                Text("Use your ChatGPT Plus or Pro subscription.")
+                Text(String(localized: "onboarding.meeting_summary.chatgpt_subscription_note", defaultValue: "Use your ChatGPT Plus or Pro subscription.", bundle: .module, comment: "Helper note describing ChatGPT subscription requirement"))
                     .font(MuesliTheme.caption())
                     .foregroundStyle(MuesliTheme.textSecondary)
 
@@ -1505,7 +1505,7 @@ struct OnboardingView: View {
                         OpenAILogoShape()
                             .fill(.white)
                             .frame(width: 14, height: 14)
-                        Text("Signed in with ChatGPT")
+                        Text(String(localized: "onboarding.meeting_summary.chatgpt_signed_in", defaultValue: "Signed in with ChatGPT", bundle: .module, comment: "Status shown after successful ChatGPT sign-in during onboarding"))
                             .font(.system(size: 13, weight: .medium))
                             .foregroundStyle(.white)
                     }
@@ -1517,7 +1517,7 @@ struct OnboardingView: View {
                     HStack(spacing: 8) {
                         ProgressView()
                             .controlSize(.small)
-                        Text("Signing in...")
+                        Text(String(localized: "onboarding.meeting_summary.signing_in", defaultValue: "Signing in...", bundle: .module, comment: "Status shown while ChatGPT sign-in is in progress"))
                             .font(.system(size: 12))
                             .foregroundStyle(MuesliTheme.textSecondary)
                     }
@@ -1536,7 +1536,7 @@ struct OnboardingView: View {
                             OpenAILogoShape()
                                 .fill(.white)
                                 .frame(width: 14, height: 14)
-                            Text("Sign in with ChatGPT")
+                            Text(String(localized: "onboarding.meeting_summary.sign_in_chatgpt", defaultValue: "Sign in with ChatGPT", bundle: .module, comment: "Button title to begin ChatGPT authentication"))
                                 .font(.system(size: 13, weight: .medium))
                                 .foregroundStyle(.white)
                         }
@@ -1555,13 +1555,13 @@ struct OnboardingView: View {
                     }
                 }
             } else if summaryBackend == .ollama {
-                Text("Run AI models locally on your device with Ollama.\nNo API key needed — just install Ollama and pull a model.")
+                Text(String(localized: "onboarding.meeting_summary.ollama_description", defaultValue: "Run AI models locally on your device with Ollama.\nNo API key needed — just install Ollama and pull a model.", bundle: .module, comment: "Description for Ollama option in meeting summary provider onboarding"))
                     .font(MuesliTheme.caption())
                     .foregroundStyle(MuesliTheme.textSecondary)
                     .multilineTextAlignment(.center)
 
                 VStack(alignment: .leading, spacing: MuesliTheme.spacing8) {
-                    Text("Ollama is served by default at http://localhost:11434")
+                    Text(String(localized: "onboarding.meeting_summary.ollama_default_url", defaultValue: "Ollama is served by default at http://localhost:11434", bundle: .module, comment: "Helper text showing default Ollama local server URL"))
                         .font(.system(size: 11))
                         .foregroundStyle(MuesliTheme.textTertiary)
 
@@ -1569,20 +1569,20 @@ struct OnboardingView: View {
                         Circle()
                             .fill(MuesliTheme.success)
                             .frame(width: 6, height: 6)
-                        Text("No authentication required")
+                        Text(String(localized: "onboarding.meeting_summary.no_auth_required", defaultValue: "No authentication required", bundle: .module, comment: "Status text indicating provider does not require authentication"))
                             .font(.system(size: 11))
                             .foregroundStyle(MuesliTheme.success)
                     }
                 }
             } else {
                 if summaryBackend == .openRouter {
-                    Text("OpenRouter supports many model providers through one API key.")
+                    Text(String(localized: "onboarding.meeting_summary.openrouter_description", defaultValue: "OpenRouter supports many model providers through one API key.", bundle: .module, comment: "Description for OpenRouter provider option during onboarding"))
                         .font(MuesliTheme.caption())
                         .foregroundStyle(MuesliTheme.textTertiary)
                 }
 
                 VStack(alignment: .leading, spacing: MuesliTheme.spacing8) {
-                    Text("API Key")
+                    Text(String(localized: "onboarding.meeting_summary.api_key_label", defaultValue: "API Key", bundle: .module, comment: "Field label for API key entry"))
                         .font(MuesliTheme.caption())
                         .foregroundStyle(MuesliTheme.textTertiary)
 
@@ -1597,7 +1597,7 @@ struct OnboardingView: View {
                         Circle()
                             .fill(apiKey.isEmpty ? MuesliTheme.textTertiary : MuesliTheme.success)
                             .frame(width: 6, height: 6)
-                        Text(apiKey.isEmpty ? "No API key" : "Key entered")
+                        Text(apiKey.isEmpty ? String(localized: "onboarding.meeting_summary.no_api_key", defaultValue: "No API key", bundle: .module, comment: "Status indicator when no API key is present") : String(localized: "onboarding.meeting_summary.key_entered", defaultValue: "Key entered", bundle: .module, comment: "Status indicator when API key has been entered"))
                             .font(.system(size: 11))
                             .foregroundStyle(apiKey.isEmpty ? MuesliTheme.textTertiary : MuesliTheme.success)
                     }
@@ -1672,11 +1672,11 @@ struct OnboardingView: View {
             isModelStillDownloading = false
             modelDownloadProgress = 1.0
             isModelPreparingAfterDownload = false
-            modelDownloadStatus = "\(selectedBackend.label) ready"
+            modelDownloadStatus = String(format: String(localized: "onboarding.model_preparation.selected_backend_ready.primary", defaultValue: "%@ ready", bundle: .module, comment: "Primary status indicating selected backend is ready"), "\(selectedBackend.label)")
             modelDownloadError = nil
             publishModelPreparationStatus(
-                title: "\(selectedBackend.label) ready",
-                detail: "Ready for transcription",
+                title: String(format: String(localized: "onboarding.model_preparation.selected_backend_ready.secondary", defaultValue: "%@ ready", bundle: .module, comment: "Secondary status indicating selected backend is ready"), "\(selectedBackend.label)"),
+                detail: String(localized: "onboarding.model_preparation.ready_for_transcription.secondary", defaultValue: "Ready for transcription", bundle: .module, comment: "Secondary readiness text indicating transcription can begin"),
                 progress: 1.0,
                 isPreparing: false,
                 isComplete: true
@@ -1706,12 +1706,12 @@ struct OnboardingView: View {
         modelDownloadProgress = alreadyDownloaded ? nil : (modelDownloadProgress ?? 0.02)
         isModelPreparingAfterDownload = alreadyDownloaded
         modelDownloadStatus = alreadyDownloaded
-            ? "Warming up \(backend.label)..."
+            ? String(format: String(localized: "onboarding.model_preparation.warming_up", defaultValue: "Warming up %@...", bundle: .module, comment: "Status text while backend model is warming up"), "\(backend.label)")
             : (modelDownloadStatus ?? initialDownloadStatus(for: backend))
         modelDownloadError = nil
         modelDownloadSnapshot = nil
         publishModelPreparationStatus(
-            title: "Preparing \(backend.label)",
+            title: String(format: String(localized: "onboarding.model_preparation.preparing_backend", defaultValue: "Preparing %@", bundle: .module, comment: "Status text while backend model is preparing"), "\(backend.label)"),
             detail: modelDownloadStatus,
             progress: modelDownloadProgress,
             isPreparing: isModelPreparingAfterDownload,
@@ -1751,12 +1751,12 @@ struct OnboardingView: View {
                     modelDownloadProgress = 1.0
                     modelDownloadSnapshot = nil
                     isModelPreparingAfterDownload = false
-                    modelDownloadStatus = "\(backend.label) ready"
+                    modelDownloadStatus = String(format: String(localized: "onboarding.model_preparation.backend_ready.primary", defaultValue: "%@ ready", bundle: .module, comment: "Primary status indicating backend is ready"), "\(backend.label)")
                     modelDownloadError = nil
                     withAnimation { isModelStillDownloading = false }
                     publishModelPreparationStatus(
-                        title: "\(backend.label) ready",
-                        detail: "Ready for transcription",
+                        title: String(format: String(localized: "onboarding.model_preparation.backend_ready.secondary", defaultValue: "%@ ready", bundle: .module, comment: "Secondary status indicating backend is ready"), "\(backend.label)"),
+                        detail: String(localized: "onboarding.model_preparation.ready_for_transcription.primary", defaultValue: "Ready for transcription", bundle: .module, comment: "Primary readiness text indicating transcription can begin"),
                         progress: 1.0,
                         isPreparing: false,
                         isComplete: true
@@ -1773,7 +1773,7 @@ struct OnboardingView: View {
                           modelDownloadBackend == backend,
                           selectedBackend == backend else { return }
                     modelDownloadError = modelPreparationFailureMessage(for: backend)
-                    modelDownloadStatus = backend.isDownloaded ? "Model setup paused" : "Download paused"
+                    modelDownloadStatus = backend.isDownloaded ? String(localized: "onboarding.model_preparation.paused.model_setup", defaultValue: "Model setup paused", bundle: .module, comment: "Status text indicating model setup is paused") : String(localized: "onboarding.model_preparation.paused.download", defaultValue: "Download paused", bundle: .module, comment: "Status text indicating model download is paused")
                     modelDownloadProgress = nil
                     if let snapshot = modelDownloadSnapshot {
                         modelDownloadSnapshot = snapshot.replacing(
@@ -1784,7 +1784,7 @@ struct OnboardingView: View {
                     isModelPreparingAfterDownload = false
                     isModelStillDownloading = false
                     publishModelPreparationStatus(
-                        title: backend.isDownloaded ? "Model setup paused" : "Download paused",
+                        title: backend.isDownloaded ? String(localized: "onboarding.model_preparation.paused.model_setup.secondary", defaultValue: "Model setup paused", bundle: .module, comment: "Secondary paused status shown when model setup is paused") : String(localized: "onboarding.model_preparation.paused.download.secondary", defaultValue: "Download paused", bundle: .module, comment: "Secondary paused status shown when model download is paused"),
                         detail: modelDownloadError,
                         progress: nil,
                         isPreparing: false,
@@ -1819,18 +1819,18 @@ struct OnboardingView: View {
             isModelStillDownloading = true
             isModelPreparingAfterDownload = true
             modelDownloadProgress = nil
-            modelDownloadStatus = snapshot.message ?? "Preparing \(backend.label)..."
+            modelDownloadStatus = snapshot.message ?? String(format: String(localized: "onboarding.model_preparation.progress.preparing_backend.ellipsis", defaultValue: "Preparing %@...", bundle: .module, comment: "Progress status while preparing the selected backend"), "\(backend.label)")
         case .ready:
-            modelDownloadStatus = snapshot.message ?? "\(backend.label) ready"
+            modelDownloadStatus = snapshot.message ?? String(format: String(localized: "onboarding.model_preparation.progress.backend_ready", defaultValue: "%@ ready", bundle: .module, comment: "Progress status indicating selected backend is ready"), "\(backend.label)")
         case .paused:
             isModelStillDownloading = false
             isModelPreparingAfterDownload = false
-            modelDownloadStatus = snapshot.message ?? "Download paused"
+            modelDownloadStatus = snapshot.message ?? String(localized: "onboarding.model_download.paused.progress", defaultValue: "Download paused", bundle: .module, comment: "Progress status indicating model download is paused")
         case .failed:
             isModelStillDownloading = false
             isModelPreparingAfterDownload = false
             modelDownloadError = snapshot.message
-            modelDownloadStatus = snapshot.message ?? "Download failed"
+            modelDownloadStatus = snapshot.message ?? String(localized: "onboarding.model_download.failed", defaultValue: "Download failed", bundle: .module, comment: "Status shown when model download fails")
         }
 
         publishModelPreparationStatus(
@@ -1851,7 +1851,7 @@ struct OnboardingView: View {
         guard modelDownloadGeneration == generation,
               modelDownloadBackend == backend,
               selectedBackend == backend else { return }
-        let detail = status ?? "Preparing \(backend.label)..."
+        let detail = status ?? String(format: String(localized: "onboarding.model_preparation.status.preparing_backend.ellipsis", defaultValue: "Preparing %@...", bundle: .module, comment: "Status label while preparing backend in setup flow"), "\(backend.label)")
         let lowercasedDetail = detail.lowercased()
         let isPreparing = lowercasedDetail.contains("compiling")
             || lowercasedDetail.contains("warming")
@@ -1862,9 +1862,9 @@ struct OnboardingView: View {
 
         if isPreparing {
             isModelPreparingAfterDownload = true
-            modelDownloadStatus = "Optimizing \(backend.label) for this Mac..."
+            modelDownloadStatus = String(format: String(localized: "onboarding.model_preparation.optimizing_for_mac", defaultValue: "Optimizing %@ for this Mac...", bundle: .module, comment: "Status shown while optimizing selected backend for current Mac"), "\(backend.label)")
             publishModelPreparationStatus(
-                title: "Preparing \(backend.label)",
+                title: String(format: String(localized: "onboarding.model_preparation.status.preparing_backend", defaultValue: "Preparing %@", bundle: .module, comment: "Status shown while preparing selected backend"), "\(backend.label)"),
                 detail: modelDownloadStatus,
                 progress: nil,
                 isPreparing: true,
@@ -1883,7 +1883,7 @@ struct OnboardingView: View {
         modelDownloadProgress = max(currentProgress, max(clampedProgress, 0.02))
         modelDownloadStatus = detail
         publishModelPreparationStatus(
-            title: "Preparing \(backend.label)",
+            title: String(format: String(localized: "onboarding.model_preparation.detail.preparing_backend", defaultValue: "Preparing %@", bundle: .module, comment: "Detail status shown while preparing selected backend"), "\(backend.label)"),
             detail: detail,
             progress: modelDownloadProgress,
             isPreparing: false,
@@ -1922,15 +1922,15 @@ struct OnboardingView: View {
             .replacingOccurrences(of: "~", with: "")
             .trimmingCharacters(in: .whitespacesAndNewlines)
         if !size.isEmpty {
-            return "0 MB of \(size)"
+            return String(format: String(localized: "onboarding.model_download.initial_status", defaultValue: "0 MB of %@", bundle: .module, comment: "Initial download status before bytes are downloaded"), "\(size)")
         }
-        return "Starting \(backend.label) download..."
+        return String(format: String(localized: "onboarding.model_download.starting_download", defaultValue: "Starting %@ download...", bundle: .module, comment: "Status shown when starting selected backend download"), "\(backend.label)")
     }
 
     private func modelPreparationFailureMessage(for backend: BackendOption) -> String {
         backend.isDownloaded
-            ? "Model setup failed. Restart Muesli or retry from Models."
-            : "Download failed. Check your connection and retry."
+            ? String(localized: "onboarding.model_preparation.failure_setup", defaultValue: "Model setup failed. Restart Muesli or retry from Models.", bundle: .module, comment: "Error message when model setup fails during onboarding")
+            : String(localized: "onboarding.model_download.failure_check_connection", defaultValue: "Download failed. Check your connection and retry.", bundle: .module, comment: "Error message when download fails and user should check connection")
     }
 
     private func publishModelPreparationStatus(
@@ -1987,11 +1987,11 @@ struct OnboardingView: View {
             Spacer()
 
             VStack(spacing: MuesliTheme.spacing8) {
-                Text("Google Calendar")
+                Text(String(localized: "onboarding.google_calendar.title", defaultValue: "Google Calendar", bundle: .module, comment: "Title for Google Calendar onboarding step"))
                     .font(MuesliTheme.title1())
                     .foregroundStyle(MuesliTheme.textPrimary)
 
-                Text("Connect Google Calendar to see upcoming meetings.\nYou can set this up later in Settings.")
+                Text(String(localized: "onboarding.google_calendar.connect_description", defaultValue: "Connect Google Calendar to see upcoming meetings.\nYou can set this up later in Settings.", bundle: .module, comment: "Description for connecting Google Calendar during onboarding"))
                     .font(MuesliTheme.body())
                     .foregroundStyle(MuesliTheme.textSecondary)
                     .multilineTextAlignment(.center)
@@ -2002,7 +2002,7 @@ struct OnboardingView: View {
                     HStack(spacing: 6) {
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundStyle(MuesliTheme.success)
-                        Text("Google Calendar connected")
+                        Text(String(localized: "onboarding.google_calendar.connected", defaultValue: "Google Calendar connected", bundle: .module, comment: "Status shown when Google Calendar is connected"))
                             .font(MuesliTheme.body())
                             .foregroundStyle(MuesliTheme.textPrimary)
                     }
@@ -2010,7 +2010,7 @@ struct OnboardingView: View {
                     HStack(spacing: 8) {
                         ProgressView()
                             .controlSize(.small)
-                        Text("Connecting...")
+                        Text(String(localized: "onboarding.google_calendar.connecting", defaultValue: "Connecting...", bundle: .module, comment: "Status shown while connecting Google Calendar"))
                             .font(MuesliTheme.body())
                             .foregroundStyle(MuesliTheme.textSecondary)
                     }
@@ -2019,7 +2019,7 @@ struct OnboardingView: View {
                         HStack(spacing: 6) {
                             Image(systemName: "calendar.badge.plus")
                                 .font(.system(size: 14))
-                            Text("Connect Google Calendar")
+                            Text(String(localized: "onboarding.google_calendar.connect_action", defaultValue: "Connect Google Calendar", bundle: .module, comment: "Button title to start Google Calendar connection"))
                                 .font(.system(size: 14, weight: .medium))
                         }
                         .foregroundStyle(.white.opacity(0.4))
@@ -2028,7 +2028,7 @@ struct OnboardingView: View {
                         .background(MuesliTheme.textTertiary.opacity(0.3))
                         .clipShape(RoundedRectangle(cornerRadius: MuesliTheme.cornerSmall))
 
-                        Text("Google OAuth verification pending")
+                        Text(String(localized: "onboarding.google_calendar.oauth_verification_pending", defaultValue: "Google OAuth verification pending", bundle: .module, comment: "Status indicating Google OAuth app verification is still pending"))
                             .font(MuesliTheme.caption())
                             .foregroundStyle(MuesliTheme.textTertiary)
                     }
@@ -2049,7 +2049,7 @@ struct OnboardingView: View {
                         HStack(spacing: 6) {
                             Image(systemName: "calendar.badge.plus")
                                 .font(.system(size: 14))
-                            Text("Connect Google Calendar")
+                            Text(String(localized: "onboarding.google_calendar.connect_action.secondary", defaultValue: "Connect Google Calendar", bundle: .module, comment: "Secondary action button title to connect Google Calendar"))
                                 .font(.system(size: 14, weight: .medium))
                         }
                         .foregroundStyle(.white)
@@ -2067,7 +2067,7 @@ struct OnboardingView: View {
                             .multilineTextAlignment(.center)
                     }
                 } else {
-                    Text("Google Calendar credentials not configured.")
+                    Text(String(localized: "onboarding.google_calendar.credentials_not_configured", defaultValue: "Google Calendar credentials not configured.", bundle: .module, comment: "Error text when Google Calendar credentials are missing"))
                         .font(MuesliTheme.caption())
                         .foregroundStyle(MuesliTheme.textTertiary)
                 }
@@ -2096,8 +2096,8 @@ struct OnboardingView: View {
             )
         } else if isModelStillDownloading || modelReadyBackend == selectedBackend {
             publishModelPreparationStatus(
-                title: modelReadyBackend == selectedBackend ? "\(selectedBackend.label) ready" : "Preparing \(selectedBackend.label)",
-                detail: modelReadyBackend == selectedBackend ? "Ready for transcription" : modelDownloadStatus,
+                title: modelReadyBackend == selectedBackend ? String(format: String(localized: "onboarding.model_preparation.ready", defaultValue: "%@ ready", bundle: .module, comment: "Status indicating selected backend is ready"), "\(selectedBackend.label)") : String(format: String(localized: "onboarding.model_preparation.preparing", defaultValue: "Preparing %@", bundle: .module, comment: "Status indicating selected backend is being prepared"), "\(selectedBackend.label)"),
+                detail: modelReadyBackend == selectedBackend ? String(localized: "onboarding.model_preparation.ready_for_transcription", defaultValue: "Ready for transcription", bundle: .module, comment: "Status indicating transcription can begin") : modelDownloadStatus,
                 progress: modelReadyBackend == selectedBackend ? 1.0 : modelDownloadProgress,
                 isPreparing: isModelPreparingAfterDownload,
                 isComplete: modelReadyBackend == selectedBackend
