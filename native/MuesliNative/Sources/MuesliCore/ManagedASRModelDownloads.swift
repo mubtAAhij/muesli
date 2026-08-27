@@ -470,10 +470,10 @@ public enum ManagedASRModelDownloader {
         try Task.checkCancellation()
 
         let scalarProgress = ManagedASRScalarProgressRelay(progress)
-        scalarProgress.call(0.01, "Finding model files...")
+        scalarProgress.call(0.01, String(localized: "asr.download.finding_model_files", defaultValue: "Finding model files...", comment: "Status message while searching for ASR model files."))
         progressSnapshot?(ModelDownloadProgress.preparing(
             modelID: plan.modelID,
-            message: "Finding model files..."
+            message: String(localized: "asr.download.finding_model_files", defaultValue: "Finding model files...", comment: "Status message while searching for ASR model files.")
         ))
         let manifest = try await resolver.resolve(
             modelID: plan.modelID,
