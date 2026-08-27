@@ -110,22 +110,22 @@ final class StatusBarController: NSObject, NSMenuDelegate {
             menu.addItem(.separator())
         }
 
-        menu.addItem(actionItem(title: "Open \(AppIdentity.displayName)", action: #selector(MuesliController.openHistoryWindow as (MuesliController) -> () -> Void)))
+        menu.addItem(actionItem(title: String(format: String(localized: "status_bar.menu.open_app", defaultValue: "Open %@", bundle: .module, comment: "Status bar menu item to open the main app window."), "\(AppIdentity.displayName)"), action: #selector(MuesliController.openHistoryWindow as (MuesliController) -> () -> Void)))
         if controller.isMeetingRecording() {
-            let pauseTitle = controller.isMeetingRecordingPaused() ? "Resume Meeting Recording" : "Pause Meeting Recording"
+            let pauseTitle = controller.isMeetingRecordingPaused() ? String(localized: "status_bar.menu.resume_meeting_recording", defaultValue: "Resume Meeting Recording", bundle: .module, comment: "Status bar menu item to resume paused meeting recording.") : String(localized: "status_bar.menu.pause_meeting_recording", defaultValue: "Pause Meeting Recording", bundle: .module, comment: "Status bar menu item to pause active meeting recording.")
             menu.addItem(actionItem(title: pauseTitle, action: #selector(MuesliController.toggleMeetingRecordingPause)))
-            menu.addItem(actionItem(title: "Stop Meeting Recording", action: #selector(MuesliController.toggleMeetingRecording)))
-            menu.addItem(actionItem(title: "Discard Meeting Recording...", action: #selector(MuesliController.discardMeetingWithConfirmation)))
+            menu.addItem(actionItem(title: String(localized: "status_bar.menu.stop_meeting_recording", defaultValue: "Stop Meeting Recording", bundle: .module, comment: "Status bar menu item to stop meeting recording."), action: #selector(MuesliController.toggleMeetingRecording)))
+            menu.addItem(actionItem(title: String(localized: "status_bar.menu.discard_meeting_recording", defaultValue: "Discard Meeting Recording...", bundle: .module, comment: "Status bar menu item to discard current meeting recording."), action: #selector(MuesliController.discardMeetingWithConfirmation)))
         } else {
-            menu.addItem(actionItem(title: "Start Meeting Recording", action: #selector(MuesliController.toggleMeetingRecording)))
+            menu.addItem(actionItem(title: String(localized: "status_bar.menu.start_meeting_recording", defaultValue: "Start Meeting Recording", bundle: .module, comment: "Status bar menu item to start a new meeting recording."), action: #selector(MuesliController.toggleMeetingRecording)))
         }
         menu.addItem(.separator())
 
-        let recentItem = NSMenuItem(title: "Recent Dictations", action: nil, keyEquivalent: "")
+        let recentItem = NSMenuItem(title: String(localized: "status_bar.menu.recent_dictations", defaultValue: "Recent Dictations", bundle: .module, comment: "Status bar submenu title for recent dictations."), action: nil, keyEquivalent: "")
         let recentMenu = NSMenu()
         let recentRows = controller.recentDictations()
         if recentRows.isEmpty {
-            let empty = NSMenuItem(title: "No dictations yet", action: nil, keyEquivalent: "")
+            let empty = NSMenuItem(title: String(localized: "status_bar.menu.no_dictations_yet", defaultValue: "No dictations yet", bundle: .module, comment: "Status bar placeholder when there are no recent dictations."), action: nil, keyEquivalent: "")
             empty.isEnabled = false
             recentMenu.addItem(empty)
         } else {
@@ -139,7 +139,7 @@ final class StatusBarController: NSObject, NSMenuDelegate {
         menu.setSubmenu(recentMenu, for: recentItem)
         menu.addItem(recentItem)
 
-        let backendItem = NSMenuItem(title: "Transcription Backend", action: nil, keyEquivalent: "")
+        let backendItem = NSMenuItem(title: String(localized: "status_bar.menu.transcription_backend", defaultValue: "Transcription Backend", bundle: .module, comment: "Status bar submenu title for selecting transcription backend."), action: nil, keyEquivalent: "")
         let backendMenu = NSMenu()
         for option in BackendOption.downloaded {
             let prefix = controller.selectedBackend == option ? "✓ " : ""
@@ -151,7 +151,7 @@ final class StatusBarController: NSObject, NSMenuDelegate {
         menu.setSubmenu(backendMenu, for: backendItem)
         menu.addItem(backendItem)
 
-        let meetingBackendItem = NSMenuItem(title: "Meetings Backend", action: nil, keyEquivalent: "")
+        let meetingBackendItem = NSMenuItem(title: String(localized: "status_bar.menu.meetings_backend", defaultValue: "Meetings Backend", bundle: .module, comment: "Status bar submenu title for selecting meetings backend."), action: nil, keyEquivalent: "")
         let meetingBackendMenu = NSMenu()
         for option in MeetingSummaryBackendOption.all {
             let prefix = controller.selectedMeetingSummaryBackend == option ? "✓ " : ""
@@ -168,11 +168,11 @@ final class StatusBarController: NSObject, NSMenuDelegate {
         menu.addItem(meetingBackendItem)
 
         menu.addItem(.separator())
-        menu.addItem(actionItem(title: "Settings…", action: #selector(MuesliController.openSettingsTab)))
-        menu.addItem(actionItem(title: "What's New in Muesli", action: #selector(MuesliController.showWhatsNew)))
+        menu.addItem(actionItem(title: String(localized: "status_bar.menu.settings", defaultValue: "Settings…", bundle: .module, comment: "Status bar menu item to open app settings."), action: #selector(MuesliController.openSettingsTab)))
+        menu.addItem(actionItem(title: String(localized: "status_bar.menu.whats_new", defaultValue: "What's New in Muesli", bundle: .module, comment: "Status bar menu item to open what's new page."), action: #selector(MuesliController.showWhatsNew)))
         menu.addItem(checkForUpdatesItem())
         menu.addItem(.separator())
-        menu.addItem(actionItem(title: "Quit", action: #selector(MuesliController.quitApp)))
+        menu.addItem(actionItem(title: String(localized: "status_bar.menu.quit", defaultValue: "Quit", bundle: .module, comment: "Status bar menu item to quit the app."), action: #selector(MuesliController.quitApp)))
     }
 
     private func addUpcomingEventsSection(_ events: [UnifiedCalendarEvent]) {
@@ -191,7 +191,7 @@ final class StatusBarController: NSObject, NSMenuDelegate {
             let firstEvent = nextUpEvents[0]
             let minutesUntil = Int(ceil(firstEvent.startDate.timeIntervalSince(now) / 60))
             addUpcomingEventGroup(
-                title: "Starts in \(formatTimeUntil(minutesUntil))",
+                title: String(format: String(localized: "status_bar.upcoming.starts_in", defaultValue: "Starts in %@", bundle: .module, comment: "Upcoming meeting label showing time remaining until start."), "\(formatTimeUntil(minutesUntil))"),
                 events: nextUpEvents,
                 timeFormatter: timeFormatter
             )
@@ -230,7 +230,7 @@ final class StatusBarController: NSObject, NSMenuDelegate {
         for event in displayedEvents {
             let timeStr = "\(timeFormatter.string(from: event.startDate)) – \(timeFormatter.string(from: event.endDate))"
             let item = NSMenuItem(
-                title: "\(event.title)\n\(timeStr)",
+                title: String(format: String(localized: "status_bar.upcoming.event_title_time_multiline", defaultValue: "%@\n%@", bundle: .module, comment: "Status bar upcoming event row combining title and time on separate lines."), "\(event.title)", "\(timeStr)"),
                 action: #selector(MuesliController.startMeetingFromCalendarMenuItem(_:)),
                 keyEquivalent: ""
             )
@@ -254,10 +254,10 @@ final class StatusBarController: NSObject, NSMenuDelegate {
 
     private func upcomingMenuHeader(for day: Date, calendar: Calendar) -> String {
         if calendar.isDateInToday(day) {
-            return "Today"
+            return String(localized: "status_bar.upcoming.header.today", defaultValue: "Today", bundle: .module, comment: "Header label for today's upcoming meetings.")
         }
         if calendar.isDateInTomorrow(day) {
-            return "Tomorrow"
+            return String(localized: "status_bar.upcoming.header.tomorrow", defaultValue: "Tomorrow", bundle: .module, comment: "Header label for tomorrow's upcoming meetings.")
         }
         let formatter = DateFormatter()
         formatter.dateFormat = "EEE, MMM d"
@@ -266,14 +266,14 @@ final class StatusBarController: NSObject, NSMenuDelegate {
 
     private func formatTimeUntil(_ minutes: Int) -> String {
         if minutes < 60 {
-            return "\(minutes)m"
+            return String(format: String(localized: "status_bar.time_until.minutes_short", defaultValue: "%dm", bundle: .module, comment: "Short relative time format for minutes."), minutes)
         }
         let hours = minutes / 60
         let remainingMinutes = minutes % 60
         if remainingMinutes == 0 {
-            return "\(hours)h"
+            return String(format: String(localized: "status_bar.time_until.hours_short", defaultValue: "%dh", bundle: .module, comment: "Short relative time format for whole hours."), hours)
         }
-        return "\(hours)h \(remainingMinutes)m"
+        return String(format: String(localized: "status_bar.time_until.hours_minutes_short", defaultValue: "%dh %dm", bundle: .module, comment: "Short relative time format for hours and minutes."), hours, remainingMinutes)
     }
 
     private func actionItem(title: String, action: Selector) -> NSMenuItem {
@@ -284,7 +284,7 @@ final class StatusBarController: NSObject, NSMenuDelegate {
 
     private func checkForUpdatesItem() -> NSMenuItem {
         let item = NSMenuItem(
-            title: "Check for Updates…",
+            title: String(localized: "status_bar.menu.check_for_updates", defaultValue: "Check for Updates…", bundle: .module, comment: "Status bar menu item to manually trigger update check."),
             action: #selector(MuesliController.checkForUpdates),
             keyEquivalent: ""
         )
