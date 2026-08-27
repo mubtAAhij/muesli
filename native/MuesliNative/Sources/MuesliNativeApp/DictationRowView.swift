@@ -93,7 +93,7 @@ struct DictationRowView: View {
                                 .foregroundStyle(MuesliTheme.textTertiary)
                         }
                         .buttonStyle(.plain)
-                        .help("Copy CUA trace")
+                        .help(String(localized: "dictation_row.copy_cua_trace.help", defaultValue: "Copy CUA trace", bundle: .module, comment: "Help text for copying CUA trace from dictation row."))
                     }
 
                     Button(action: onCopy) {
@@ -132,11 +132,11 @@ struct DictationRowView: View {
                 onCopy()
             }
         }
-        .alert("Delete Dictation", isPresented: $showDeleteConfirmation) {
-            Button("Delete", role: .destructive) { onDelete?() }
-            Button("Cancel", role: .cancel) {}
+        .alert(String(localized: "dictation_row.delete_dictation.alert_title", defaultValue: "Delete Dictation", bundle: .module, comment: "Alert title for confirming dictation deletion."), isPresented: $showDeleteConfirmation) {
+            Button(String(localized: "dictation_row.delete_dictation.confirm_button", defaultValue: "Delete", bundle: .module, comment: "Confirm button title for deleting dictation."), role: .destructive) { onDelete?() }
+            Button(String(localized: "dictation_row.delete_dictation.cancel_button", defaultValue: "Cancel", bundle: .module, comment: "Cancel button title for delete dictation alert."), role: .cancel) {}
         } message: {
-            Text("Are you sure you want to delete this dictation? This cannot be undone.")
+            Text(String(localized: "dictation_row.delete_dictation.alert_message", defaultValue: "Are you sure you want to delete this dictation? This cannot be undone.", bundle: .module, comment: "Alert message warning that dictation deletion is irreversible."))
         }
     }
 
@@ -150,7 +150,7 @@ struct DictationRowView: View {
                 ForEach(trace.events) { event in
                     VStack(alignment: .leading, spacing: MuesliTheme.spacing4) {
                         HStack(spacing: MuesliTheme.spacing8) {
-                            Text(event.step.map { "Step \($0)" } ?? "Run")
+                            Text(event.step.map { String(format: String(localized: "dictation_row.computer_use_trace.step_title", defaultValue: "Step %d", bundle: .module, comment: "Title for numbered computer use trace step."), $0) } ?? String(localized: "dictation_row.computer_use_trace.run_label", defaultValue: "Run", bundle: .module, comment: "Label for computer use trace run identifier."))
                                 .font(.system(size: 11, weight: .medium, design: .monospaced))
                                 .foregroundStyle(MuesliTheme.textTertiary)
                                 .frame(width: 48, alignment: .leading)
@@ -199,14 +199,14 @@ struct DictationRowView: View {
         switch status.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() {
         case "done":
             return "Done"
-        case "timed_out", "timedout":
-            return "Timed out"
+        case "timed_out", String(localized: "dictation_row.status.timed_out_token_compact", defaultValue: "timedout", bundle: .module, comment: "Normalized status token without underscore for timed out state."):
+            return String(localized: "dictation_row.status.timed_out", defaultValue: "Timed out", bundle: .module, comment: "User-facing status text for timed out run.")
         case "failed", "fail":
             return "Failed"
-        case "confirm", "needsconfirmation", "needs_confirmation":
+        case "confirm", String(localized: "dictation_row.status.needs_confirmation_token", defaultValue: "needsconfirmation", bundle: .module, comment: "Normalized status token for needs-confirmation state."), "needs_confirmation":
             return "Confirm"
         case "cancelled", "canceled":
-            return "Cancelled"
+            return String(localized: "dictation_row.status.cancelled", defaultValue: "Cancelled", bundle: .module, comment: "User-facing status text for cancelled run.")
         default:
             return status.capitalized
         }
