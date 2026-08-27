@@ -344,7 +344,7 @@ enum ComputerUseObservationCapture {
         if target != nil, let app, !app.isActive {
             app.activate(options: [.activateAllWindows])
         }
-        let appName = app?.localizedName ?? "Unknown"
+        let appName = app?.localizedName ?? String(localized: "computer_use_observation.app_name.unknown", defaultValue: "Unknown", bundle: .module, comment: "Fallback app name when the observed app is not known.")
         let bundleID = app?.bundleIdentifier ?? ""
         let capturedAt = Date()
 
