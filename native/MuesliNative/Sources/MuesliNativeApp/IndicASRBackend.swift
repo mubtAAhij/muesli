@@ -17,13 +17,13 @@ enum IndicASRLanguage: String, CaseIterable, Codable, Sendable {
 
     var label: String {
         switch self {
-        case .hindi: return "Hindi"
-        case .bengali: return "Bengali"
-        case .marathi: return "Marathi"
-        case .telugu: return "Telugu"
-        case .tamil: return "Tamil"
-        case .malayalam: return "Malayalam"
-        case .kannada: return "Kannada"
+        case .hindi: return String(localized: "indic_asr.language.hindi", defaultValue: "Hindi", bundle: .module, comment: "Display name for Hindi language option in Indic ASR backend.")
+        case .bengali: return String(localized: "indic_asr.language.bengali", defaultValue: "Bengali", bundle: .module, comment: "Display name for Bengali language option in Indic ASR backend.")
+        case .marathi: return String(localized: "indic_asr.language.marathi", defaultValue: "Marathi", bundle: .module, comment: "Display name for Marathi language option in Indic ASR backend.")
+        case .telugu: return String(localized: "indic_asr.language.telugu", defaultValue: "Telugu", bundle: .module, comment: "Display name for Telugu language option in Indic ASR backend.")
+        case .tamil: return String(localized: "indic_asr.language.tamil", defaultValue: "Tamil", bundle: .module, comment: "Display name for Tamil language option in Indic ASR backend.")
+        case .malayalam: return String(localized: "indic_asr.language.malayalam", defaultValue: "Malayalam", bundle: .module, comment: "Display name for Malayalam language option in Indic ASR backend.")
+        case .kannada: return String(localized: "indic_asr.language.kannada", defaultValue: "Kannada", bundle: .module, comment: "Display name for Kannada language option in Indic ASR backend.")
         }
     }
 
@@ -260,7 +260,7 @@ enum IndicASRModelStore {
         }
 
         throw NSError(domain: "IndicASR", code: 1, userInfo: [
-            NSLocalizedDescriptionKey: "Indic ASR CoreML artifacts are not installed correctly. Retry the download or set \(IndicASRConfig.envOverride) to a directory containing the CoreML packages.",
+            NSLocalizedDescriptionKey: String(format: String(localized: "indic_asr.error.coreml_artifacts_not_installed", defaultValue: "Indic ASR CoreML artifacts are not installed correctly. Retry the download or set %@ to a directory containing the CoreML packages.", bundle: .module, comment: "Error shown when Indic ASR CoreML artifacts are missing or invalid."), "\(IndicASRConfig.envOverride)"),
         ])
     }
 
@@ -394,7 +394,7 @@ private final class IndicASRTokenizer {
         for language in IndicASRLanguage.allCases {
             guard let tokens = raw[language.rawValue], tokens.count > IndicASRConfig.blankId else {
                 throw NSError(domain: "IndicASR", code: 20, userInfo: [
-                    NSLocalizedDescriptionKey: "Indic ASR vocab is missing \(language.rawValue) tokens.",
+                    NSLocalizedDescriptionKey: String(format: String(localized: "indic_asr.error.missing_vocab_tokens", defaultValue: "Indic ASR vocab is missing %@ tokens.", bundle: .module, comment: "Error shown when vocab tokens for selected language are missing."), "\(language.rawValue)"),
                 ])
             }
             parsed[language] = tokens
@@ -437,12 +437,12 @@ private final class IndicASRMelSpectrogram {
             let headerSize = 8 + 4 * MemoryLayout<Int32>.stride + 3 * MemoryLayout<Float>.stride
             guard data.count >= headerSize else {
                 throw NSError(domain: "IndicASR", code: 22, userInfo: [
-                    NSLocalizedDescriptionKey: "Indic ASR preprocessor constants file is truncated.",
+                    NSLocalizedDescriptionKey: String(localized: "indic_asr.error.preprocessor_constants_truncated", defaultValue: "Indic ASR preprocessor constants file is truncated.", bundle: .module, comment: "Error shown when Indic ASR preprocessor constants file is incomplete."),
                 ])
             }
             guard String(data: data[0..<8], encoding: .ascii) == "IASRPC01" else {
                 throw NSError(domain: "IndicASR", code: 23, userInfo: [
-                    NSLocalizedDescriptionKey: "Indic ASR preprocessor constants file has an unsupported format.",
+                    NSLocalizedDescriptionKey: String(localized: "indic_asr.error.preprocessor_constants_unsupported_format", defaultValue: "Indic ASR preprocessor constants file has an unsupported format.", bundle: .module, comment: "Error shown when preprocessor constants format is unsupported."),
                 ])
             }
 
@@ -468,7 +468,7 @@ private final class IndicASRMelSpectrogram {
                   nMels == IndicASRConfig.nMels,
                   data.count == expectedSize else {
                 throw NSError(domain: "IndicASR", code: 24, userInfo: [
-                    NSLocalizedDescriptionKey: "Indic ASR preprocessor constants do not match the expected model shape.",
+                    NSLocalizedDescriptionKey: String(localized: "indic_asr.error.preprocessor_constants_shape_mismatch", defaultValue: "Indic ASR preprocessor constants do not match the expected model shape.", bundle: .module, comment: "Error shown when preprocessor constants dimensions do not match model."),
                 ])
             }
 
@@ -510,7 +510,7 @@ private final class IndicASRMelSpectrogram {
         self.fftLog2n = log2n
         guard let setup = vDSP_create_fftsetup(log2n, FFTRadix(kFFTRadix2)) else {
             throw NSError(domain: "IndicASR", code: 21, userInfo: [
-                NSLocalizedDescriptionKey: "Failed to create Indic ASR FFT setup.",
+                NSLocalizedDescriptionKey: String(localized: "indic_asr.error.failed_to_create_fft_setup", defaultValue: "Failed to create Indic ASR FFT setup.", bundle: .module, comment: "Error shown when FFT setup initialization fails."),
             ])
         }
         self.fftSetup = setup
@@ -750,13 +750,13 @@ actor IndicASRTranscriber {
         }
 
         let task = Task<IndicASRModels, Error> {
-            progress?(0.05, "Loading Indic ASR CoreML artifacts...")
+            progress?(0.05, String(localized: "indic_asr.status.loading_coreml_artifacts", defaultValue: "Loading Indic ASR CoreML artifacts...", bundle: .module, comment: "Status text while loading Indic ASR CoreML artifact files."))
             let layout = try await IndicASRModelStore.resolvedLayout(
                 progress: progress,
                 progressSnapshot: progressSnapshot
             )
             try Task.checkCancellation()
-            progressSnapshot?(ModelDownloadProgress.preparing(modelID: IndicASRConfig.repoId, message: "Preparing Core ML models..."))
+            progressSnapshot?(ModelDownloadProgress.preparing(modelID: IndicASRConfig.repoId, message: String(localized: "indic_asr.status.preparing_coreml_models", defaultValue: "Preparing Core ML models...", bundle: .module, comment: "Status text while preparing Core ML models for inference.")))
             let loaded = try await IndicASRModels.load(from: layout)
             try Task.checkCancellation()
             progress?(1.0, "Indic ASR loaded")
@@ -797,7 +797,7 @@ actor IndicASRTranscriber {
         }
         guard let models else {
             throw NSError(domain: "IndicASR", code: 2, userInfo: [
-                NSLocalizedDescriptionKey: "Indic ASR models are not loaded.",
+                NSLocalizedDescriptionKey: String(localized: "indic_asr.error.models_not_loaded", defaultValue: "Indic ASR models are not loaded.", bundle: .module, comment: "Error shown when inference is requested before models are loaded."),
             ])
         }
 
@@ -925,12 +925,12 @@ private struct IndicASRRNNTGreedyDecoder {
             let strides = encoded.strides.map(\.intValue)
             guard shape.count == 3, strides.count == 3 else {
                 throw NSError(domain: "IndicASR", code: 40, userInfo: [
-                    NSLocalizedDescriptionKey: "Unexpected Indic ASR encoder output rank \(shape.count); expected [batch, encoderDim, frames]. Shape: \(encoded.shape).",
+                    NSLocalizedDescriptionKey: String(format: String(localized: "indic_asr.error.unexpected_encoder_output_rank", defaultValue: "Unexpected Indic ASR encoder output rank %d; expected [batch, encoderDim, frames]. Shape: %@.", bundle: .module, comment: "Error shown when encoder output tensor rank is not as expected."), shape.count, "\(encoded.shape)"),
                 ])
             }
             guard shape[1] == IndicASRConfig.encoderDim else {
                 throw NSError(domain: "IndicASR", code: 42, userInfo: [
-                    NSLocalizedDescriptionKey: "Unexpected Indic ASR encoder hidden dimension \(shape[1]); expected \(IndicASRConfig.encoderDim). Shape: \(encoded.shape).",
+                    NSLocalizedDescriptionKey: String(format: String(localized: "indic_asr.error.unexpected_encoder_hidden_dimension", defaultValue: "Unexpected Indic ASR encoder hidden dimension %d; expected %d. Shape: %@.", bundle: .module, comment: "Error shown when encoder hidden dimension does not match configured dimension."), shape[1], IndicASRConfig.encoderDim, "\(encoded.shape)"),
                 ])
             }
             let frameCapacity = shape[2]
@@ -942,7 +942,7 @@ private struct IndicASRRNNTGreedyDecoder {
         func copyFrame(_ frameIndex: Int, into destination: MLMultiArray) throws {
             guard frameIndex >= 0, frameIndex < frameCount else {
                 throw NSError(domain: "IndicASR", code: 43, userInfo: [
-                    NSLocalizedDescriptionKey: "Indic ASR frame index \(frameIndex) is outside available frame count \(frameCount).",
+                    NSLocalizedDescriptionKey: String(format: String(localized: "indic_asr.error.frame_index_out_of_range", defaultValue: "Indic ASR frame index %d is outside available frame count %d.", bundle: .module, comment: "Error shown when requested frame index exceeds available frames."), frameIndex, frameCount),
                 ])
             }
             let ptr = destination.dataPointer.bindMemory(to: Float.self, capacity: IndicASRConfig.encoderDim)
@@ -982,7 +982,7 @@ private struct IndicASRRNNTGreedyDecoder {
     private func transcribeChunk(audioSamples: [Float], language: IndicASRLanguage) async throws -> DecodedChunk {
         guard let jointPostNet = models.jointPostNets[language] else {
             throw NSError(domain: "IndicASR", code: 30, userInfo: [
-                NSLocalizedDescriptionKey: "Missing Indic ASR joint post-net for \(language.label).",
+                NSLocalizedDescriptionKey: String(format: String(localized: "indic_asr.error.missing_joint_postnet", defaultValue: "Missing Indic ASR joint post-net for %@.", bundle: .module, comment: "Error shown when language-specific joint post-net model is missing."), "\(language.label)"),
             ])
         }
 
@@ -1000,7 +1000,7 @@ private struct IndicASRRNNTGreedyDecoder {
         guard let encoded = encoderOutput.featureValue(for: "outputs")?.multiArrayValue,
               let encodedLengths = encoderOutput.featureValue(for: "encoded_lengths")?.multiArrayValue else {
             throw NSError(domain: "IndicASR", code: 31, userInfo: [
-                NSLocalizedDescriptionKey: "Indic ASR encoder did not return outputs.",
+                NSLocalizedDescriptionKey: String(localized: "indic_asr.error.encoder_no_outputs", defaultValue: "Indic ASR encoder did not return outputs.", bundle: .module, comment: "Error shown when Indic ASR encoder inference returns no output tensors."),
             ])
         }
 
@@ -1091,7 +1091,7 @@ private struct IndicASRRNNTGreedyDecoder {
               let nextHState = output.featureValue(for: "states")?.multiArrayValue,
               let nextCState = output.featureValue(for: "cell_state_out")?.multiArrayValue else {
             throw NSError(domain: "IndicASR", code: 32, userInfo: [
-                NSLocalizedDescriptionKey: "Indic ASR RNNT decoder did not return expected state outputs.",
+                NSLocalizedDescriptionKey: String(localized: "indic_asr.error.rnnt_decoder_missing_state_outputs", defaultValue: "Indic ASR RNNT decoder did not return expected state outputs.", bundle: .module, comment: "Error shown when RNNT decoder misses expected recurrent state outputs."),
             ])
         }
         return DecoderResult(outputs: decoderOutputs, hState: nextHState, cState: nextCState)
@@ -1103,12 +1103,12 @@ private struct IndicASRRNNTGreedyDecoder {
         let hasExpectedRank = shape.count == 2 || (shape.count == 3 && shape[2] == 1)
         guard hasExpectedRank, strides.count == shape.count else {
             throw NSError(domain: "IndicASR", code: 41, userInfo: [
-                NSLocalizedDescriptionKey: "Unexpected Indic ASR decoder output shape; expected [batch, predHiddenDim] or [batch, predHiddenDim, 1]. Shape: \(decoderOutputs.shape).",
+                NSLocalizedDescriptionKey: String(format: String(localized: "indic_asr.error.unexpected_decoder_output_shape", defaultValue: "Unexpected Indic ASR decoder output shape; expected [batch, predHiddenDim] or [batch, predHiddenDim, 1]. Shape: %@.", bundle: .module, comment: "Error shown when decoder output tensor rank or layout is unsupported."), "\(decoderOutputs.shape)"),
             ])
         }
         guard shape[1] == IndicASRConfig.predHiddenDim else {
             throw NSError(domain: "IndicASR", code: 44, userInfo: [
-                NSLocalizedDescriptionKey: "Unexpected Indic ASR decoder hidden dimension \(shape[1]); expected \(IndicASRConfig.predHiddenDim). Shape: \(decoderOutputs.shape).",
+                NSLocalizedDescriptionKey: String(format: String(localized: "indic_asr.error.unexpected_decoder_hidden_dimension", defaultValue: "Unexpected Indic ASR decoder hidden dimension %d; expected %d. Shape: %@.", bundle: .module, comment: "Error shown when decoder hidden dimension does not match configuration."), shape[1], IndicASRConfig.predHiddenDim, "\(decoderOutputs.shape)"),
             ])
         }
         let ptr = workspace.decoderFrameInput.dataPointer.bindMemory(to: Float.self, capacity: IndicASRConfig.predHiddenDim)
@@ -1129,7 +1129,7 @@ private struct IndicASRRNNTGreedyDecoder {
         let output = try await model.prediction(from: provider)
         guard let result = output.featureValue(for: outputName)?.multiArrayValue else {
             throw NSError(domain: "IndicASR", code: 33, userInfo: [
-                NSLocalizedDescriptionKey: "Indic ASR CoreML model did not return \(outputName).",
+                NSLocalizedDescriptionKey: String(format: String(localized: "indic_asr.error.coreml_missing_output", defaultValue: "Indic ASR CoreML model did not return %@.", bundle: .module, comment: "Error shown when expected CoreML output tensor name is missing."), "\(outputName)"),
             ])
         }
         return result
