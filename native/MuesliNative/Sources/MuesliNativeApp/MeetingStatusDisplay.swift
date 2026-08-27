@@ -5,15 +5,15 @@ extension MeetingStatus {
     var displayLabel: String {
         switch self {
         case .recording:
-            return "Recording"
+            return String(localized: "meeting_status_display.label.recording", defaultValue: "Recording", bundle: .module, comment: "Status label indicating a meeting is being recorded.")
         case .processing:
-            return "Processing"
+            return String(localized: "meeting_status_display.label.processing", defaultValue: "Processing", bundle: .module, comment: "Status label indicating meeting output is processing.")
         case .completed:
-            return "Completed"
+            return String(localized: "meeting_status_display.label.completed", defaultValue: "Completed", bundle: .module, comment: "Status label indicating meeting processing has completed.")
         case .noteOnly:
-            return "Note only"
+            return String(localized: "meeting_status_display.label.note_only", defaultValue: "Note only", bundle: .module, comment: "Status label indicating a note-only meeting entry.")
         case .failed:
-            return "Needs attention"
+            return String(localized: "meeting_status_display.label.needs_attention", defaultValue: "Needs attention", bundle: .module, comment: "Status label indicating the meeting needs user attention.")
         }
     }
 
