@@ -6,7 +6,7 @@ enum MeetingPreviewText {
             .split(whereSeparator: \.isWhitespace)
             .joined(separator: " ")
 
-        guard !compact.isEmpty else { return "No notes yet" }
+        guard !compact.isEmpty else { return String(localized: "meeting_preview.snippet.empty", defaultValue: "No notes yet", bundle: .module, comment: "Placeholder text for empty meeting preview notes.") }
         guard compact.count > limit else { return compact }
 
         let prefixCount = max(0, limit - 3)
