@@ -57,33 +57,33 @@ struct DashboardRootView: View {
             }
         }
         .alert(
-            appState.contributionMilestonePrompt?.title ?? "Muesli milestone",
+            appState.contributionMilestonePrompt?.title ?? String(localized: "dashboard_root_view.title.muesli_milestone", defaultValue: "Muesli milestone", bundle: .module, comment: "Title of dashboard milestone prompt panel."),
             isPresented: Binding(
                 get: { appState.contributionMilestonePrompt != nil },
                 set: { if !$0 { controller.dismissContributionMilestonePrompt() } }
             )
         ) {
             if appState.contributionMilestonePrompt?.showGitHubStar == true {
-                Button("Star on GitHub") {
+                Button(String(localized: "dashboard_root_view.button.star_on_github", defaultValue: "Star on GitHub", bundle: .module, comment: "Button title to open GitHub and star the project.")) {
                     controller.openContributionMilestoneAction(.githubStar)
                 }
             }
             if appState.contributionMilestonePrompt?.showBuyMeCoffee == true {
-                Button("Buy Me a Coffee") {
+                Button(String(localized: "dashboard_root_view.button.buy_me_a_coffee", defaultValue: "Buy Me a Coffee", bundle: .module, comment: "Button title to open Buy Me a Coffee support page.")) {
                     controller.openContributionMilestoneAction(.buyMeCoffee)
                 }
             }
             if appState.contributionMilestonePrompt?.showTweetAboutMuesli == true {
-                Button("Tweet about Muesli") {
+                Button(String(localized: "dashboard_root_view.button.tweet_about_muesli", defaultValue: "Tweet about Muesli", bundle: .module, comment: "Button title to share about Muesli on X/Twitter.")) {
                     controller.openContributionMilestoneAction(.tweetAboutMuesli)
                 }
             }
             if appState.contributionMilestonePrompt?.showPostOnLinkedIn == true {
-                Button("Post about Muesli on LinkedIn") {
+                Button(String(localized: "dashboard_root_view.button.post_on_linkedin", defaultValue: "Post about Muesli on LinkedIn", bundle: .module, comment: "Button title to share about Muesli on LinkedIn.")) {
                     controller.openContributionMilestoneAction(.postOnLinkedIn)
                 }
             }
-            Button("Later", role: .cancel) {
+            Button(String(localized: "dashboard_root_view.button.later", defaultValue: "Later", bundle: .module, comment: "Button title to dismiss milestone prompt for now."), role: .cancel) {
                 controller.dismissContributionMilestonePrompt()
             }
         } message: {
@@ -122,7 +122,7 @@ struct DashboardRootView: View {
                     appState.selectedMeetingID = nil
                     appState.selectedMeetingRecord = nil
                 },
-                backLabel: "Back to Search"
+                backLabel: String(localized: "dashboard_root_view.back_to_search", defaultValue: "Back to Search", bundle: .module, comment: "Navigation button title to return to search view.")
             )
             .id(id)
         } else if appState.selectedTab == .timeline,
@@ -133,7 +133,7 @@ struct DashboardRootView: View {
                 controller: controller,
                 appState: appState,
                 onBack: { controller.showTimelineHome() },
-                backLabel: "Back to Timeline"
+                backLabel: String(localized: "dashboard_root_view.back_to_timeline", defaultValue: "Back to Timeline", bundle: .module, comment: "Navigation button title to return to timeline view.")
             )
             .id(id)
         } else if appState.isSearchActive {
