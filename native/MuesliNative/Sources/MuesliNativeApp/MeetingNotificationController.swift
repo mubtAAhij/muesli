@@ -381,7 +381,7 @@ final class MeetingNotificationController {
         progressLayer.beginTime = resumeHostTime - pausedTime
     }
 
-    private func animateOut(completion: @escaping () -> Void) {
+    private func animateOut(completion: @Sendable @escaping () -> Void) {
         guard let panel else { completion(); return }
         NSAnimationContext.runAnimationGroup({ ctx in
             ctx.duration = 0.2
