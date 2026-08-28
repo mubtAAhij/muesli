@@ -143,14 +143,21 @@ final class ChatGPTAuthManager {
                 continuation.resume(throwing: ChatGPTAuthError.portInUse)
                 return
             }
-            let stateLock = NSLock()
-            var resumed = false
+            final class ResumeState: @unchecked Sendable {
+                private let lock = NSLock()
+                private var resumed = false
+
+                func markResumed() -> Bool {
+                    lock.lock()
+                    defer { lock.unlock() }
+                    guard !resumed else { return false }
+                    resumed = true
+                    return true
+                }
+            }
+            let resumeState = ResumeState()
             let markResumed: @Sendable () -> Bool = {
-                stateLock.lock()
-                defer { stateLock.unlock() }
-                guard !resumed else { return false }
-                resumed = true
-                return true
+                resumeState.markResumed()
             }
 
             let timeoutWork = DispatchWorkItem { [weak listener] in
