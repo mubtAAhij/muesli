@@ -145,12 +145,16 @@ final class ChatGPTAuthManager {
             }
             let stateLock = NSLock()
             var resumed = false
-
-            let timeoutWork = DispatchWorkItem { [weak listener] in
+            let markResumed: @Sendable () -> Bool = {
                 stateLock.lock()
                 defer { stateLock.unlock() }
-                guard !resumed else { return }
+                guard !resumed else { return false }
                 resumed = true
+                return true
+            }
+
+            let timeoutWork = DispatchWorkItem { [weak listener] in
+                guard markResumed() else { return }
                 listener?.cancel()
                 continuation.resume(throwing: ChatGPTAuthError.callbackTimeout)
             }
@@ -161,10 +165,7 @@ final class ChatGPTAuthManager {
 
             listener.stateUpdateHandler = { state in
                 if case .failed = state {
-                    stateLock.lock()
-                    defer { stateLock.unlock() }
-                    guard !resumed else { return }
-                    resumed = true
+                    guard markResumed() else { return }
                     timeoutWork.cancel()
                     continuation.resume(throwing: ChatGPTAuthError.portInUse)
                 }
@@ -180,10 +181,7 @@ final class ChatGPTAuthManager {
                         listener.cancel()
                         timeoutWork.cancel()
                     }
-                    stateLock.lock()
-                    defer { stateLock.unlock() }
-                    guard !resumed else { return }
-                    resumed = true
+                    guard markResumed() else { return }
 
                     guard let data, let request = String(data: data, encoding: .utf8) else {
                         continuation.resume(throwing: ChatGPTAuthError.callbackMissingCode)
