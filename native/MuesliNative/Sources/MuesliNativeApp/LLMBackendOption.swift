@@ -11,7 +11,7 @@ struct LLMBackendOption: Equatable, Identifiable {
     static let openRouter = LLMBackendOption(backend: "openrouter", label: "OpenRouter")
     static let ollama = LLMBackendOption(backend: "ollama", label: "Ollama")
     static let lmStudio = LLMBackendOption(backend: "lmstudio", label: "LM Studio")
-    static let customLLM = LLMBackendOption(backend: "custom_llm", label: "Custom LLM")
+    static let customLLM = LLMBackendOption(backend: "custom_llm", label: String(localized: "llm_backend_option.custom_llm.title", defaultValue: "Custom LLM", bundle: .module, comment: "Display name for the custom LLM backend option."))
 
     static let all: [LLMBackendOption] = [.chatGPT, .openAI, .openRouter, .ollama, .lmStudio, .customLLM]
 
@@ -33,7 +33,7 @@ struct TranscriptCleanupBackendOption: Equatable, Identifiable {
 
     static let local = TranscriptCleanupBackendOption(
         backend: "local",
-        label: "Local Model",
+        label: String(localized: "transcript_cleanup_backend_option.local_model.title", defaultValue: "Local Model", bundle: .module, comment: "Display name for the local model transcript cleanup backend option."),
         llmBackend: nil
     )
 
