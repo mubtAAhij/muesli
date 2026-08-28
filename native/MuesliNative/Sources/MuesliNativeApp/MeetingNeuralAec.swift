@@ -404,9 +404,6 @@ final class MeetingNeuralAec {
         let maxCandidateDelaySamples = delayEstimator.maxCandidateDelaySamples
         let retentionSamples = delayEstimator.windowSamples + maxCandidateDelaySamples
         let latestComparableSystemSample = min(systemAbsoluteEndSample, micSamplesReceived - maxCandidateDelaySamples)
-        let oldestNeededForEstimator = latestComparableSystemSample > 0
-            ? max(0, latestComparableSystemSample - delayEstimator.windowSamples)
-            : max(0, systemSamplesReceived - retentionSamples)
         // AEC constraint: only protect system samples that queued mic frames actually need.
         // When the pending buffer is empty there is nothing to protect, so trim freely.
         let oldestNeededForAec = pendingMicSamples.isEmpty
