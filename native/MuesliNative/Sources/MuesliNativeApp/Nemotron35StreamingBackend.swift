@@ -100,7 +100,7 @@ actor Nemotron35StreamingTranscriber: NemotronStreamingTranscribing {
         }
 
         fputs("[nemotron35] loading CoreML models...\n", stderr)
-        progressSnapshot?(ModelDownloadProgress.preparing(modelID: Nemotron35ModelStore.repoID, message: "Preparing Nemotron 3.5 Core ML models..."))
+        progressSnapshot?(ModelDownloadProgress.preparing(modelID: Nemotron35ModelStore.repoID, message: String(localized: "nemotron35_backend.status.preparing_coreml_models", defaultValue: "Preparing Nemotron 3.5 Core ML models...", bundle: .module, comment: "Status message shown while preparing Nemotron Core ML models.")))
         let mlConfig = MLModelConfiguration()
         mlConfig.computeUnits = .all
 
