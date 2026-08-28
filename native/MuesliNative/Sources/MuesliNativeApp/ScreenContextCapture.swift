@@ -40,7 +40,7 @@ enum DictationContextCapture {
     /// Lightweight and deterministic — no screenshots, no OCR.
     static func capture() -> DictationContext {
         let app = NSWorkspace.shared.frontmostApplication
-        let appName = app?.localizedName ?? "Unknown"
+        let appName = app?.localizedName ?? String(localized: "screen_context_capture.value.unknown", defaultValue: "Unknown", bundle: .module, comment: "Fallback value when screen context information is unavailable.")
         let bundleID = app?.bundleIdentifier ?? ""
 
         var docContext = ""
@@ -67,18 +67,18 @@ enum DictationContextCapture {
 
     /// Formats for the post-processor LLM prompt. Compact, high-signal.
     static func formatForPrompt(_ ctx: DictationContext) -> String {
-        var parts = "App: \(ctx.appName)"
+        var parts = String(format: String(localized: "screen_context_capture.prompt.app_label", defaultValue: "App: %@", bundle: .module, comment: "Prompt section showing the current app name in captured screen context."), "\(ctx.appName)")
         if let url = ctx.url {
             parts += " (\(url))"
         }
         if !ctx.documentContext.isEmpty {
-            parts += "\nDocument context: \(ctx.documentContext)"
+            parts += "\n" + String(format: String(localized: "screen_context_capture.prompt.document_context", defaultValue: "Document context: %@", bundle: .module, comment: "Prompt section label followed by captured document context text."), "\(ctx.documentContext)")
         }
         if !ctx.selectedText.isEmpty {
-            parts += "\nSelected text: \(ctx.selectedText)"
+            parts += "\n" + String(format: String(localized: "screen_context_capture.prompt.selected_text", defaultValue: "Selected text: %@", bundle: .module, comment: "Prompt section label followed by selected text from the active app."), "\(ctx.selectedText)")
         }
         if !ctx.ocrText.isEmpty {
-            parts += "\nOCR screen text: \(ctx.ocrText)"
+            parts += "\n" + String(format: String(localized: "screen_context_capture.prompt.ocr_screen_text", defaultValue: "OCR screen text: %@", bundle: .module, comment: "Prompt section label followed by OCR-derived screen text."), "\(ctx.ocrText)")
         }
         return parts
     }
@@ -212,7 +212,7 @@ enum ScreenContextCapture {
     ) async -> ScreenContext? {
         guard CGPreflightScreenCaptureAccess() else { return nil }
         let app = NSWorkspace.shared.frontmostApplication
-        let appName = app?.localizedName ?? "Unknown"
+        let appName = app?.localizedName ?? String(localized: "screen_context_capture.value.unknown", defaultValue: "Unknown", bundle: .module, comment: "Fallback value when screen context information is unavailable.")
         let bundleID = app?.bundleIdentifier ?? ""
 
         let pid = app?.processIdentifier ?? 0
@@ -341,10 +341,10 @@ actor MeetingScreenContextCollector {
 
                 var sections: [String] = []
                 if !meaningfulAppContext.isEmpty {
-                    sections.append("App context:\n\(String(meaningfulAppContext.prefix(700)))")
+                    sections.append(String(format: String(localized: "screen_context_capture.periodic.app_context_section", defaultValue: "App context:\n%@", bundle: .module, comment: "Periodic capture section containing summarized app context text."), String(meaningfulAppContext.prefix(700))))
                 }
                 if !ocrText.isEmpty {
-                    sections.append("OCR visual text:\n\(String(ocrText.prefix(1000)))")
+                    sections.append(String(format: String(localized: "screen_context_capture.periodic.ocr_visual_text_section", defaultValue: "OCR visual text:\n%@", bundle: .module, comment: "Periodic capture section containing OCR visual text excerpt."), String(ocrText.prefix(1000))))
                 }
 
                 let contextText = sections.joined(separator: "\n\n")
