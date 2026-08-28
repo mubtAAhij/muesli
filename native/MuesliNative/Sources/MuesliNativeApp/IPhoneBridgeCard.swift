@@ -6,20 +6,20 @@ import TelemetryDeck
 enum ICloudBridgeWorkingCopy {
     static func title(isActivationPending: Bool) -> String {
         isActivationPending
-            ? "Setting up private iCloud sync"
-            : "Syncing with private iCloud"
+            ? String(localized: "iphone_bridge.status.setting_up_private_icloud_sync", defaultValue: "Setting up private iCloud sync", bundle: .module, comment: "Status label while private iCloud sync setup is in progress.")
+            : String(localized: "iphone_bridge.status.syncing_with_private_icloud", defaultValue: "Syncing with private iCloud", bundle: .module, comment: "Status label while syncing text records with private iCloud.")
     }
 
     static func subtitle(isActivationPending: Bool) -> String {
         isActivationPending
-            ? "Creating the sync channel and pulling your latest text records."
-            : "Checking for new text and uploading local changes."
+            ? String(localized: "iphone_bridge.subtitle.creating_sync_channel", defaultValue: "Creating the sync channel and pulling your latest text records.", bundle: .module, comment: "Subtitle explaining sync channel creation and initial pull.")
+            : String(localized: "iphone_bridge.subtitle.checking_for_new_text", defaultValue: "Checking for new text and uploading local changes.", bundle: .module, comment: "Subtitle explaining routine text sync activity.")
     }
 
     static func buttonHelp(isActivationPending: Bool) -> String {
         isActivationPending
-            ? "Sync setup is in progress"
-            : "Text sync is in progress"
+            ? String(localized: "iphone_bridge.button_help.sync_setup_in_progress", defaultValue: "Sync setup is in progress", bundle: .module, comment: "Help text for disabled action while sync setup is in progress.")
+            : String(localized: "iphone_bridge.button_help.text_sync_in_progress", defaultValue: "Text sync is in progress", bundle: .module, comment: "Help text for disabled action while text sync is active.")
     }
 }
 struct IPhoneBridgeCard: View {
@@ -64,7 +64,7 @@ struct IPhoneBridgeCard: View {
                         .clipShape(RoundedRectangle(cornerRadius: MuesliTheme.cornerSmall))
                 }
                 .buttonStyle(.plain)
-                .help("Show iPhone setup QR")
+                .help(String(localized: "iphone_bridge.help.show_setup_qr", defaultValue: "Show iPhone setup QR", bundle: .module, comment: "Action label to show QR code for iPhone setup."))
             }
 
             Button(action: primaryAction) {
@@ -98,7 +98,7 @@ struct IPhoneBridgeCard: View {
                     .clipShape(RoundedRectangle(cornerRadius: MuesliTheme.cornerSmall))
             }
             .buttonStyle(.plain)
-            .help("Hide iOS companion prompt")
+            .help(String(localized: "iphone_bridge.help.hide_ios_companion_prompt", defaultValue: "Hide iOS companion prompt", bundle: .module, comment: "Action label to hide iOS companion prompt."))
         }
         .padding(MuesliTheme.spacing12)
         .background(MuesliTheme.backgroundRaised)
@@ -170,26 +170,26 @@ struct IPhoneBridgeCard: View {
         case .active:
             guard let deviceName = appState.iCloudBridgeCompanionDeviceName else {
                 if let lastSyncedAt = appState.iCloudLastSyncedAt {
-                    return "iCloud sync active · \(relativeSyncTime(lastSyncedAt))"
+                    return String(format: String(localized: "iphone_bridge.title.icloud_sync_active_with_time", defaultValue: "iCloud sync active · %@", bundle: .module, comment: "Title showing active iCloud sync with relative sync time."), "\(relativeSyncTime(lastSyncedAt))")
                 }
-                return "iCloud sync active"
+                return String(localized: "iphone_bridge.title.icloud_sync_active", defaultValue: "iCloud sync active", bundle: .module, comment: "Title showing active iCloud sync without timestamp.")
             }
             if let lastSyncedAt = appState.iCloudLastSyncedAt {
-                return "Synced with \(deviceName) · \(relativeSyncTime(lastSyncedAt))"
+                return String(format: String(localized: "iphone_bridge.title.synced_with_device_with_time", defaultValue: "Synced with %@ · %@", bundle: .module, comment: "Title showing synced device name with relative sync time."), "\(deviceName)", "\(relativeSyncTime(lastSyncedAt))")
             }
-            return "Synced with \(deviceName)"
+            return String(format: String(localized: "iphone_bridge.title.synced_with_device", defaultValue: "Synced with %@", bundle: .module, comment: "Title showing synced device name without timestamp."), "\(deviceName)")
         case .checkingICloud:
-            return "Setting up private iCloud sync"
+            return String(localized: "iphone_bridge.title.setting_up_private_icloud_sync", defaultValue: "Setting up private iCloud sync", bundle: .module, comment: "Title shown while private iCloud sync setup is in progress.")
         case .syncing:
             return ICloudBridgeWorkingCopy.title(
                 isActivationPending: appState.isICloudBridgeActivationPending
             )
         case .needsICloud:
-            return "Sign in to iCloud to sync"
+            return String(localized: "iphone_bridge.title.sign_in_to_icloud_to_sync", defaultValue: "Sign in to iCloud to sync", bundle: .module, comment: "Title prompting user to sign in to iCloud for sync.")
         case .error:
-            return "iPhone sync needs attention"
+            return String(localized: "iphone_bridge.title.sync_needs_attention", defaultValue: "iPhone sync needs attention", bundle: .module, comment: "Title indicating iPhone sync requires user attention.")
         case .notConfigured:
-            return "Use Muesli on iPhone"
+            return String(localized: "iphone_bridge.title.use_muesli_on_iphone", defaultValue: "Use Muesli on iPhone", bundle: .module, comment: "Title encouraging user to use Muesli on iPhone.")
         }
     }
 
@@ -197,28 +197,28 @@ struct IPhoneBridgeCard: View {
         switch bridgeState {
         case .active:
             if let deviceName = appState.iCloudBridgeCompanionDeviceName {
-                return "Private iCloud text sync is on with \(deviceName). Audio stays local."
+                return String(format: String(localized: "iphone_bridge.subtitle.sync_on_with_device_audio_local", defaultValue: "Private iCloud text sync is on with %@. Audio stays local.", bundle: .module, comment: "Subtitle describing active sync with a specific device and local audio behavior."), "\(deviceName)")
             }
-            return "Scan the QR code to connect your iPhone. Audio stays local."
+            return String(localized: "iphone_bridge.subtitle.scan_qr_connect_iphone", defaultValue: "Scan the QR code to connect your iPhone. Audio stays local.", bundle: .module, comment: "Subtitle instructing user to scan QR to connect iPhone.")
         case .checkingICloud:
-            return "Checking this Mac's iCloud account..."
+            return String(localized: "iphone_bridge.subtitle.checking_macos_icloud_account", defaultValue: "Checking this Mac's iCloud account...", bundle: .module, comment: "Subtitle shown while validating this Mac's iCloud account.")
         case .syncing:
             return ICloudBridgeWorkingCopy.subtitle(
                 isActivationPending: appState.isICloudBridgeActivationPending
             )
         case .needsICloud, .error:
-            return appState.iCloudBridgeMessage ?? "Open iCloud settings, then try again."
+            return appState.iCloudBridgeMessage ?? String(localized: "iphone_bridge.subtitle.open_icloud_settings_try_again", defaultValue: "Open iCloud settings, then try again.", bundle: .module, comment: "Subtitle instructing user to open iCloud settings and retry.")
         case .notConfigured:
-            return "Your Muesli history follows you through private iCloud. Audio stays local."
+            return String(localized: "iphone_bridge.subtitle.history_follows_private_icloud", defaultValue: "Your Muesli history follows you through private iCloud. Audio stays local.", bundle: .module, comment: "Subtitle explaining private iCloud text history sync and local audio behavior.")
         }
     }
 
     private var buttonTitle: String {
         switch bridgeState {
-        case .active: return "Sync"
-        case .checkingICloud, .syncing: return "Syncing"
-        case .needsICloud, .error: return "Try again"
-        case .notConfigured: return "Set up private iCloud sync"
+        case .active: return String(localized: "iphone_bridge.button_title.sync", defaultValue: "Sync", bundle: .module, comment: "Primary action button title to start text sync.")
+        case .checkingICloud, .syncing: return String(localized: "iphone_bridge.button_title.syncing", defaultValue: "Syncing", bundle: .module, comment: "Primary action button title while sync is in progress.")
+        case .needsICloud, .error: return String(localized: "iphone_bridge.button_title.try_again", defaultValue: "Try again", bundle: .module, comment: "Primary action button title to retry iPhone sync setup.")
+        case .notConfigured: return String(localized: "iphone_bridge.button_title.set_up_private_icloud_sync", defaultValue: "Set up private iCloud sync", bundle: .module, comment: "Primary action button title to start private iCloud sync setup.")
         }
     }
 
@@ -233,15 +233,15 @@ struct IPhoneBridgeCard: View {
     private var buttonHelp: String {
         switch bridgeState {
         case .active:
-            return "Sync text with iCloud"
+            return String(localized: "iphone_bridge.button_help.sync_text_with_icloud", defaultValue: "Sync text with iCloud", bundle: .module, comment: "Help text for sync button when text sync is available.")
         case .checkingICloud:
-            return "Sync setup is in progress"
+            return String(localized: "iphone_bridge.button_help.sync_setup_in_progress", defaultValue: "Sync setup is in progress", bundle: .module, comment: "Help text for sync button while setup is ongoing.")
         case .syncing:
             return ICloudBridgeWorkingCopy.buttonHelp(
                 isActivationPending: appState.isICloudBridgeActivationPending
             )
         default:
-            return "Set up private iCloud text sync"
+            return String(localized: "iphone_bridge.button_help.set_up_private_icloud_text_sync", defaultValue: "Set up private iCloud text sync", bundle: .module, comment: "Help text prompting user to configure private iCloud text sync.")
         }
     }
 
@@ -305,10 +305,10 @@ private struct IPhoneBridgeQRCodeSheet: View {
         VStack(alignment: .leading, spacing: MuesliTheme.spacing16) {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: MuesliTheme.spacing4) {
-                    Text("Open Muesli on iPhone")
+                    Text(String(localized: "iphone_bridge.open_muesli_on_iphone", defaultValue: "Open Muesli on iPhone", bundle: .module, comment: "Button label to open Muesli app page on iPhone."))
                         .font(MuesliTheme.title3())
                         .foregroundStyle(MuesliTheme.textPrimary)
-                    Text("Scan this after installing the iPhone app. The QR only opens setup; private iCloud does the actual sync.")
+                    Text(String(localized: "iphone_bridge.scan_after_install_description", defaultValue: "Scan this after installing the iPhone app. The QR only opens setup; private iCloud does the actual sync.", bundle: .module, comment: "Description text explaining the QR setup flow for iPhone bridge."))
                         .font(MuesliTheme.caption())
                         .foregroundStyle(MuesliTheme.textTertiary)
                         .fixedSize(horizontal: false, vertical: true)
@@ -335,19 +335,19 @@ private struct IPhoneBridgeQRCodeSheet: View {
                     .clipShape(RoundedRectangle(cornerRadius: MuesliTheme.cornerSmall))
 
                 VStack(alignment: .leading, spacing: MuesliTheme.spacing8) {
-                    Label("Same iCloud account", systemImage: "icloud")
-                    Label("Text sync only", systemImage: "text.badge.checkmark")
-                    Label("Audio stays local", systemImage: "lock")
+                    Label(String(localized: "iphone_bridge.benefit.same_icloud_account", defaultValue: "Same iCloud account", bundle: .module, comment: "Benefit bullet indicating both devices use the same iCloud account."), systemImage: "icloud")
+                    Label(String(localized: "iphone_bridge.benefit.text_sync_only", defaultValue: "Text sync only", bundle: .module, comment: "Benefit bullet indicating only text is synced."), systemImage: "text.badge.checkmark")
+                    Label(String(localized: "iphone_bridge.benefit.audio_stays_local", defaultValue: "Audio stays local", bundle: .module, comment: "Benefit bullet indicating audio is not synced to cloud."), systemImage: "lock")
                 }
                 .font(MuesliTheme.caption())
                 .foregroundStyle(MuesliTheme.textSecondary)
             }
 
             HStack(spacing: MuesliTheme.spacing8) {
-                Button("Open iPhone app page") { NSWorkspace.shared.open(installURL) }
+                Button(String(localized: "iphone_bridge.button.open_iphone_app_page", defaultValue: "Open iPhone app page", bundle: .module, comment: "Button label to open the iPhone app page.")) { NSWorkspace.shared.open(installURL) }
                     .buttonStyle(.bordered)
 
-                Button(didCopySetupLink ? "Copied!" : "Copy setup link") {
+                Button(didCopySetupLink ? String(localized: "iphone_bridge.copied", defaultValue: "Copied!", bundle: .module, comment: "Transient label shown after copying setup link.") : String(localized: "iphone_bridge.button.copy_setup_link", defaultValue: "Copy setup link", bundle: .module, comment: "Button label to copy iPhone setup link.")) {
                     NSPasteboard.general.clearContents()
                     NSPasteboard.general.setString(deepLinkURL.absoluteString, forType: .string)
                     didCopySetupLink = true
@@ -382,7 +382,7 @@ private struct QRCodeImage: View {
                     .foregroundStyle(MuesliTheme.textTertiary)
             }
         }
-        .accessibilityLabel("iPhone sync setup QR code")
+        .accessibilityLabel(String(localized: "iphone_bridge.accessibility.qr_code_label", defaultValue: "iPhone sync setup QR code", bundle: .module, comment: "Accessibility label describing the iPhone sync setup QR code."))
         .onAppear {
             if cachedImage == nil {
                 cachedImage = makeQRCodeImage(payload: payload)
