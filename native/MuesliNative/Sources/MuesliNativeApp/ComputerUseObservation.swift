@@ -641,7 +641,7 @@ enum ComputerUseObservationCapture {
            let frame = cgWindowBounds(appWindow) ?? fallbackFrame,
            frame.width > 0,
            frame.height > 0,
-           let image = captureWindowImage(
+           let image = captureWindowImageAvailable(
                .null,
                .optionIncludingWindow,
                windowID,
@@ -652,13 +652,26 @@ enum ComputerUseObservationCapture {
         }
 
         guard let displayFrame = displayFrame(containing: fallbackFrame),
-              let image = captureWindowImage(
+              let image = captureWindowImageAvailable(
                   displayFrame,
                   .optionOnScreenOnly,
                   kCGNullWindowID,
                   [.bestResolution]
               ) else { return nil }
         return screenshotObservation(image: image, frame: displayFrame)
+    }
+
+    private static func captureWindowImageAvailable(
+        _ screenBounds: CGRect,
+        _ listOption: CGWindowListOption,
+        _ windowID: CGWindowID,
+        _ imageOption: CGWindowImageOption
+    ) -> CGImage? {
+        if #available(macOS 14.0, *) {
+            return CGWindowListCreateImage(screenBounds, listOption, windowID, imageOption)
+        } else {
+            return captureWindowImage(screenBounds, listOption, windowID, imageOption)
+        }
     }
 
     @available(macOS, deprecated: 14.0, message: "Please use ScreenCaptureKit instead.")
