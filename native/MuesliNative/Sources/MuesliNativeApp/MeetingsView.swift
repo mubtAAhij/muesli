@@ -594,7 +594,7 @@ struct MeetingsView: View {
     @ViewBuilder
     private func browserHeaderMeta(meetingCount: Int) -> some View {
         HStack(spacing: MuesliTheme.spacing8) {
-            Text(String(localized: "meetings.count.summary", defaultValue: "%#@meetingCount@", bundle: .module, comment: "Summary label showing number of meetings in the current context."), tableName: nil, bundle: .module, comment: "Summary label showing number of meetings in the current context.", locale: nil)
+            Text(LocalizedStringKey("meetings.count.summary"), tableName: nil, bundle: .module, comment: "Summary label showing number of meetings in the current context.")
                 .font(MuesliTheme.callout())
                 .foregroundStyle(MuesliTheme.textSecondary)
                 .fixedSize()
