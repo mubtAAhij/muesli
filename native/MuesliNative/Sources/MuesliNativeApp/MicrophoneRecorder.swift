@@ -47,7 +47,7 @@ final class MicrophoneRecorder: NSObject, AVAudioRecorderDelegate, @unchecked Se
             guard preparedInputDeviceID != preferredInputDeviceID else { return }
             guard !isRecording else {
                 throw NSError(domain: "MicrophoneRecorder", code: 4, userInfo: [
-                    NSLocalizedDescriptionKey: "Cannot change microphone input while recording",
+                    NSLocalizedDescriptionKey: String(localized: "microphone_recorder.error.cannot_change_input_while_recording", defaultValue: "Cannot change microphone input while recording", bundle: .module, comment: "Error shown when attempting to switch microphone input during active recording."),
                 ])
             }
             cleanupPreparedRecording(removeFile: true)
@@ -73,7 +73,7 @@ final class MicrophoneRecorder: NSObject, AVAudioRecorderDelegate, @unchecked Se
             nextRecorder.isMeteringEnabled = true
             guard nextRecorder.prepareToRecord() else {
                 throw NSError(domain: "MicrophoneRecorder", code: 6, userInfo: [
-                    NSLocalizedDescriptionKey: "Microphone recorder failed to prepare",
+                    NSLocalizedDescriptionKey: String(localized: "microphone_recorder.error.failed_to_prepare", defaultValue: "Microphone recorder failed to prepare", bundle: .module, comment: "Error shown when microphone recorder preparation fails."),
                 ])
             }
             preparedURL = fileURL
@@ -132,13 +132,13 @@ final class MicrophoneRecorder: NSObject, AVAudioRecorderDelegate, @unchecked Se
         try prepare()
         guard let recorder else {
             throw NSError(domain: "MicrophoneRecorder", code: 1, userInfo: [
-                NSLocalizedDescriptionKey: "No audio recorder available",
+                NSLocalizedDescriptionKey: String(localized: "microphone_recorder.error.no_audio_recorder_available", defaultValue: "No audio recorder available", bundle: .module, comment: "Error shown when no microphone audio recorder instance is available."),
             ])
         }
         resetCaptureState()
         guard recorder.record() else {
             throw NSError(domain: "MicrophoneRecorder", code: 2, userInfo: [
-                NSLocalizedDescriptionKey: "Microphone recorder failed to start",
+                NSLocalizedDescriptionKey: String(localized: "microphone_recorder.error.failed_to_start", defaultValue: "Microphone recorder failed to start", bundle: .module, comment: "Error shown when microphone recorder fails to start."),
             ])
         }
         isRecording = true
@@ -348,7 +348,7 @@ final class MicrophoneRecorder: NSObject, AVAudioRecorderDelegate, @unchecked Se
             return
         }
         let resolvedError = error ?? NSError(domain: "MicrophoneRecorder", code: 5, userInfo: [
-            NSLocalizedDescriptionKey: "Microphone recording stopped unexpectedly",
+            NSLocalizedDescriptionKey: String(localized: "microphone_recorder.error.recording_stopped_unexpectedly", defaultValue: "Microphone recording stopped unexpectedly", bundle: .module, comment: "Error shown when microphone recording terminates unexpectedly."),
         ])
         lock.unlock()
         onRecordingFailed?(resolvedError, activeRecordingID)
@@ -366,7 +366,7 @@ private final class DefaultInputOverride {
         guard previousDeviceID != preferredDeviceID else { return }
         guard Self.setDefaultInputDeviceID(preferredDeviceID) else {
             throw NSError(domain: "MicrophoneRecorder", code: 3, userInfo: [
-                NSLocalizedDescriptionKey: "Could not select preferred microphone",
+                NSLocalizedDescriptionKey: String(localized: "microphone_recorder.error.could_not_select_preferred_microphone", defaultValue: "Could not select preferred microphone", bundle: .module, comment: "Error shown when selecting preferred microphone input fails."),
             ])
         }
         didApply = true
