@@ -1,5 +1,6 @@
 import AppKit
 import CryptoKit
+@preconcurrency import Dispatch
 import Foundation
 import Network
 
@@ -154,11 +155,18 @@ final class GoogleCalendarAuthManager {
                 continuation.resume(throwing: GoogleCalendarAuthError.portInUse)
                 return
             }
+            let stateLock = NSLock()
             var resumed = false
+            let markResumed: @Sendable () -> Bool = {
+                stateLock.lock()
+                defer { stateLock.unlock() }
+                guard !resumed else { return false }
+                resumed = true
+                return true
+            }
 
             let timeoutWork = DispatchWorkItem { [weak listener] in
-                guard !resumed else { return }
-                resumed = true
+                guard markResumed() else { return }
                 listener?.cancel()
                 continuation.resume(throwing: GoogleCalendarAuthError.callbackTimeout)
             }
@@ -186,8 +194,7 @@ final class GoogleCalendarAuthManager {
                         }
                     }
                 case .failed:
-                    guard !resumed else { return }
-                    resumed = true
+                    guard markResumed() else { return }
                     timeoutWork.cancel()
                     continuation.resume(throwing: GoogleCalendarAuthError.portInUse)
                 default:
@@ -202,16 +209,15 @@ final class GoogleCalendarAuthManager {
                         listener.cancel()
                         timeoutWork.cancel()
                     }
-                    guard !resumed else { return }
-                    resumed = true
+                    guard markResumed() else { return }
 
                     guard let data, let request = String(data: data, encoding: .utf8) else {
                         continuation.resume(throwing: GoogleCalendarAuthError.callbackMissingCode)
                         return
                     }
 
-                    let code = self.extractParam(named: "code", from: request)
-                    let callbackState = self.extractParam(named: "state", from: request)
+                    let code = Self.extractParam(named: "code", from: request)
+                    let callbackState = Self.extractParam(named: "state", from: request)
 
                     guard callbackState == expectedState else {
                         fputs("[google-cal] OAuth state mismatch — possible CSRF\n", stderr)
@@ -264,7 +270,7 @@ final class GoogleCalendarAuthManager {
         }
     }
 
-    private func extractParam(named name: String, from httpRequest: String) -> String? {
+    private static func extractParam(named name: String, from httpRequest: String) -> String? {
         guard let pathLine = httpRequest.split(separator: "\r\n").first ?? httpRequest.split(separator: "\n").first,
               let pathPart = pathLine.split(separator: " ").dropFirst().first else {
             return nil
