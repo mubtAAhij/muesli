@@ -1,5 +1,6 @@
 import AppKit
 import CryptoKit
+@preconcurrency import Dispatch
 import Foundation
 import Network
 import Security
@@ -142,9 +143,12 @@ final class ChatGPTAuthManager {
                 continuation.resume(throwing: ChatGPTAuthError.portInUse)
                 return
             }
+            let stateLock = NSLock()
             var resumed = false
 
             let timeoutWork = DispatchWorkItem { [weak listener] in
+                stateLock.lock()
+                defer { stateLock.unlock() }
                 guard !resumed else { return }
                 resumed = true
                 listener?.cancel()
@@ -157,6 +161,8 @@ final class ChatGPTAuthManager {
 
             listener.stateUpdateHandler = { state in
                 if case .failed = state {
+                    stateLock.lock()
+                    defer { stateLock.unlock() }
                     guard !resumed else { return }
                     resumed = true
                     timeoutWork.cancel()
@@ -174,6 +180,8 @@ final class ChatGPTAuthManager {
                         listener.cancel()
                         timeoutWork.cancel()
                     }
+                    stateLock.lock()
+                    defer { stateLock.unlock() }
                     guard !resumed else { return }
                     resumed = true
 
@@ -238,7 +246,7 @@ final class ChatGPTAuthManager {
         }
     }
 
-    func extractCode(from httpRequest: String) -> String? {
+    nonisolated func extractCode(from httpRequest: String) -> String? {
         // Parse "GET /callback?code=XXX&... HTTP/1.1"
         guard let pathLine = httpRequest.split(separator: "\r\n").first ?? httpRequest.split(separator: "\n").first,
               let pathPart = pathLine.split(separator: " ").dropFirst().first else {
@@ -249,7 +257,7 @@ final class ChatGPTAuthManager {
         return components.queryItems?.first(where: { $0.name == "code" })?.value
     }
 
-    func extractParam(named name: String, from httpRequest: String) -> String? {
+    nonisolated func extractParam(named name: String, from httpRequest: String) -> String? {
         guard let pathLine = httpRequest.split(separator: "\r\n").first ?? httpRequest.split(separator: "\n").first,
               let pathPart = pathLine.split(separator: " ").dropFirst().first else {
             return nil
