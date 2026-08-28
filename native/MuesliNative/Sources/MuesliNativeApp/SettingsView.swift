@@ -26,27 +26,27 @@ struct SettingsView: View {
         var title: String {
             switch self {
             case .dictations:
-                return "Clear dictation history?"
+                return String(localized: "settings.clear_history.dictations.title", defaultValue: "Clear dictation history?", bundle: .module, comment: "Alert title for clearing dictation history.")
             case .meetings:
-                return "Clear meeting history?"
+                return String(localized: "settings.clear_history.meetings.title", defaultValue: "Clear meeting history?", bundle: .module, comment: "Alert title for clearing meeting history.")
             }
         }
 
         var message: String {
             switch self {
             case .dictations:
-                return "This will permanently remove all saved dictations. This cannot be undone."
+                return String(localized: "settings.clear_history.dictations.message", defaultValue: "This will permanently remove all saved dictations. This cannot be undone.", bundle: .module, comment: "Warning message shown before clearing dictations.")
             case .meetings:
-                return "This will permanently remove all saved meetings, notes, transcripts, and retained audio recordings. This cannot be undone."
+                return String(localized: "settings.clear_history.meetings.message", defaultValue: "This will permanently remove all saved meetings, notes, transcripts, and retained audio recordings. This cannot be undone.", bundle: .module, comment: "Warning message shown before clearing meetings and related data.")
             }
         }
 
         var confirmLabel: String {
             switch self {
             case .dictations:
-                return "Clear Dictations"
+                return String(localized: "settings.clear_history.dictations.confirm", defaultValue: "Clear Dictations", bundle: .module, comment: "Confirmation button title for clearing dictations.")
             case .meetings:
-                return "Clear Meetings"
+                return String(localized: "settings.clear_history.meetings.confirm", defaultValue: "Clear Meetings", bundle: .module, comment: "Confirmation button title for clearing meetings.")
             }
         }
     }
@@ -139,19 +139,19 @@ struct SettingsView: View {
         let selected = appState.config.resolvedMeetingLiveCaptionBackend
         guard appState.config.enableLiveStreamingPartials,
               downloadedMeetingLiveCaptionBackends.contains(selected) else {
-            return "Shows completed transcript segments only."
+            return String(localized: "settings.meeting_live_transcript.description.completed_only", defaultValue: "Shows completed transcript segments only.", bundle: .module, comment: "Description for completed-only meeting transcript mode.")
         }
         if usesUnifiedMeetingTranscript {
-            return "Creates the live and final transcript."
+            return String(localized: "settings.meeting_live_transcript.description.live_and_final", defaultValue: "Creates the live and final transcript.", bundle: .module, comment: "Description for mode that creates live and final transcript.")
         }
-        return "Adds a low-latency preview."
+        return String(localized: "settings.meeting_live_transcript.description.low_latency_preview", defaultValue: "Adds a low-latency preview.", bundle: .module, comment: "Description for low-latency transcript preview mode.")
     }
 
     private var selectedMeetingBackendLabel: String {
         if meetingBackendOptions.contains(appState.selectedMeetingTranscriptionBackend) {
             return appState.selectedMeetingTranscriptionBackend.label
         }
-        return meetingBackendOptions.first?.label ?? "No downloaded models"
+        return meetingBackendOptions.first?.label ?? String(localized: "settings.meeting_backend.no_downloaded_models", defaultValue: "No downloaded models", bundle: .module, comment: "Status text shown when no meeting backend models are available.")
     }
 
     private var cleanupPromptPresets: [TranscriptCleanupPromptPreset] {
@@ -176,15 +176,15 @@ struct SettingsView: View {
     private var cleanupBackendDescription: String {
         if appState.selectedPostProcessorBackend == .local {
             return downloadedPostProcOptions.isEmpty
-                ? "Download a cleanup model from Models to refine dictations on this Mac."
-                : "Refines dictated text on this Mac."
+                ? String(localized: "settings.cleanup_backend.description.download_model", defaultValue: "Download a cleanup model from Models to refine dictations on this Mac.", bundle: .module, comment: "Description prompting user to download a cleanup model.")
+                : String(localized: "settings.cleanup_backend.description.refines_on_mac", defaultValue: "Refines dictated text on this Mac.", bundle: .module, comment: "Description for local cleanup backend behavior.")
         }
         if appState.selectedPostProcessorBackend == .gemma4LiteRT {
             return Gemma4LiteRTModelStore.isAvailableLocally()
-                ? "Uses the downloaded Gemma 4 model to refine dictated text on this Mac."
-                : "Download Gemma 4 E2B from Models to use it for cleanup."
+                ? String(localized: "settings.cleanup_backend.description.gemma4_refinement", defaultValue: "Uses the downloaded Gemma 4 model to refine dictated text on this Mac.", bundle: .module, comment: "Description for Gemma 4 cleanup backend option.")
+                : String(localized: "settings.cleanup_backend.description.download_gemma4_for_cleanup", defaultValue: "Download Gemma 4 E2B from Models to use it for cleanup.", bundle: .module, comment: "Description prompting user to download Gemma 4 model for cleanup.")
         }
-        return "Sends dictated text to \(appState.selectedPostProcessorBackend.label) and may add latency."
+        return String(format: String(localized: "settings.cleanup_backend.description.sends_to_backend_with_latency", defaultValue: "Sends dictated text to %@ and may add latency.", bundle: .module, comment: "Description for remote cleanup backend and latency implications."), "\(appState.selectedPostProcessorBackend.label)")
     }
 
     private var selectedCohereLanguage: CohereTranscribeLanguage {
@@ -212,7 +212,7 @@ struct SettingsView: View {
 
     private var selectedDictationMicrophoneLabel: String {
         let selectedUID = appState.config.dictationInputDeviceUID
-        return dictationMicrophoneOptions.first(where: { $0.uid == selectedUID })?.label ?? "Automatic"
+        return dictationMicrophoneOptions.first(where: { $0.uid == selectedUID })?.label ?? String(localized: "settings.microphone.option.automatic", defaultValue: "Automatic", bundle: .module, comment: "Microphone selection option for automatic device choice.")
     }
 
     private var meetingMicrophoneOptions: [MicrophoneOption] {
@@ -221,14 +221,14 @@ struct SettingsView: View {
 
     private var selectedMeetingMicrophoneLabel: String {
         let selectedUID = appState.config.meetingInputDeviceUID
-        return meetingMicrophoneOptions.first(where: { $0.uid == selectedUID })?.label ?? "Automatic"
+        return meetingMicrophoneOptions.first(where: { $0.uid == selectedUID })?.label ?? String(localized: "settings.microphone.option.automatic", defaultValue: "Automatic", bundle: .module, comment: "Repeated automatic microphone option label.")
     }
 
     private func microphoneOptions(selectedUID: String?) -> [MicrophoneOption] {
-        var options = [MicrophoneOption(uid: nil, label: "Automatic")]
+        var options = [MicrophoneOption(uid: nil, label: String(localized: "settings.microphone.option.automatic", defaultValue: "Automatic", bundle: .module, comment: "Repeated automatic microphone option label."))]
         options += audioInputDevices.map { MicrophoneOption(uid: $0.uid, label: $0.name) }
         if let selectedUID, !options.contains(where: { $0.uid == selectedUID }) {
-            options.append(MicrophoneOption(uid: selectedUID, label: "Selected microphone unavailable"))
+            options.append(MicrophoneOption(uid: selectedUID, label: String(localized: "settings.microphone.option.selected_unavailable", defaultValue: "Selected microphone unavailable", bundle: .module, comment: "Status text when previously selected microphone device is unavailable.")))
         }
         return options
     }
@@ -241,7 +241,7 @@ struct SettingsView: View {
         ScrollViewReader { scrollProxy in
             ScrollView {
                 VStack(alignment: .leading, spacing: MuesliTheme.spacing24) {
-                    Text("Settings")
+                    Text(String(localized: "settings.title", defaultValue: "Settings", bundle: .module, comment: "Main title of the settings screen."))
                         .font(MuesliTheme.title1())
                         .foregroundStyle(MuesliTheme.textPrimary)
 
@@ -303,16 +303,16 @@ struct SettingsView: View {
                 }
             }
             .alert(
-                pendingDataDestruction?.title ?? "Confirm Destructive Action",
+                pendingDataDestruction?.title ?? String(localized: "settings.alert.confirm_destructive_action.title", defaultValue: "Confirm Destructive Action", bundle: .module, comment: "Alert title confirming a destructive settings action."),
                 isPresented: Binding(
                     get: { pendingDataDestruction != nil },
                     set: { if !$0 { pendingDataDestruction = nil } }
                 )
             ) {
-                Button("Cancel", role: .cancel) {
+                Button(String(localized: "settings.action.cancel", defaultValue: "Cancel", bundle: .module, comment: "Cancel action label used in settings alerts."), role: .cancel) {
                     pendingDataDestruction = nil
                 }
-                Button(pendingDataDestruction?.confirmLabel ?? "Delete", role: .destructive) {
+                Button(pendingDataDestruction?.confirmLabel ?? String(localized: "settings.action.delete", defaultValue: "Delete", bundle: .module, comment: "Delete action label used in destructive confirmation alert."), role: .destructive) {
                     switch pendingDataDestruction {
                     case .dictations:
                         controller.clearDictationHistory()
@@ -327,17 +327,17 @@ struct SettingsView: View {
                 Text(pendingDataDestruction?.message ?? "")
             }
             .alert(
-                "Enable Accessibility?",
+                String(localized: "settings.alert.enable_accessibility.title", defaultValue: "Enable Accessibility?", bundle: .module, comment: "Alert title prompting user to enable Accessibility permission."),
                 isPresented: $isShowingDictionaryAccessibilityPrompt
             ) {
-                Button("Cancel", role: .cancel) {
+                Button(String(localized: "settings.action.cancel", defaultValue: "Cancel", bundle: .module, comment: "Cancel action label in enable accessibility alert."), role: .cancel) {
                     controller.cancelDictionaryCorrectionAccessibilityEnableRequest()
                 }
-                Button("Enable") {
+                Button(String(localized: "settings.alert.action.enable", defaultValue: "Enable", bundle: .module, comment: "Enable action label in accessibility permission alert.")) {
                     controller.requestDictionaryCorrectionAccessibilityEnable()
                 }
             } message: {
-                Text("Dictionary suggestions briefly read focused app text via Accessibility after dictation. Grant access, then relaunch Muesli to turn suggestions on.")
+                Text(String(localized: "settings.alert.enable_accessibility.message", defaultValue: "Dictionary suggestions briefly read focused app text via Accessibility after dictation. Grant access, then relaunch Muesli to turn suggestions on.", bundle: .module, comment: "Explanation message in accessibility enable alert."))
             }
             .sheet(isPresented: $isCleanupPromptManagerPresented) {
                 TranscriptCleanupPromptsManagerView(
@@ -379,36 +379,36 @@ struct SettingsView: View {
     }
 
     private static let accentPresets: [(hex: String, name: String)] = [
-        ("2563eb", "Blue"),
-        ("ef4444", "Red"),
-        ("f59e0b", "Amber"),
-        ("10b981", "Green"),
-        ("8b5cf6", "Purple"),
-        ("ec4899", "Pink"),
-        ("1e1e2e", "Dark"),
+        ("2563eb", String(localized: "settings.accent_presets.blue", defaultValue: "Blue", bundle: .module, comment: "Accent color preset label for blue.")),
+        ("ef4444", String(localized: "settings.accent_presets.red", defaultValue: "Red", bundle: .module, comment: "Accent color preset label for red.")),
+        ("f59e0b", String(localized: "settings.accent_presets.amber", defaultValue: "Amber", bundle: .module, comment: "Accent color preset label for amber.")),
+        ("10b981", String(localized: "settings.accent_presets.green", defaultValue: "Green", bundle: .module, comment: "Accent color preset label for green.")),
+        ("8b5cf6", String(localized: "settings.accent_presets.purple", defaultValue: "Purple", bundle: .module, comment: "Accent color preset label for purple.")),
+        ("ec4899", String(localized: "settings.accent_presets.pink", defaultValue: "Pink", bundle: .module, comment: "Accent color preset label for pink.")),
+        ("1e1e2e", String(localized: "settings.accent_presets.dark", defaultValue: "Dark", bundle: .module, comment: "Accent color preset label for dark option.")),
     ]
 
     private func screenContextDescription(includesScreenOCR: Bool) -> String {
         if !accessibilityGranted {
-            return "Grant Accessibility, then toggle again if needed."
+            return String(localized: "settings.screen_context.description.grant_accessibility_then_toggle", defaultValue: "Grant Accessibility, then toggle again if needed.", bundle: .module, comment: "Guidance text for enabling screen context with accessibility permission.")
         }
         if includesScreenOCR, !screenRecordingGranted {
-            return "Adds nearby app text for post-processing. Screen Recording enables OCR context."
+            return String(localized: "settings.screen_context.description.app_text_plus_screen_recording_ocr", defaultValue: "Adds nearby app text for post-processing. Screen Recording enables OCR context.", bundle: .module, comment: "Description for screen context mode using app text plus OCR via screen recording.")
         }
         if includesScreenOCR {
-            return "Adds nearby app text and OCR context."
+            return String(localized: "settings.screen_context.description.app_text_and_ocr", defaultValue: "Adds nearby app text and OCR context.", bundle: .module, comment: "Description for screen context mode with app text and OCR context.")
         }
-        return "Adds nearby app text for post-processing."
+        return String(localized: "settings.screen_context.description.app_text_only", defaultValue: "Adds nearby app text for post-processing.", bundle: .module, comment: "Description for screen context mode using app text only.")
     }
 
     private var dictationOCRContextDescription: String {
         if !appState.config.enableScreenContext {
-            return "Turn on App context first."
+            return String(localized: "settings.dictation_ocr_context.description.turn_on_app_context_first", defaultValue: "Turn on App context first.", bundle: .module, comment: "Guidance text instructing user to enable app context before OCR context.")
         }
         if !screenRecordingGranted {
-            return "Grant Screen Recording to add frontmost-window OCR text."
+            return String(localized: "settings.dictation_ocr_context.description.grant_screen_recording", defaultValue: "Grant Screen Recording to add frontmost-window OCR text.", bundle: .module, comment: "Guidance text requesting Screen Recording permission for OCR context.")
         }
-        return "Adds frontmost-window OCR text. Cloud cleanup may send this text to the selected provider."
+        return String(localized: "settings.dictation_ocr_context.description.ocr_text_cloud_cleanup_notice", defaultValue: "Adds frontmost-window OCR text. Cloud cleanup may send this text to the selected provider.", bundle: .module, comment: "Description warning that OCR context may be sent to selected cloud cleanup provider.")
     }
 
     @ViewBuilder
@@ -446,7 +446,7 @@ struct SettingsView: View {
         let width = controlWidth
         HStack(alignment: .top, spacing: 20) {
             VStack(alignment: .leading, spacing: 6) {
-                Text("Screen OCR context")
+                Text(String(localized: "settings.dictation.screen_ocr_context", defaultValue: "Screen OCR context", bundle: .module, comment: ""))
                     .font(MuesliTheme.body())
                     .foregroundStyle(MuesliTheme.textPrimary)
                 Text(dictationOCRContextDescription)
@@ -467,7 +467,7 @@ struct SettingsView: View {
         .frame(minHeight: 52)
     }
 
-    private let customIndicatorPositionLabel = "Custom (drag to reposition)"
+    private let customIndicatorPositionLabel = String(localized: "settings.section.general", defaultValue: "Custom (drag to reposition)", bundle: .module, comment: "Indicator position option label for custom draggable placement.")
 
     private var settingsPanePicker: some View {
         HStack {
@@ -504,9 +504,9 @@ struct SettingsView: View {
 
     private var generalSettingsPane: some View {
         VStack(alignment: .leading, spacing: MuesliTheme.spacing24) {
-            settingsSection("General") {
+            settingsSection(String(localized: "settings.general.launch_at_login", defaultValue: "General", bundle: .module, comment: "Section header label for general settings section.")) {
                 VStack(alignment: .leading, spacing: MuesliTheme.spacing8) {
-                    settingsRow("Launch at login") {
+                    settingsRow(String(localized: "settings.general.open_dashboard_on_launch", defaultValue: "Launch at login", bundle: .module, comment: "Toggle label for launching app automatically at login.")) {
                         settingsSwitch(isOn: appState.config.launchAtLogin) { newValue in
                             controller.setLaunchAtLogin(newValue)
                         }
@@ -516,7 +516,7 @@ struct SettingsView: View {
                     }
                 }
                 Divider().background(MuesliTheme.surfaceBorder)
-                settingsRow("Open dashboard on launch") {
+                settingsRow(String(localized: "settings.section.data", defaultValue: "Open dashboard on launch", bundle: .module, comment: "Toggle label for opening dashboard when app launches.")) {
                     settingsSwitch(isOn: appState.config.openDashboardOnLaunch) { newValue in
                         controller.updateConfig { $0.openDashboardOnLaunch = newValue }
                     }
@@ -525,16 +525,16 @@ struct SettingsView: View {
 
             permissionsSection
 
-            settingsSection("Data") {
+            settingsSection(String(localized: "settings.data.clear_dictation_history", defaultValue: "Data", bundle: .module, comment: "Section header label for data settings section.")) {
                 HStack(spacing: MuesliTheme.spacing12) {
-                    actionButton("Clear dictation history", role: .destructive) {
+                    actionButton(String(localized: "settings.data.clear_meeting_history", defaultValue: "Clear dictation history", bundle: .module, comment: "Action label for clearing saved dictation history."), role: .destructive) {
                         pendingDataDestruction = .dictations
                     }
-                    actionButton("Clear meeting history", role: .destructive) {
+                    actionButton(String(localized: "settings.general.help.stop_recording_before_clear_history", defaultValue: "Clear meeting history", bundle: .module, comment: "Action label for clearing saved meeting history."), role: .destructive) {
                         pendingDataDestruction = .meetings
                     }
                     .disabled(controller.isMeetingRecording())
-                    .help("Stop the current meeting recording before clearing meeting history.")
+                    .help(String(localized: "settings.general.help.stop_recording_before_clear_history-stop-the-current-meeting-rec", defaultValue: "Stop the current meeting recording before clearing meeting history.", bundle: .module, comment: "Helper text instructing user to stop recording before destructive clear action."))
                 }
             }
         }
@@ -545,7 +545,7 @@ struct SettingsView: View {
             Image(systemName: "exclamationmark.circle.fill")
                 .font(.system(size: 12, weight: .semibold))
                 .foregroundStyle(MuesliTheme.recording)
-            Text("Requires approval in System Settings")
+            Text(String(localized: "settings.launch_at_login.requires_approval_system_settings", defaultValue: "Requires approval in System Settings", bundle: .module, comment: "Status note that launch-at-login needs system approval."))
                 .font(MuesliTheme.caption())
                 .foregroundStyle(MuesliTheme.textTertiary)
             Spacer(minLength: MuesliTheme.spacing12)
@@ -555,7 +555,7 @@ struct SettingsView: View {
                 HStack(spacing: 6) {
                     Image(systemName: "arrow.up.forward.square")
                         .font(.system(size: 11, weight: .semibold))
-                    Text("Open")
+                    Text(String(localized: "settings.launch_at_login.action.open", defaultValue: "Open", bundle: .module, comment: "Action label to open system settings for login items approval."))
                 }
             }
             .buttonStyle(.plain)
@@ -565,7 +565,7 @@ struct SettingsView: View {
             .padding(.vertical, 4)
             .background(MuesliTheme.accentSubtle)
             .clipShape(RoundedRectangle(cornerRadius: MuesliTheme.cornerSmall))
-            .help("Open Login Items in System Settings")
+            .help(String(localized: "settings.launch_at_login.help.open_login_items_system_settings", defaultValue: "Open Login Items in System Settings", bundle: .module, comment: "Help text describing action to open login items settings."))
         }
         .padding(.leading, MuesliTheme.spacing16)
         .padding(.trailing, MuesliTheme.spacing16)
@@ -574,13 +574,13 @@ struct SettingsView: View {
 
     private var syncSettingsPane: some View {
         VStack(alignment: .leading, spacing: MuesliTheme.spacing24) {
-            settingsSection("iCloud Text Sync") {
-                settingsRow("Private iCloud sync") {
+            settingsSection(String(localized: "settings.sync.icloud_text_sync.section_title", defaultValue: "iCloud Text Sync", bundle: .module, comment: "Section title for iCloud text sync settings.")) {
+                settingsRow(String(localized: "settings.sync.private_icloud_sync", defaultValue: "Private iCloud sync", bundle: .module, comment: "Toggle label for private iCloud synchronization.")) {
                     settingsSwitch(isOn: appState.config.iCloudSyncEnabled) { newValue in
                         controller.setICloudSyncEnabledFromSettings(newValue)
                     }
                 }
-                settingsDescription("Sync dictation text, meeting transcripts, notes, summaries, and manual notes with Muesli for iPhone through your private iCloud account. Audio recordings are never synced.")
+                settingsDescription(String(localized: "settings.sync.description.private_icloud_scope", defaultValue: "Sync dictation text, meeting transcripts, notes, summaries, and manual notes with Muesli for iPhone through your private iCloud account. Audio recordings are never synced.", bundle: .module, comment: "Description of data scope included in private iCloud sync."))
 
                 Divider().background(MuesliTheme.surfaceBorder)
 
@@ -591,7 +591,7 @@ struct SettingsView: View {
                             .foregroundStyle(MuesliTheme.textPrimary)
                             .fixedSize(horizontal: false, vertical: true)
                         if let lastSyncedText = syncLastSyncedText {
-                            Text("Last synced: \(lastSyncedText)")
+                            Text(String(format: String(localized: "settings.sync.status.last_synced", defaultValue: "Last synced: %@", bundle: .module, comment: "Sync status text showing last successful sync time."), "\(lastSyncedText)"))
                                 .font(MuesliTheme.caption())
                                 .foregroundStyle(MuesliTheme.textTertiary)
                         }
@@ -603,7 +603,7 @@ struct SettingsView: View {
                         }
                     }
                     Spacer(minLength: MuesliTheme.spacing16)
-                    actionButton("Sync now", systemImage: "arrow.triangle.2.circlepath") {
+                    actionButton(String(localized: "settings.sync.action.sync_now", defaultValue: "Sync now", bundle: .module, comment: "Action label to trigger immediate synchronization."), systemImage: "arrow.triangle.2.circlepath") {
                         controller.performICloudSync()
                     }
                     .frame(width: controlWidth)
@@ -611,28 +611,28 @@ struct SettingsView: View {
                 }
             }
 
-            settingsSection("iPhone Bridge") {
-                settingsRow("Show iOS companion prompt") {
+            settingsSection(String(localized: "settings.sync.iphone_bridge.section_title", defaultValue: "iPhone Bridge", bundle: .module, comment: "Section title for iPhone Bridge sync settings.")) {
+                settingsRow(String(localized: "settings.sync.iphone_bridge.show_ios_companion_prompt", defaultValue: "Show iOS companion prompt", bundle: .module, comment: "Toggle label for showing iOS companion bridge prompt.")) {
                     settingsSwitch(isOn: appState.config.showIOSCompanionPrompt) { newValue in
                         controller.updateConfig { $0.showIOSCompanionPrompt = newValue }
                     }
                 }
-                settingsDescription("Keep the timeline bridge card available while users connect Muesli on iPhone.")
+                settingsDescription(String(localized: "settings.sync.iphone_bridge.description.keep_timeline_card", defaultValue: "Keep the timeline bridge card available while users connect Muesli on iPhone.", bundle: .module, comment: "Description for keeping timeline bridge card visible during iPhone onboarding."))
 
                 Divider().background(MuesliTheme.surfaceBorder)
 
                 HStack(spacing: MuesliTheme.spacing12) {
                     VStack(alignment: .leading, spacing: MuesliTheme.spacing4) {
-                        Text("Muesli for iPhone")
+                        Text(String(localized: "settings.sync.muesli_for_iphone", defaultValue: "Muesli for iPhone", bundle: .module, comment: "Section label for Muesli iPhone companion app."))
                             .font(MuesliTheme.body())
                             .foregroundStyle(MuesliTheme.textPrimary)
-                        Text("Use iPhone for offline meetings, keyboard dictation, and private iCloud text sync with this Mac.")
+                        Text(String(localized: "settings.sync.iphone_description", defaultValue: "Use iPhone for offline meetings, keyboard dictation, and private iCloud text sync with this Mac.", bundle: .module, comment: "Description of iPhone companion capabilities and sync behavior."))
                             .font(MuesliTheme.caption())
                             .foregroundStyle(MuesliTheme.textTertiary)
                             .fixedSize(horizontal: false, vertical: true)
                     }
                     Spacer(minLength: MuesliTheme.spacing16)
-                    actionButton("Open iOS app page") {
+                    actionButton(String(localized: "settings.sync.action.open_ios_app_page", defaultValue: "Open iOS app page", bundle: .module, comment: "Action label to open the iOS app page.")) {
                         NSWorkspace.shared.open(iOSCompanionURL)
                     }
                     .frame(width: controlWidth)
@@ -643,9 +643,9 @@ struct SettingsView: View {
 
     private var syncStatusText: String {
         if !appState.config.iCloudSyncEnabled {
-            return "Sync is off. Turn it on to bridge this Mac with Muesli for iPhone."
+            return String(localized: "settings.sync.status.off_turn_on_bridge", defaultValue: "Sync is off. Turn it on to bridge this Mac with Muesli for iPhone.", bundle: .module, comment: "Status text shown when sync is disabled for iPhone bridge.")
         }
-        return appState.iCloudSyncStatus ?? "Private iCloud text sync is ready."
+        return appState.iCloudSyncStatus ?? String(localized: "settings.sync.status.private_icloud_ready", defaultValue: "Private iCloud text sync is ready.", bundle: .module, comment: "Status text shown when private iCloud text sync is ready.")
     }
 
     private var syncLastSyncedText: String? {
@@ -657,27 +657,27 @@ struct SettingsView: View {
         guard appState.config.iCloudSyncEnabled else { return nil }
         if let remoteDeviceName = appState.iCloudBridgeCompanionDeviceName {
             if let platform = appState.iCloudBridgeRemoteDevicePlatform {
-                return "Linked \(syncDeviceLabel(for: platform)): \(remoteDeviceName)"
+                return String(format: String(localized: "settings.sync.linked_device.with_platform_and_name", defaultValue: "Linked %@: %@", bundle: .module, comment: "Linked device status showing platform label and device name."), "\(syncDeviceLabel(for: platform))", "\(remoteDeviceName)")
             }
-            return "Linked device: \(remoteDeviceName)"
+            return String(format: String(localized: "settings.sync.linked_device.name_only", defaultValue: "Linked device: %@", bundle: .module, comment: "Linked device status showing only remote device name."), "\(remoteDeviceName)")
         }
-        return "No linked iPhone yet."
+        return String(localized: "settings.sync.linked_device.none_iphone_yet", defaultValue: "No linked iPhone yet.", bundle: .module, comment: "Status text shown when no iPhone is linked yet.")
     }
 
     private func syncDeviceLabel(for platform: String) -> String {
         switch platform.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() {
         case "ios":
-            return "iPhone"
+            return String(localized: "settings.sync.device_label.iphone", defaultValue: "iPhone", bundle: .module, comment: "Device platform label for linked iPhone.")
         case "ipados":
-            return "iPad"
+            return String(localized: "settings.sync.device_label.ipad", defaultValue: "iPad", bundle: .module, comment: "Device platform label for linked iPad.")
         default:
             return platform
         }
     }
 
     private var dictationModelSettingsSection: some View {
-        settingsSection("Speech Recognition") {
-            settingsRow("Dictation model", controlWidth: meetingControlWidth) {
+        settingsSection(String(localized: "settings.section.speech_recognition", defaultValue: "Speech Recognition", bundle: .module, comment: "Section title for speech recognition settings.")) {
+            settingsRow(String(localized: "settings.speech_recognition.dictation_model", defaultValue: "Dictation model", bundle: .module, comment: "Setting label for selecting dictation model."), controlWidth: meetingControlWidth) {
                 settingsMenu(
                     selection: appState.selectedBackend.label,
                     options: dictationBackendOptions.map(\.label),
@@ -689,23 +689,23 @@ struct SettingsView: View {
                 }
             }
             if !disabledDictationBackendLabels.isEmpty {
-                settingsDescription("Gemma 4 dictation is unavailable while Gemma 4 is the cleanup backend.")
+                settingsDescription(String(localized: "settings.speech_recognition.description.gemma4_unavailable_with_cleanup_backend", defaultValue: "Gemma 4 dictation is unavailable while Gemma 4 is the cleanup backend.", bundle: .module, comment: "Description explaining Gemma 4 dictation incompatibility with Gemma cleanup backend."))
             }
             if appState.selectedBackend.backend == BackendOption.cohereTranscribe.backend {
                 Divider().background(MuesliTheme.surfaceBorder)
-                settingsRow("Cohere language", controlWidth: meetingControlWidth) {
+                settingsRow(String(localized: "settings.speech_recognition.cohere_language", defaultValue: "Cohere language", bundle: .module, comment: "Setting label for Cohere transcription language."), controlWidth: meetingControlWidth) {
                     cohereLanguageMenu
                 }
             }
             if appState.selectedBackend.backend == BackendOption.indicASR.backend {
                 Divider().background(MuesliTheme.surfaceBorder)
-                settingsRow("Indic language", controlWidth: meetingControlWidth) {
+                settingsRow(String(localized: "settings.speech_recognition.indic_language", defaultValue: "Indic language", bundle: .module, comment: "Setting label for Indic transcription language."), controlWidth: meetingControlWidth) {
                     indicLanguageMenu
                 }
             }
             if appState.selectedBackend.supportsWhisperLanguageSelection {
                 Divider().background(MuesliTheme.surfaceBorder)
-                settingsRow("Whisper language", controlWidth: meetingControlWidth) {
+                settingsRow(String(localized: "settings.speech_recognition.whisper_language", defaultValue: "Whisper language", bundle: .module, comment: "Setting label for Whisper transcription language."), controlWidth: meetingControlWidth) {
                     whisperLanguageMenu
                 }
             }
@@ -713,10 +713,10 @@ struct SettingsView: View {
     }
 
     private var meetingTranscriptionSettingsSection: some View {
-        settingsSection("Transcription") {
+        settingsSection(String(localized: "settings.section.transcription", defaultValue: "Transcription", bundle: .module, comment: "Section title for transcription settings.")) {
             settingsRow(
                 "Microphone",
-                description: "Only affects Muesli. Changes apply immediately.",
+                description: String(localized: "settings.transcription.microphone.description.only_affects_muesli", defaultValue: "Only affects Muesli. Changes apply immediately.", bundle: .module, comment: "Description for microphone setting scope and immediacy."),
                 controlWidth: meetingControlWidth
             ) {
                 let options = meetingMicrophoneOptions
@@ -733,8 +733,8 @@ struct SettingsView: View {
             }
             Divider().background(MuesliTheme.surfaceBorder)
             settingsRow(
-                "Show transcript on hover",
-                description: "Show recent transcript beside the waveform.",
+                String(localized: "settings.transcription.show_transcript_on_hover", defaultValue: "Show transcript on hover", bundle: .module, comment: "Toggle label for displaying transcript on waveform hover."),
+                description: String(localized: "settings.transcription.show_transcript_on_hover.description", defaultValue: "Show recent transcript beside the waveform.", bundle: .module, comment: "Description for transcript-on-hover behavior."),
                 controlWidth: meetingControlWidth
             ) {
                 settingsSwitch(isOn: appState.config.showMeetingTranscriptOnIndicatorHover) { newValue in
@@ -743,7 +743,7 @@ struct SettingsView: View {
             }
             Divider().background(MuesliTheme.surfaceBorder)
             settingsRow(
-                "Live preview model",
+                String(localized: "settings.transcription.live_preview_model", defaultValue: "Live preview model", bundle: .module, comment: "Setting label for live preview transcription model selection."),
                 description: meetingLiveTranscriptDescription,
                 controlWidth: meetingControlWidth
             ) {
@@ -765,7 +765,7 @@ struct SettingsView: View {
                         }
                     }
                 } else {
-                    Text("Download from Models")
+                    Text(String(localized: "settings.meeting_transcription.download_from_models", defaultValue: "Download from Models", bundle: .module, comment: "Action label to download transcription models from Models screen."))
                         .font(.system(size: 12, weight: .medium))
                         .foregroundStyle(MuesliTheme.textTertiary)
                         .multilineTextAlignment(.trailing)
@@ -775,14 +775,14 @@ struct SettingsView: View {
             .id(FeatureTourTarget.liveCaptionsSetting.rawValue)
             .featureTourTarget(.liveCaptionsSetting)
             Divider().background(MuesliTheme.surfaceBorder)
-            settingsRow("Final transcript", controlWidth: meetingControlWidth) {
+            settingsRow(String(localized: "settings.transcription.final_transcript", defaultValue: "Final transcript", bundle: .module, comment: "Setting label for final transcript model selection."), controlWidth: meetingControlWidth) {
                 if usesUnifiedMeetingTranscript {
-                    Text("\(MeetingLiveCaptionBackend.nemotron35.label) (same model)")
+                    Text(String(format: String(localized: "settings.transcription.final_transcript.same_model", defaultValue: "%@ (same model)", bundle: .module, comment: "Description showing final transcript uses same model as live captions."), "\(MeetingLiveCaptionBackend.nemotron35.label)"))
                         .font(MuesliTheme.body())
                         .foregroundStyle(MuesliTheme.textSecondary)
                         .frame(width: meetingControlWidth, alignment: .trailing)
                 } else if meetingBackendOptions.isEmpty {
-                    Text("No downloaded models")
+                    Text(String(localized: "settings.meeting_transcription.no_downloaded_models", defaultValue: "No downloaded models", bundle: .module, comment: "Status text shown when no transcription models are downloaded."))
                         .font(MuesliTheme.body())
                         .foregroundStyle(MuesliTheme.textTertiary)
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -799,22 +799,22 @@ struct SettingsView: View {
             }
             if usesUnifiedMeetingTranscript {
                 Divider().background(MuesliTheme.surfaceBorder)
-                settingsRow("Language", controlWidth: meetingControlWidth) {
+                settingsRow(String(localized: "settings.transcription.language", defaultValue: "Language", bundle: .module, comment: "Label for transcription language setting."), controlWidth: meetingControlWidth) {
                     nemotron35LanguageMenu
                 }
             } else if appState.selectedMeetingTranscriptionBackend.backend == BackendOption.cohereTranscribe.backend {
                 Divider().background(MuesliTheme.surfaceBorder)
-                settingsRow("Cohere language", controlWidth: meetingControlWidth) {
+                settingsRow(String(localized: "settings.transcription.cohere_language", defaultValue: "Cohere language", bundle: .module, comment: "Label for Cohere transcription language selection."), controlWidth: meetingControlWidth) {
                     cohereLanguageMenu
                 }
             } else if appState.selectedMeetingTranscriptionBackend.backend == BackendOption.indicASR.backend {
                 Divider().background(MuesliTheme.surfaceBorder)
-                settingsRow("Indic language", controlWidth: meetingControlWidth) {
+                settingsRow(String(localized: "settings.transcription.indic_language", defaultValue: "Indic language", bundle: .module, comment: "Label for Indic transcription language selection."), controlWidth: meetingControlWidth) {
                     indicLanguageMenu
                 }
             } else if appState.selectedMeetingTranscriptionBackend.supportsWhisperLanguageSelection {
                 Divider().background(MuesliTheme.surfaceBorder)
-                settingsRow("Whisper language", controlWidth: meetingControlWidth) {
+                settingsRow(String(localized: "settings.transcription.whisper_language", defaultValue: "Whisper language", bundle: .module, comment: "Label for Whisper transcription language selection."), controlWidth: meetingControlWidth) {
                     whisperLanguageMenu
                 }
             }
@@ -822,9 +822,9 @@ struct SettingsView: View {
     }
 
     private var dictationCleanupSettingsSection: some View {
-        settingsSection("Dictation Cleanup") {
+        settingsSection(String(localized: "settings.section.dictation_cleanup", defaultValue: "Dictation Cleanup", bundle: .module, comment: "Section title for dictation cleanup settings.")) {
             settingsRow(
-                "Cleanup backend",
+                String(localized: "settings.dictation_cleanup.cleanup_backend", defaultValue: "Cleanup backend", bundle: .module, comment: "Setting label for dictation cleanup backend selection."),
                 description: cleanupBackendDescription,
                 controlWidth: meetingControlWidth
             ) {
@@ -841,13 +841,13 @@ struct SettingsView: View {
             .id(FeatureTourTarget.cloudCleanupSetting.rawValue)
             .featureTourTarget(.cloudCleanupSetting)
             if !disabledCleanupBackendLabels.isEmpty {
-                settingsDescription("Gemma 4 cleanup is unavailable while Gemma 4 is the dictation model.")
+                settingsDescription(String(localized: "settings.dictation_cleanup.description.gemma4_unavailable_with_dictation_model", defaultValue: "Gemma 4 cleanup is unavailable while Gemma 4 is the dictation model.", bundle: .module, comment: "Description explaining Gemma 4 cleanup incompatibility with Gemma 4 dictation model."))
             }
             if appState.selectedPostProcessorBackend == .local {
                 Divider().background(MuesliTheme.surfaceBorder)
-                settingsRow("Cleanup model", controlWidth: meetingControlWidth) {
+                settingsRow(String(localized: "settings.dictation_cleanup.model", defaultValue: "Cleanup model", bundle: .module, comment: "Setting label for cleanup model selection."), controlWidth: meetingControlWidth) {
                     if downloadedPostProcOptions.isEmpty {
-                        compactActionButton("View cleanup models", systemImage: "arrow.right") {
+                        compactActionButton(String(localized: "settings.dictation_cleanup.action.view_cleanup_models", defaultValue: "View cleanup models", bundle: .module, comment: "Action label to open cleanup models view."), systemImage: "arrow.right") {
                             controller.showModels(category: .postProcessing)
                         }
                         .frame(width: meetingControlWidth, alignment: .trailing)
@@ -867,14 +867,14 @@ struct SettingsView: View {
                 }
             } else if appState.selectedPostProcessorBackend == .gemma4LiteRT {
                 Divider().background(MuesliTheme.surfaceBorder)
-                settingsRow("Cleanup model", controlWidth: meetingControlWidth) {
+                settingsRow(String(localized: "settings.dictation_cleanup.model", defaultValue: "Cleanup model", bundle: .module, comment: "Repeated cleanup model setting label."), controlWidth: meetingControlWidth) {
                     if Gemma4LiteRTModelStore.isAvailableLocally() {
-                        Text("Gemma 4 E2B (Downloaded)")
+                        Text(String(localized: "settings.dictation_cleanup.model.gemma_4_e2b_downloaded", defaultValue: "Gemma 4 E2B (Downloaded)", bundle: .module, comment: "Cleanup model option label indicating Gemma 4 E2B is downloaded."))
                             .font(.system(size: 12, weight: .medium))
                             .foregroundStyle(MuesliTheme.textSecondary)
                             .frame(width: meetingControlWidth, alignment: .trailing)
                     } else {
-                        compactActionButton("View Gemma model", systemImage: "arrow.right") {
+                        compactActionButton(String(localized: "settings.dictation_cleanup.action.view_gemma_model", defaultValue: "View Gemma model", bundle: .module, comment: "Action label to open Gemma model details/download view."), systemImage: "arrow.right") {
                             controller.showModels(category: .postProcessing)
                         }
                         .frame(width: meetingControlWidth, alignment: .trailing)
@@ -933,11 +933,11 @@ struct SettingsView: View {
         switch backend.llmBackend {
         case .some(.chatGPT):
             Divider().background(MuesliTheme.surfaceBorder)
-            settingsRow("Account", controlWidth: meetingControlWidth) {
+            settingsRow(String(localized: "settings.hosted_cleanup.account", defaultValue: "Account", bundle: .module, comment: "Field label for hosted cleanup account selection."), controlWidth: meetingControlWidth) {
                 chatGPTAccountControl(selectMeetingSummaryBackend: false)
             }
             Divider().background(MuesliTheme.surfaceBorder)
-            settingsRow("Cleanup model", controlWidth: meetingControlWidth) {
+            settingsRow(String(localized: "settings.dictation_cleanup.model", defaultValue: "Cleanup model", bundle: .module, comment: "Field label for cleanup model selection."), controlWidth: meetingControlWidth) {
                 settingsModelMenu(
                     currentModel: appState.config.postProcessorChatGPTModel,
                     presets: SummaryModelPreset.chatGPTTranscriptCleanupModels
@@ -945,7 +945,7 @@ struct SettingsView: View {
             }
         case .some(.openAI):
             Divider().background(MuesliTheme.surfaceBorder)
-            settingsRow("API Key", controlWidth: meetingControlWidth) {
+            settingsRow(String(localized: "settings.hosted_cleanup.api_key", defaultValue: "API Key", bundle: .module, comment: "Field label for hosted cleanup API key."), controlWidth: meetingControlWidth) {
                 PastableSecureField(
                     text: appState.config.openAIAPIKey,
                     placeholder: "sk-...",
@@ -954,7 +954,7 @@ struct SettingsView: View {
                 .frame(height: 22)
             }
             Divider().background(MuesliTheme.surfaceBorder)
-            settingsRow("Cleanup model", controlWidth: meetingControlWidth) {
+            settingsRow(String(localized: "settings.dictation_cleanup.model", defaultValue: "Cleanup model", bundle: .module, comment: "Repeated field label for cleanup model selection."), controlWidth: meetingControlWidth) {
                 settingsModelMenu(
                     currentModel: appState.config.postProcessorOpenAIModel,
                     presets: SummaryModelPreset.openAIModels
@@ -963,7 +963,7 @@ struct SettingsView: View {
             keyStatusRow(key: appState.config.openAIAPIKey)
         case .some(.openRouter):
             Divider().background(MuesliTheme.surfaceBorder)
-            settingsRow("API Key", controlWidth: meetingControlWidth) {
+            settingsRow(String(localized: "settings.hosted_cleanup.api_key", defaultValue: "API Key", bundle: .module, comment: "Repeated field label for hosted cleanup API key."), controlWidth: meetingControlWidth) {
                 PastableSecureField(
                     text: appState.config.openRouterAPIKey,
                     placeholder: "sk-or-...",
@@ -972,14 +972,14 @@ struct SettingsView: View {
                 .frame(height: 22)
             }
             Divider().background(MuesliTheme.surfaceBorder)
-            settingsRow("Model preset", controlWidth: meetingControlWidth) {
+            settingsRow(String(localized: "settings.hosted_cleanup.model_preset", defaultValue: "Model preset", bundle: .module, comment: "Field label for hosted cleanup model preset selection."), controlWidth: meetingControlWidth) {
                 settingsModelMenu(
                     currentModel: appState.config.postProcessorOpenRouterModel,
                     presets: SummaryModelPreset.openRouterModels
                 ) { controller.updatePostProcessorModel($0, for: backend) }
             }
             Divider().background(MuesliTheme.surfaceBorder)
-            settingsRow("Custom model ID", controlWidth: meetingControlWidth) {
+            settingsRow(String(localized: "settings.hosted_cleanup.custom_model_id", defaultValue: "Custom model ID", bundle: .module, comment: "Field label for entering custom hosted cleanup model identifier."), controlWidth: meetingControlWidth) {
                 settingsModelTextField(
                     currentModel: appState.config.postProcessorOpenRouterModel,
                     placeholder: "provider/model"
@@ -988,7 +988,7 @@ struct SettingsView: View {
             keyStatusRow(key: appState.config.openRouterAPIKey)
         case .some(.ollama):
             Divider().background(MuesliTheme.surfaceBorder)
-            settingsRow("Ollama URL", controlWidth: meetingControlWidth) {
+            settingsRow(String(localized: "settings.hosted_cleanup.ollama_url", defaultValue: "Ollama URL", bundle: .module, comment: "Field label for Ollama endpoint URL in hosted cleanup settings."), controlWidth: meetingControlWidth) {
                 PastableTextField(
                     text: appState.config.ollamaURL,
                     placeholder: "http://localhost:11434",
@@ -997,7 +997,7 @@ struct SettingsView: View {
                 .frame(height: 22)
             }
             Divider().background(MuesliTheme.surfaceBorder)
-            settingsRow("Cleanup model", controlWidth: meetingControlWidth) {
+            settingsRow(String(localized: "settings.dictation_cleanup.model", defaultValue: "Cleanup model", bundle: .module, comment: "Repeated field label for cleanup model selection."), controlWidth: meetingControlWidth) {
                 settingsModelTextField(
                     currentModel: appState.config.postProcessorOllamaModel,
                     placeholder: TranscriptCleanupClient.defaultModel(for: backend)
@@ -1005,7 +1005,7 @@ struct SettingsView: View {
             }
         case .some(.lmStudio):
             Divider().background(MuesliTheme.surfaceBorder)
-            settingsRow("LM Studio URL", controlWidth: meetingControlWidth) {
+            settingsRow(String(localized: "settings.hosted_cleanup.lm_studio_url", defaultValue: "LM Studio URL", bundle: .module, comment: "Field label for LM Studio endpoint URL."), controlWidth: meetingControlWidth) {
                 PastableTextField(
                     text: appState.config.lmStudioURL,
                     placeholder: "http://localhost:1234",
@@ -1014,10 +1014,10 @@ struct SettingsView: View {
                 .frame(height: 22)
             }
             Divider().background(MuesliTheme.surfaceBorder)
-            settingsRow("Cleanup model", controlWidth: meetingControlWidth) {
+            settingsRow(String(localized: "settings.dictation_cleanup.model", defaultValue: "Cleanup model", bundle: .module, comment: "Repeated field label for cleanup model selection."), controlWidth: meetingControlWidth) {
                 settingsModelTextField(
                     currentModel: appState.config.postProcessorLMStudioModel,
-                    placeholder: "Loaded LM Studio model"
+                    placeholder: String(localized: "settings.hosted_cleanup.loaded_lm_studio_model", defaultValue: "Loaded LM Studio model", bundle: .module, comment: "Field label showing currently loaded LM Studio model.")
                 ) { controller.updatePostProcessorModel($0, for: backend) }
             }
         case .some(.customLLM):
@@ -1031,7 +1031,7 @@ struct SettingsView: View {
 
     private var cleanupPromptSettings: some View {
         VStack(alignment: .leading, spacing: MuesliTheme.spacing12) {
-            settingsRow("Cleanup preset", controlWidth: meetingControlWidth) {
+            settingsRow(String(localized: "settings.cleanup_prompt.cleanup_preset", defaultValue: "Cleanup preset", bundle: .module, comment: "Field label for selecting cleanup prompt preset."), controlWidth: meetingControlWidth) {
                 FixedWidthPopUp(
                     selection: selectedCleanupPromptName,
                     options: cleanupPromptPresets.map(\.name),
@@ -1058,7 +1058,7 @@ struct SettingsView: View {
 
             HStack {
                 Spacer()
-                compactActionButton("Manage Presets…", systemImage: "slider.horizontal.3") {
+                compactActionButton(String(localized: "settings.cleanup_prompt.action.manage_presets", defaultValue: "Manage Presets…", bundle: .module, comment: "Action label to open cleanup preset management."), systemImage: "slider.horizontal.3") {
                     isCleanupPromptManagerPresented = true
                 }
             }
@@ -1066,8 +1066,8 @@ struct SettingsView: View {
     }
 
     private var meetingSummarySettingsSection: some View {
-        settingsSection("Meeting Summaries") {
-            settingsRow("Summary backend", controlWidth: meetingControlWidth) {
+        settingsSection(String(localized: "settings.section.meeting_summaries", defaultValue: "Meeting Summaries", bundle: .module, comment: "Section title for meeting summaries settings.")) {
+            settingsRow(String(localized: "settings.meeting_summaries.summary_backend", defaultValue: "Summary backend", bundle: .module, comment: "Field label for meeting summary backend selection."), controlWidth: meetingControlWidth) {
                 settingsMenu(
                     selection: appState.selectedMeetingSummaryBackend.label,
                     options: MeetingSummaryBackendOption.all.map(\.label)
@@ -1080,18 +1080,18 @@ struct SettingsView: View {
             Divider().background(MuesliTheme.surfaceBorder)
 
             if appState.selectedMeetingSummaryBackend == .chatGPT {
-                settingsRow("Account", controlWidth: meetingControlWidth) {
+                settingsRow(String(localized: "settings.meeting_summaries.account", defaultValue: "Account", bundle: .module, comment: "Field label for meeting summaries account selection."), controlWidth: meetingControlWidth) {
                     chatGPTAccountControl()
                 }
                 Divider().background(MuesliTheme.surfaceBorder)
-                settingsRow("Model", controlWidth: meetingControlWidth) {
+                settingsRow(String(localized: "settings.meeting_summaries.model", defaultValue: "Model", bundle: .module, comment: "Field label for meeting summaries model selection."), controlWidth: meetingControlWidth) {
                     settingsModelMenu(
                         currentModel: appState.config.chatGPTModel,
                         presets: SummaryModelPreset.chatGPTModels
                     ) { val in controller.updateConfig { $0.chatGPTModel = val } }
                 }
             } else if appState.selectedMeetingSummaryBackend == .openAI {
-                settingsRow("API Key", controlWidth: meetingControlWidth) {
+                settingsRow(String(localized: "settings.hosted_cleanup.api_key", defaultValue: "API Key", bundle: .module, comment: "Label for hosted cleanup API key setting"), controlWidth: meetingControlWidth) {
                     PastableSecureField(
                         text: appState.config.openAIAPIKey,
                         placeholder: "sk-...",
@@ -1100,7 +1100,7 @@ struct SettingsView: View {
                     .frame(height: 22)
                 }
                 Divider().background(MuesliTheme.surfaceBorder)
-                settingsRow("Model", controlWidth: meetingControlWidth) {
+                settingsRow(String(localized: "settings.meeting_summaries.model", defaultValue: "Model", bundle: .module, comment: "Label for meeting summaries model setting"), controlWidth: meetingControlWidth) {
                     settingsModelMenu(
                         currentModel: appState.config.openAIModel,
                         presets: SummaryModelPreset.openAIModels
@@ -1108,7 +1108,7 @@ struct SettingsView: View {
                 }
                 keyStatusRow(key: appState.config.openAIAPIKey)
             } else if appState.selectedMeetingSummaryBackend == .ollama {
-                settingsRow("Ollama URL", controlWidth: meetingControlWidth) {
+                settingsRow(String(localized: "settings.meeting_summaries.ollama_url", defaultValue: "Ollama URL", bundle: .module, comment: "Label for meeting summaries Ollama URL setting"), controlWidth: meetingControlWidth) {
                     PastableTextField(
                         text: appState.config.ollamaURL,
                         placeholder: "http://localhost:11434",
@@ -1117,14 +1117,14 @@ struct SettingsView: View {
                     .frame(height: 22)
                 }
                 Divider().background(MuesliTheme.surfaceBorder)
-                settingsRow("Model", controlWidth: meetingControlWidth) {
+                settingsRow(String(localized: "settings.meeting_summaries.model", defaultValue: "Model", bundle: .module, comment: "Label for meeting summaries model setting"), controlWidth: meetingControlWidth) {
                     settingsModelTextField(
                         currentModel: appState.config.ollamaModel,
                         placeholder: "qwen3.5"
                     ) { val in controller.updateConfig { $0.ollamaModel = val } }
                 }
             } else if appState.selectedMeetingSummaryBackend == .lmStudio {
-                settingsRow("LM Studio URL", controlWidth: meetingControlWidth) {
+                settingsRow(String(localized: "settings.meeting_summaries.lm_studio_url", defaultValue: "LM Studio URL", bundle: .module, comment: "Label for meeting summaries LM Studio URL setting"), controlWidth: meetingControlWidth) {
                     PastableTextField(
                         text: appState.config.lmStudioURL,
                         placeholder: "http://localhost:1234",
@@ -1133,10 +1133,10 @@ struct SettingsView: View {
                     .frame(height: 22)
                 }
                 Divider().background(MuesliTheme.surfaceBorder)
-                settingsRow("Model", controlWidth: meetingControlWidth) {
+                settingsRow(String(localized: "settings.meeting_summaries.model", defaultValue: "Model", bundle: .module, comment: "Label for meeting summaries model setting"), controlWidth: meetingControlWidth) {
                     settingsModelTextField(
                         currentModel: appState.config.lmStudioModel,
-                        placeholder: "Select a loaded LM Studio model"
+                        placeholder: String(localized: "settings.meeting_summaries.select_loaded_lm_studio_model", defaultValue: "Select a loaded LM Studio model", bundle: .module, comment: "Placeholder text prompting selection of loaded LM Studio model")
                     ) { val in controller.updateConfig { $0.lmStudioModel = val } }
                 }
             } else if appState.selectedMeetingSummaryBackend == .customLLM {
@@ -1144,7 +1144,7 @@ struct SettingsView: View {
                     val in controller.updateConfig { $0.customLLMModel = val }
                 }
             } else {
-                settingsRow("API Key", controlWidth: meetingControlWidth) {
+                settingsRow(String(localized: "settings.hosted_cleanup.api_key", defaultValue: "API Key", bundle: .module, comment: "Label for hosted cleanup API key setting"), controlWidth: meetingControlWidth) {
                     PastableSecureField(
                         text: appState.config.openRouterAPIKey,
                         placeholder: "sk-or-...",
@@ -1153,7 +1153,7 @@ struct SettingsView: View {
                     .frame(height: 22)
                 }
                 Divider().background(MuesliTheme.surfaceBorder)
-                settingsRow("Model", controlWidth: meetingControlWidth) {
+                settingsRow(String(localized: "settings.meeting_summaries.model", defaultValue: "Model", bundle: .module, comment: "Label for meeting summaries model setting"), controlWidth: meetingControlWidth) {
                     openRouterFreeModelMenu
                 }
                 keyStatusRow(key: appState.config.openRouterAPIKey)
@@ -1164,7 +1164,7 @@ struct SettingsView: View {
     @ViewBuilder
     private func customLLMSettingsRows(model: String, onModelChange: @escaping (String) -> Void) -> some View {
         Divider().background(MuesliTheme.surfaceBorder)
-        settingsRow("API Format", controlWidth: meetingControlWidth) {
+        settingsRow(String(localized: "settings.custom_llm.api_format", defaultValue: "API Format", bundle: .module, comment: "Label for custom LLM API format setting"), controlWidth: meetingControlWidth) {
             settingsMenu(
                 selection: CustomLLMFormat(rawValue: appState.config.customLLMFormat)?.label ?? CustomLLMFormat.openAI.label,
                 options: CustomLLMFormat.allCases.map(\.label)
@@ -1174,7 +1174,7 @@ struct SettingsView: View {
             }
         }
         Divider().background(MuesliTheme.surfaceBorder)
-        settingsRow("Endpoint", controlWidth: meetingControlWidth) {
+        settingsRow(String(localized: "settings.custom_llm.endpoint", defaultValue: "Endpoint", bundle: .module, comment: "Label for custom LLM endpoint setting"), controlWidth: meetingControlWidth) {
             PastableTextField(
                 text: appState.config.customLLMURL,
                 placeholder: appState.config.customLLMFormat == CustomLLMFormat.anthropic.rawValue
@@ -1185,18 +1185,18 @@ struct SettingsView: View {
             .frame(height: 22)
         }
         Divider().background(MuesliTheme.surfaceBorder)
-        settingsRow("API Key", controlWidth: meetingControlWidth) {
+        settingsRow(String(localized: "settings.custom_llm.api_key", defaultValue: "API Key", bundle: .module, comment: "Label for custom LLM API key setting"), controlWidth: meetingControlWidth) {
             PastableSecureField(
                 text: appState.config.customLLMAPIKey,
                 placeholder: appState.config.customLLMFormat == CustomLLMFormat.anthropic.rawValue
-                    ? "Required for Anthropic API"
-                    : "Optional for local servers",
+                    ? String(localized: "settings.custom_llm.api_key.required_for_anthropic", defaultValue: "Required for Anthropic API", bundle: .module, comment: "Helper text indicating API key requirement for Anthropic")
+                    : String(localized: "settings.custom_llm.api_key.optional_for_local_servers", defaultValue: "Optional for local servers", bundle: .module, comment: "Helper text indicating API key is optional for local servers"),
                 onChange: { val in controller.updateConfig { $0.customLLMAPIKey = val } }
             )
             .frame(height: 22)
         }
         Divider().background(MuesliTheme.surfaceBorder)
-        settingsRow("Model", controlWidth: meetingControlWidth) {
+        settingsRow(String(localized: "settings.meeting_summaries.model", defaultValue: "Model", bundle: .module, comment: "Label for meeting summaries model setting"), controlWidth: meetingControlWidth) {
             settingsModelTextField(
                 currentModel: model,
                 placeholder: appState.config.customLLMFormat == CustomLLMFormat.anthropic.rawValue
@@ -1210,10 +1210,10 @@ struct SettingsView: View {
         VStack(alignment: .leading, spacing: MuesliTheme.spacing24) {
             dictationModelSettingsSection
 
-            settingsSection("Transcription") {
+            settingsSection(String(localized: "settings.section.transcription", defaultValue: "Transcription", bundle: .module, comment: "Section title for transcription settings")) {
                 settingsRow(
                     "Microphone",
-                    description: "Automatic uses system input, or Mac mic with AirPods."
+                    description: String(localized: "settings.dictation.microphone.description.automatic_system_or_mac_mic", defaultValue: "Automatic uses system input, or Mac mic with AirPods.", bundle: .module, comment: "Description for dictation microphone automatic selection behavior")
                 ) {
                     let options = dictationMicrophoneOptions
                     FixedWidthPopUp(
@@ -1228,7 +1228,7 @@ struct SettingsView: View {
                     .frame(height: 24)
                 }
                 Divider().background(MuesliTheme.surfaceBorder)
-                settingsRow("AI transcript cleanup") {
+                settingsRow(String(localized: "settings.dictation.ai_transcript_cleanup", defaultValue: "AI transcript cleanup", bundle: .module, comment: "Label for AI transcript cleanup dictation setting")) {
                     settingsSwitch(isOn: appState.config.enablePostProcessor) { newValue in
                         controller.setPostProcessorEnabled(newValue)
                     }
@@ -1237,32 +1237,32 @@ struct SettingsView: View {
                 cleanupPromptSettings
                 Divider().background(MuesliTheme.surfaceBorder)
                 settingsRow(
-                    "Dictionary suggestions",
-                    description: "Suggest words after corrections by briefly reading focused app text via Accessibility."
+                    String(localized: "settings.dictation.dictionary_suggestions", defaultValue: "Dictionary suggestions", bundle: .module, comment: "Label for dictionary suggestions dictation setting"),
+                    description: String(localized: "settings.dictation.dictionary_suggestions.description", defaultValue: "Suggest words after corrections by briefly reading focused app text via Accessibility.", bundle: .module, comment: "Description for dictionary suggestions behavior")
                 ) {
                     settingsSwitch(isOn: appState.config.enableDictionaryCorrectionPrompts) { newValue in
                         handleDictionaryCorrectionPromptsToggle(newValue)
                     }
-                    .help("Briefly reads focused app text after dictation to detect corrections.")
+                    .help(String(localized: "settings.dictation.help.ocr_context_brief_description", defaultValue: "Briefly reads focused app text after dictation to detect corrections.", bundle: .module, comment: "Help text explaining OCR context behavior after dictation"))
                 }
             }
 
             dictationCleanupSettingsSection
 
-            settingsSection("Advanced") {
-                settingsRow("Pause media during dictation") {
+            settingsSection(String(localized: "settings.section.advanced", defaultValue: "Advanced", bundle: .module, comment: "Section title for advanced settings")) {
+                settingsRow(String(localized: "settings.dictation.pause_media_during_dictation", defaultValue: "Pause media during dictation", bundle: .module, comment: "Toggle label for pausing media while dictating")) {
                     settingsSwitch(isOn: appState.config.pauseMediaDuringDictation) { newValue in
                         controller.updateConfig { $0.pauseMediaDuringDictation = newValue }
                     }
                 }
                 Divider().background(MuesliTheme.surfaceBorder)
-                settingsRow("Mute system audio during dictation") {
+                settingsRow(String(localized: "settings.dictation.mute_system_audio_during_dictation", defaultValue: "Mute system audio during dictation", bundle: .module, comment: "Toggle label for muting system audio while dictating")) {
                     settingsSwitch(isOn: appState.config.muteSystemAudioDuringDictation) { newValue in
                         controller.updateConfig { $0.muteSystemAudioDuringDictation = newValue }
                     }
                 }
                 Divider().background(MuesliTheme.surfaceBorder)
-                screenContextRow("App context")
+                screenContextRow(String(localized: "settings.dictation.app_context", defaultValue: "App context", bundle: .module, comment: "Label for app context setting"))
                 Divider().background(MuesliTheme.surfaceBorder)
                 dictationOCRContextRow
             }
@@ -1271,25 +1271,25 @@ struct SettingsView: View {
 
     private var computerUseSettingsPane: some View {
         VStack(alignment: .leading, spacing: MuesliTheme.spacing24) {
-            settingsSection("Computer Use") {
-                settingsRow("Enable planner", controlWidth: meetingControlWidth) {
+            settingsSection(String(localized: "settings.section.computer_use", defaultValue: "Computer Use", bundle: .module, comment: "Section title for computer use settings")) {
+                settingsRow(String(localized: "settings.computer_use.enable_planner", defaultValue: "Enable planner", bundle: .module, comment: "Toggle label to enable computer use planner"), controlWidth: meetingControlWidth) {
                     settingsSwitch(isOn: appState.config.enableComputerUsePlanner) { newValue in
                         controller.updateConfig { $0.enableComputerUsePlanner = newValue }
                     }
                 }
                 Divider().background(MuesliTheme.surfaceBorder)
-                settingsRow("Account", controlWidth: meetingControlWidth) {
+                settingsRow(String(localized: "settings.computer_use.account", defaultValue: "Account", bundle: .module, comment: "Label for computer use account setting"), controlWidth: meetingControlWidth) {
                     chatGPTAccountControl()
                 }
                 Divider().background(MuesliTheme.surfaceBorder)
-                settingsRow("Planner model", controlWidth: meetingControlWidth) {
+                settingsRow(String(localized: "settings.computer_use.planner_model", defaultValue: "Planner model", bundle: .module, comment: "Label for computer use planner model setting"), controlWidth: meetingControlWidth) {
                     settingsModelMenu(
                         currentModel: appState.config.computerUsePlannerModel,
                         presets: SummaryModelPreset.computerUsePlannerModels
                     ) { val in controller.updateConfig { $0.computerUsePlannerModel = val } }
                 }
                 Divider().background(MuesliTheme.surfaceBorder)
-                settingsRow("Timeout", controlWidth: meetingControlWidth) {
+                settingsRow(String(localized: "settings.computer_use.timeout", defaultValue: "Timeout", bundle: .module, comment: "Label for computer use timeout setting"), controlWidth: meetingControlWidth) {
                     Stepper(
                         value: Binding(
                             get: { max(appState.config.computerUseTimeoutSeconds, 1) },
@@ -1300,7 +1300,7 @@ struct SettingsView: View {
                         in: 1...600,
                         step: 15
                     ) {
-                        Text("\(max(appState.config.computerUseTimeoutSeconds, 1)) seconds")
+                        Text(String(format: String(localized: "settings.computer_use.timeout.seconds", defaultValue: "%d seconds", bundle: .module, comment: "Computer use timeout value in seconds"), max(appState.config.computerUseTimeoutSeconds, 1)))
                             .font(MuesliTheme.body())
                             .foregroundStyle(MuesliTheme.textPrimary)
                     }
@@ -1313,20 +1313,20 @@ struct SettingsView: View {
         VStack(alignment: .leading, spacing: MuesliTheme.spacing24) {
             meetingTranscriptionSettingsSection
 
-            settingsSection("Meeting Context") {
-                screenContextRow("Meeting context", includesScreenOCR: true)
+            settingsSection(String(localized: "settings.section.meeting_context", defaultValue: "Meeting Context", bundle: .module, comment: "Section title for meeting context settings")) {
+                screenContextRow(String(localized: "settings.meetings.meeting_context", defaultValue: "Meeting context", bundle: .module, comment: "Label for meeting context setting"), includesScreenOCR: true)
             }
 
             meetingSummarySettingsSection
 
-            settingsSection("Meeting Notes") {
-                settingsRow("Default template", controlWidth: meetingControlWidth) {
+            settingsSection(String(localized: "settings.section.meeting_notes", defaultValue: "Meeting Notes", bundle: .module, comment: "Section title for meeting notes settings")) {
+                settingsRow(String(localized: "settings.meetings.default_template", defaultValue: "Default template", bundle: .module, comment: "Label for default meeting notes template setting"), controlWidth: meetingControlWidth) {
                     meetingTemplateMenu(selectionID: appState.config.defaultMeetingTemplateID) { id in
                         controller.updateDefaultMeetingTemplate(id: id)
                     }
                 }
                 Divider().background(MuesliTheme.surfaceBorder)
-                settingsRow("Summary retries", controlWidth: meetingControlWidth) {
+                settingsRow(String(localized: "settings.meetings.summary_retries", defaultValue: "Summary retries", bundle: .module, comment: "Label for summary retry count setting"), controlWidth: meetingControlWidth) {
                     Stepper(
                         value: Binding(
                             get: {
@@ -1345,23 +1345,23 @@ struct SettingsView: View {
                             .foregroundStyle(MuesliTheme.textPrimary)
                     }
                 }
-                settingsDescription("Retry transient AI summary failures before saving failed notes.")
+                settingsDescription(String(localized: "settings.meetings.summary_retries.description", defaultValue: "Retry transient AI summary failures before saving failed notes.", bundle: .module, comment: "Description for summary retries behavior"))
                 Divider().background(MuesliTheme.surfaceBorder)
-                settingsRow("Templates", controlWidth: meetingControlWidth) {
-                    actionButton("Manage Templates…") {
+                settingsRow(String(localized: "settings.meetings.templates", defaultValue: "Templates", bundle: .module, comment: "Label for meeting templates setting"), controlWidth: meetingControlWidth) {
+                    actionButton(String(localized: "settings.meetings.action.manage_templates", defaultValue: "Manage Templates…", bundle: .module, comment: "Action title to manage meeting templates")) {
                         controller.showMeetingTemplatesManager()
                     }
                 }
             }
 
-            settingsSection("Recording") {
-                settingsRow("Auto-record calendar meetings") {
+            settingsSection(String(localized: "settings.section.recording", defaultValue: "Recording", bundle: .module, comment: "Section title for recording settings")) {
+                settingsRow(String(localized: "settings.meetings.auto_record_calendar_meetings", defaultValue: "Auto-record calendar meetings", bundle: .module, comment: "Toggle label for automatically recording calendar meetings")) {
                     settingsSwitch(isOn: appState.config.autoRecordMeetings) { newValue in
                         controller.updateConfig { $0.autoRecordMeetings = newValue }
                     }
                 }
                 Divider().background(MuesliTheme.surfaceBorder)
-                settingsRow("Save meeting recording") {
+                settingsRow(String(localized: "settings.meetings.save_meeting_recording", defaultValue: "Save meeting recording", bundle: .module, comment: "Toggle label for saving meeting recordings")) {
                     settingsMenu(
                         selection: recordingSaveLabel(for: appState.config.meetingRecordingSavePolicy),
                         options: MeetingRecordingSavePolicy.allCases.map(recordingSaveLabel(for:))
@@ -1372,7 +1372,7 @@ struct SettingsView: View {
                 }
                 if appState.config.meetingRecordingSavePolicy != .never {
                     Divider().background(MuesliTheme.surfaceBorder)
-                    settingsRow("Recording format") {
+                    settingsRow(String(localized: "settings.meetings.recording_format", defaultValue: "Recording format", bundle: .module, comment: "Label for recording format setting")) {
                         settingsMenu(
                             selection: appState.config.resolvedMeetingRecordingFileFormat.displayName,
                             options: MeetingRecordingFileFormat.allCases.map(recordingFileFormatLabel(for:))
@@ -1381,23 +1381,23 @@ struct SettingsView: View {
                             controller.updateConfig { $0.meetingRecordingFileFormat = format.rawValue }
                         }
                     }
-                    settingsDescription("M4A is recommended for smaller files. WAV is lossless and uses more storage.")
+                    settingsDescription(String(localized: "settings.meetings.recording_format.description", defaultValue: "M4A is recommended for smaller files. WAV is lossless and uses more storage.", bundle: .module, comment: "Description explaining recording format tradeoffs"))
                 }
             }
 
-            settingsSection("Auto Export") {
-                settingsRow("Auto-export meetings") {
+            settingsSection(String(localized: "settings.section.auto_export", defaultValue: "Auto Export", bundle: .module, comment: "Section title for auto export settings")) {
+                settingsRow(String(localized: "settings.meetings.auto_export_meetings", defaultValue: "Auto-export meetings", bundle: .module, comment: "Toggle label for auto exporting meetings")) {
                     settingsSwitch(isOn: appState.config.autoExportMarkdownEnabled) { newValue in
                         controller.updateConfig { $0.autoExportMarkdownEnabled = newValue }
                     }
                 }
                 if appState.config.autoExportMarkdownEnabled {
                     Divider().background(MuesliTheme.surfaceBorder)
-                    settingsRow("Destination folder") {
+                    settingsRow(String(localized: "settings.meetings.destination_folder", defaultValue: "Destination folder", bundle: .module, comment: "Label for auto export destination folder setting")) {
                         autoExportFolderPicker
                     }
                     Divider().background(MuesliTheme.surfaceBorder)
-                    settingsRow("Content") {
+                    settingsRow(String(localized: "settings.meetings.content", defaultValue: "Content", bundle: .module, comment: "Label for exported meeting content setting")) {
                         settingsMenu(
                             selection: appState.config.resolvedAutoExportMarkdownContent.displayName,
                             options: MeetingExportContent.allCases.map(\.displayName)
@@ -1408,7 +1408,7 @@ struct SettingsView: View {
                         }
                     }
                     Divider().background(MuesliTheme.surfaceBorder)
-                    settingsRow("File format") {
+                    settingsRow(String(localized: "settings.meetings.file_format", defaultValue: "File format", bundle: .module, comment: "Label for export file format setting")) {
                         settingsMenu(
                             selection: appState.config.resolvedAutoExportFileFormat.displayName,
                             options: MeetingAutoExportFileFormat.allCases.map(\.displayName)
@@ -1418,24 +1418,24 @@ struct SettingsView: View {
                         }
                     }
                 }
-                Text("Automatically saves each completed meeting to the chosen folder in the selected format.")
+                Text(String(localized: "settings.meetings.auto_export.description", defaultValue: "Automatically saves each completed meeting to the chosen folder in the selected format.", bundle: .module, comment: "Description for auto export behavior"))
                     .font(MuesliTheme.caption())
                     .foregroundStyle(MuesliTheme.textTertiary)
                     .padding(.horizontal, MuesliTheme.spacing16)
             }
 
-            settingsSection("Meeting Notifications") {
-                settingsRow("Scheduled meetings") {
+            settingsSection(String(localized: "settings.section.meeting_notifications", defaultValue: "Meeting Notifications", bundle: .module, comment: "Section title for meeting notifications settings")) {
+                settingsRow(String(localized: "settings.meetings.notifications.scheduled_meetings", defaultValue: "Scheduled meetings", bundle: .module, comment: "Toggle label for scheduled meetings notifications")) {
                     settingsSwitch(isOn: appState.config.showScheduledMeetingNotifications) { newValue in
                         controller.updateConfig { $0.showScheduledMeetingNotifications = newValue }
                     }
                 }
-                settingsDescription("Show notifications for calendar meetings with a join link.")
+                settingsDescription(String(localized: "settings.meetings.notifications.scheduled_meetings.description", defaultValue: "Show notifications for calendar meetings with a join link.", bundle: .module, comment: "Description for scheduled meetings notifications setting"))
 
                 if appState.config.showScheduledMeetingNotifications {
                     Divider().background(MuesliTheme.surfaceBorder)
 
-                    settingsRow("Reminder timing") {
+                    settingsRow(String(localized: "settings.meetings.notifications.reminder_timing", defaultValue: "Reminder timing", bundle: .module, comment: "Label for meeting reminder timing setting")) {
                         settingsMenu(
                             selection: scheduledMeetingLeadTimeLabel(for: appState.config.scheduledMeetingNotificationLeadTime),
                             options: ScheduledMeetingNotificationLeadTime.allCases.map(scheduledMeetingLeadTimeLabel(for:))
@@ -1444,17 +1444,17 @@ struct SettingsView: View {
                             controller.updateConfig { $0.scheduledMeetingNotificationLeadTime = leadTime }
                         }
                     }
-                    settingsDescription("At start time avoids early calendar-only prompts before you join.")
+                    settingsDescription(String(localized: "settings.meetings.notifications.reminder_timing.description", defaultValue: "At start time avoids early calendar-only prompts before you join.", bundle: .module, comment: "Description for reminder timing behavior"))
                 }
 
                 Divider().background(MuesliTheme.surfaceBorder)
 
-                settingsRow("Auto-detected meetings") {
+                settingsRow(String(localized: "settings.meetings.notifications.auto_detected_meetings", defaultValue: "Auto-detected meetings", bundle: .module, comment: "Toggle label for auto-detected meeting notifications")) {
                     settingsSwitch(isOn: appState.config.showMeetingDetectionNotification) { newValue in
                         controller.updateConfig { $0.showMeetingDetectionNotification = newValue }
                     }
                 }
-                settingsDescription("Show notifications when a call is detected from browser, camera, microphone, or app audio activity.")
+                settingsDescription(String(localized: "settings.meetings.notifications.auto_detected_meetings.description", defaultValue: "Show notifications when a call is detected from browser, camera, microphone, or app audio activity.", bundle: .module, comment: "Description for auto-detected meetings notifications setting"))
 
                 if appState.config.showMeetingDetectionNotification {
                     Divider().background(MuesliTheme.surfaceBorder)
@@ -1462,8 +1462,8 @@ struct SettingsView: View {
                 }
             }
 
-            settingsSection("Calendars") {
-                settingsRow("Upcoming meetings", controlWidth: meetingControlWidth) {
+            settingsSection(String(localized: "settings.section.calendars", defaultValue: "Calendars", bundle: .module, comment: "Section title for calendar settings")) {
+                settingsRow(String(localized: "settings.meetings.calendars.upcoming_meetings", defaultValue: "Upcoming meetings", bundle: .module, comment: "Label for upcoming meetings calendar setting"), controlWidth: meetingControlWidth) {
                     settingsMenu(
                         selection: selectedUpcomingMeetingsWindow.label,
                         options: UpcomingMeetingsWindow.allCases.map(\.label)
@@ -1472,35 +1472,35 @@ struct SettingsView: View {
                         controller.updateUpcomingMeetingsWindow(dayCount: window.dayCount)
                     }
                 }
-                settingsDescription("Controls how many calendar days appear in Coming Up, the menu bar, and scheduled meeting checks.")
+                settingsDescription(String(localized: "settings.meetings.calendars.upcoming_meetings.description", defaultValue: "Controls how many calendar days appear in Coming Up, the menu bar, and scheduled meeting checks.", bundle: .module, comment: "Description for upcoming meetings calendar days setting"))
                 Divider().background(MuesliTheme.surfaceBorder)
                 calendarSourcesControl
                     .padding(.bottom, MuesliTheme.spacing8)
             }
 
             if appState.isGoogleCalendarAvailable {
-                settingsSection("Calendar") {
-                    settingsRow("Google Calendar") {
+                settingsSection(String(localized: "settings.section.calendar", defaultValue: "Calendar", bundle: .module, comment: "Section title for calendar integration settings")) {
+                    settingsRow(String(localized: "settings.meetings.calendar.google_calendar", defaultValue: "Google Calendar", bundle: .module, comment: "Label for Google Calendar integration setting")) {
                         googleCalendarControl
                     }
                 }
             }
 
-            settingsSection("Advanced") {
-                settingsRow("Enable post-meeting hook", controlWidth: meetingControlWidth) {
+            settingsSection(String(localized: "settings.section.advanced", defaultValue: "Advanced", bundle: .module, comment: "Section title for advanced meeting settings")) {
+                settingsRow(String(localized: "settings.meetings.advanced.enable_post_meeting_hook", defaultValue: "Enable post-meeting hook", bundle: .module, comment: "Toggle label for enabling post-meeting hook script"), controlWidth: meetingControlWidth) {
                     settingsSwitch(isOn: appState.config.meetingHookEnabled) { newValue in
                         controller.updateConfig { $0.meetingHookEnabled = newValue }
                     }
                 }
                 Divider().background(MuesliTheme.surfaceBorder)
-                settingsRow("Hook script", controlWidth: meetingControlWidth) {
+                settingsRow(String(localized: "settings.meetings.advanced.hook_script", defaultValue: "Hook script", bundle: .module, comment: "Label for post-meeting hook script setting"), controlWidth: meetingControlWidth) {
                     meetingHookPathPicker
                 }
                 Divider().background(MuesliTheme.surfaceBorder)
-                settingsRow("Timeout", controlWidth: meetingControlWidth) {
+                settingsRow(String(localized: "settings.meetings.advanced.timeout", defaultValue: "Timeout", bundle: .module, comment: "Label for post-meeting hook timeout setting"), controlWidth: meetingControlWidth) {
                     meetingHookTimeoutControl
                 }
-                settingsDescription("Runs a user-supplied executable after each completed meeting. The executable receives JSON on stdin and must already be runnable on its own.")
+                settingsDescription(String(localized: "settings.meetings.advanced.hook_script.description", defaultValue: "Runs a user-supplied executable after each completed meeting. The executable receives JSON on stdin and must already be runnable on its own.", bundle: .module, comment: "Description for post-meeting hook script behavior"))
             }
             .padding(.top, MuesliTheme.spacing8)
         }
@@ -1511,22 +1511,22 @@ struct SettingsView: View {
 
     private var appearanceSettingsPane: some View {
         VStack(alignment: .leading, spacing: MuesliTheme.spacing24) {
-            settingsSection("Floating Indicator") {
-                settingsRow("Show floating indicator") {
+            settingsSection(String(localized: "settings.section.floating_indicator", defaultValue: "Floating Indicator", bundle: .module, comment: "Section title for floating indicator settings")) {
+                settingsRow(String(localized: "settings.appearance.show_floating_indicator", defaultValue: "Show floating indicator", bundle: .module, comment: "Toggle label to show floating indicator")) {
                     settingsSwitch(isOn: appState.config.showFloatingIndicator) { newValue in
                         controller.updateConfig { $0.showFloatingIndicator = newValue }
                         controller.refreshIndicatorVisibility()
                     }
                 }
                 Divider().background(MuesliTheme.surfaceBorder)
-                settingsRow("Show hotkey on floating indicator") {
+                settingsRow(String(localized: "settings.appearance.show_hotkey_on_floating_indicator", defaultValue: "Show hotkey on floating indicator", bundle: .module, comment: "Toggle label to show hotkey on floating indicator")) {
                     settingsSwitch(isOn: appState.config.showHotkeyOnFloatingIndicator) { newValue in
                         controller.updateConfig { $0.showHotkeyOnFloatingIndicator = newValue }
                     }
                     .disabled(!appState.config.showFloatingIndicator)
                 }
                 Divider().background(MuesliTheme.surfaceBorder)
-                settingsRow("Indicator position") {
+                settingsRow(String(localized: "settings.appearance.indicator_position", defaultValue: "Indicator position", bundle: .module, comment: "Label for floating indicator position setting")) {
                     let isCustom = appState.config.indicatorAnchor == .custom
                     let selection = isCustom ? customIndicatorPositionLabel : appState.config.indicatorAnchor.label
                     let options = (isCustom ? [customIndicatorPositionLabel] : [])
@@ -1543,34 +1543,34 @@ struct SettingsView: View {
                 }
             }
 
-            settingsSection("Appearance") {
-                settingsRow("Dark mode") {
+            settingsSection(String(localized: "settings.section.appearance", defaultValue: "Appearance", bundle: .module, comment: "Section title for appearance settings")) {
+                settingsRow(String(localized: "settings.appearance.dark_mode", defaultValue: "Dark mode", bundle: .module, comment: "Toggle label for dark mode setting")) {
                     settingsSwitch(isOn: appState.config.darkMode) { newValue in
                         controller.updateConfig { $0.darkMode = newValue }
                     }
                 }
                 Divider().background(MuesliTheme.surfaceBorder)
-                settingsRow("Menu bar icon") {
+                settingsRow(String(localized: "settings.appearance.menu_bar_icon", defaultValue: "Menu bar icon", bundle: .module, comment: "Label for menu bar icon setting")) {
                     menuBarIconPicker
                 }
                 Divider().background(MuesliTheme.surfaceBorder)
-                settingsRow("Show hotkey in menu bar") {
+                settingsRow(String(localized: "settings.appearance.show_hotkey_in_menu_bar", defaultValue: "Show hotkey in menu bar", bundle: .module, comment: "Toggle label to show hotkey in menu bar")) {
                     settingsSwitch(isOn: appState.config.showHotkeyInMenuBar) { newValue in
                         controller.updateConfig { $0.showHotkeyInMenuBar = newValue }
                     }
                 }
                 Divider().background(MuesliTheme.surfaceBorder)
-                settingsRow("Accent color") {
+                settingsRow(String(localized: "settings.appearance.accent_color", defaultValue: "Accent color", bundle: .module, comment: "Label for accent color setting")) {
                     glassTintPicker
                 }
                 Divider().background(MuesliTheme.surfaceBorder)
-                settingsRow("Play sound effects") {
+                settingsRow(String(localized: "settings.appearance.play_sound_effects", defaultValue: "Play sound effects", bundle: .module, comment: "Toggle label for playing sound effects")) {
                     settingsSwitch(isOn: appState.config.soundEnabled) { newValue in
                         controller.updateConfig { $0.soundEnabled = newValue }
                     }
                 }
                 Divider().background(MuesliTheme.surfaceBorder)
-                settingsRow("Show next meeting in menu bar") {
+                settingsRow(String(localized: "settings.appearance.show_next_meeting_in_menu_bar", defaultValue: "Show next meeting in menu bar", bundle: .module, comment: "Toggle label to show next meeting in menu bar")) {
                     settingsSwitch(isOn: appState.config.showNextMeetingInMenuBar) { newValue in
                         controller.updateConfig { $0.showNextMeetingInMenuBar = newValue }
                     }
@@ -1578,8 +1578,8 @@ struct SettingsView: View {
             }
 
             if appState.config.maraudersMapUnlocked {
-                settingsSection("Marauder\u{2019}s Map") {
-                    settingsRow("Meeting countdown audio") {
+                settingsSection(String(localized: "settings.section.marauders_map", defaultValue: "Marauder’s Map", bundle: .module, comment: "Section title for Marauder’s Map settings")) {
+                    settingsRow(String(localized: "settings.appearance.meeting_countdown_audio", defaultValue: "Meeting countdown audio", bundle: .module, comment: "Label for meeting countdown audio setting")) {
                         maraudersMapControl
                     }
                     Divider().background(MuesliTheme.surfaceBorder)
@@ -1589,7 +1589,7 @@ struct SettingsView: View {
                             isPreviewingClip = false
                             controller.resetMaraudersMap()
                         } label: {
-                            Text("Mischief Managed")
+                            Text(String(localized: "settings.appearance.mischief_managed", defaultValue: "Mischief Managed", bundle: .module, comment: "Label for resetting or clearing Marauder's Map customization"))
                                 .font(.system(size: 11))
                                 .foregroundColor(MuesliTheme.textSecondary)
                         }
@@ -1671,7 +1671,7 @@ struct SettingsView: View {
                     OpenAILogoShape()
                         .fill(.white)
                         .frame(width: 10, height: 10)
-                    Text("Signed in · Sign Out")
+                    Text(String(localized: "settings.chatgpt_account.signed_in_sign_out", defaultValue: "Signed in · Sign Out", bundle: .module, comment: "Button title indicating ChatGPT is signed in with sign out action"))
                         .font(.system(size: 11, weight: .medium))
                         .foregroundStyle(.white)
                         .lineLimit(1)
@@ -1687,7 +1687,7 @@ struct SettingsView: View {
             HStack(spacing: 6) {
                 ProgressView()
                     .controlSize(.small)
-                Text("Signing in...")
+                Text(String(localized: "settings.chatgpt_account.signing_in", defaultValue: "Signing in...", bundle: .module, comment: "Status label while ChatGPT sign-in is in progress"))
                     .font(.system(size: 11))
                     .foregroundStyle(MuesliTheme.textSecondary)
             }
@@ -1706,7 +1706,7 @@ struct SettingsView: View {
                         OpenAILogoShape()
                             .fill(.white)
                             .frame(width: 10, height: 10)
-                        Text("Sign in with ChatGPT")
+                        Text(String(localized: "settings.chatgpt_account.sign_in_with_chatgpt", defaultValue: "Sign in with ChatGPT", bundle: .module, comment: "Button title to start ChatGPT sign-in flow"))
                             .font(.system(size: 11, weight: .medium))
                             .foregroundStyle(.white)
                             .lineLimit(1)
@@ -1739,7 +1739,7 @@ struct SettingsView: View {
                     Image(systemName: "calendar")
                         .font(.system(size: 10))
                         .foregroundStyle(.white)
-                    Text("Connected · Disconnect")
+                    Text(String(localized: "settings.google_calendar.connected_disconnect", defaultValue: "Connected · Disconnect", bundle: .module, comment: "Button title indicating Google Calendar is connected with disconnect action"))
                         .font(.system(size: 11, weight: .medium))
                         .foregroundStyle(.white)
                         .lineLimit(1)
@@ -1755,7 +1755,7 @@ struct SettingsView: View {
             HStack(spacing: 6) {
                 ProgressView()
                     .controlSize(.small)
-                Text("Connecting...")
+                Text(String(localized: "settings.google_calendar.connecting", defaultValue: "Connecting...", bundle: .module, comment: "Status label while Google Calendar connection is in progress"))
                     .font(.system(size: 11))
                     .foregroundStyle(MuesliTheme.textSecondary)
             }
@@ -1765,7 +1765,7 @@ struct SettingsView: View {
                     Image(systemName: "calendar.badge.plus")
                         .font(.system(size: 10))
                         .foregroundStyle(.white.opacity(0.4))
-                    Text("Connect Google Calendar")
+                    Text(String(localized: "settings.google_calendar.connect", defaultValue: "Connect Google Calendar", bundle: .module, comment: "Button title to connect Google Calendar"))
                         .font(.system(size: 11, weight: .medium))
                         .foregroundStyle(.white.opacity(0.4))
                         .lineLimit(1)
@@ -1776,7 +1776,7 @@ struct SettingsView: View {
                 .background(MuesliTheme.textTertiary.opacity(0.3))
                 .clipShape(RoundedRectangle(cornerRadius: MuesliTheme.cornerSmall))
 
-                Text("Google OAuth verification pending")
+                Text(String(localized: "settings.google_calendar.oauth_verification_pending", defaultValue: "Google OAuth verification pending", bundle: .module, comment: "Status message when Google OAuth verification is pending"))
                     .font(.system(size: 10))
                     .foregroundStyle(MuesliTheme.textTertiary)
             }
@@ -1795,7 +1795,7 @@ struct SettingsView: View {
                         Image(systemName: "calendar.badge.plus")
                             .font(.system(size: 10))
                             .foregroundStyle(.white)
-                        Text("Connect Google Calendar")
+                        Text(String(localized: "settings.google_calendar.connect", defaultValue: "Connect Google Calendar", bundle: .module, comment: "Button title to connect Google Calendar"))
                             .font(.system(size: 11, weight: .medium))
                             .foregroundStyle(.white)
                             .lineLimit(1)
@@ -1827,7 +1827,7 @@ struct SettingsView: View {
                 ),
                 options: SoundController.maraudersMapClipLabels
             ) { label in
-                if label == "Custom\u{2026}" {
+                if label == "Custom…" {
                     pickCustomAudioFile()
                 } else if let preset = SoundController.maraudersMapPresets
                     .first(where: { $0.label == label }) {
@@ -1868,7 +1868,7 @@ struct SettingsView: View {
 
     private func pickCustomAudioFile() {
         let panel = NSOpenPanel()
-        panel.title = "Choose an audio clip"
+        panel.title = String(localized: "settings.appearance.audio_picker.choose_clip", defaultValue: "Choose an audio clip", bundle: .module, comment: "Prompt title for selecting an audio clip file")
         panel.allowedContentTypes = [.mp3, .mpeg4Audio, .wav, .aiff]
         panel.allowsMultipleSelection = false
         panel.canChooseDirectories = false
@@ -1896,8 +1896,8 @@ struct SettingsView: View {
 
     private func pickMeetingHookFile() {
         let panel = NSOpenPanel()
-        panel.title = "Choose a hook script"
-        panel.prompt = "Choose Script"
+        panel.title = String(localized: "settings.meetings.hook_script.choose_prompt", defaultValue: "Choose a hook script", bundle: .module, comment: "Prompt title for selecting a post-meeting hook script")
+        panel.prompt = String(localized: "settings.meetings.hook_script.choose_button", defaultValue: "Choose Script", bundle: .module, comment: "Button title for choosing a hook script file")
         panel.allowsMultipleSelection = false
         panel.canChooseDirectories = false
         panel.canChooseFiles = true
@@ -1910,8 +1910,8 @@ struct SettingsView: View {
 
     private func pickAutoExportFolder() {
         let panel = NSOpenPanel()
-        panel.title = "Choose a folder for exported notes"
-        panel.prompt = "Choose Folder"
+        panel.title = String(localized: "settings.meetings.auto_export.choose_folder_prompt", defaultValue: "Choose a folder for exported notes", bundle: .module, comment: "Prompt title for selecting auto-export destination folder")
+        panel.prompt = String(localized: "settings.meetings.auto_export.choose_folder_button", defaultValue: "Choose Folder", bundle: .module, comment: "Button title for choosing export destination folder")
         panel.allowsMultipleSelection = false
         panel.canChooseDirectories = true
         panel.canChooseFiles = false
@@ -1964,7 +1964,7 @@ struct SettingsView: View {
     // MARK: - Permissions
 
     private var permissionsSection: some View {
-        settingsSection("Permissions") {
+        settingsSection(String(localized: "settings.permissions.section", defaultValue: "Permissions", bundle: .module, comment: "Section title for app permissions settings")) {
             permissionStatusRow(
                 "Microphone",
                 granted: micGranted,
@@ -1994,7 +1994,7 @@ struct SettingsView: View {
             )
             Divider().background(MuesliTheme.surfaceBorder)
             permissionStatusRow(
-                "Screen Recording",
+                String(localized: "settings.permissions.screen_recording", defaultValue: "Screen Recording", bundle: .module, comment: "Permission row label for screen recording access"),
                 granted: screenRecordingGranted,
                 action: { CGRequestScreenCaptureAccess() },
                 pane: "Privacy_ScreenCapture"
@@ -2002,7 +2002,7 @@ struct SettingsView: View {
             if appState.config.useCoreAudioTap {
                 Divider().background(MuesliTheme.surfaceBorder)
                 permissionStatusRow(
-                    "System Audio",
+                    String(localized: "settings.permissions.system_audio", defaultValue: "System Audio", bundle: .module, comment: "Permission row label for system audio access"),
                     granted: systemAudioGranted,
                     action: {
                         Task { await CoreAudioSystemRecorder.requestSystemAudioAccess() }
@@ -2026,11 +2026,11 @@ struct SettingsView: View {
             }
             Spacer()
             if granted {
-                Text("Granted")
+                Text(String(localized: "settings.permissions.status.granted", defaultValue: "Granted", bundle: .module, comment: "Permissions status text when access is granted"))
                     .font(.system(size: 11))
                     .foregroundStyle(MuesliTheme.success)
             } else {
-                Button("Grant") {
+                Button(String(localized: "settings.permissions.action.grant", defaultValue: "Grant", bundle: .module, comment: "Button title to grant a permission")) {
                     action()
                 }
                 .buttonStyle(.plain)
@@ -2049,7 +2049,7 @@ struct SettingsView: View {
                     .foregroundStyle(MuesliTheme.textTertiary)
             }
             .buttonStyle(.plain)
-            .help("Open in System Settings")
+            .help(String(localized: "settings.permissions.help.open_in_system_settings", defaultValue: "Open in System Settings", bundle: .module, comment: "Help action to open macOS System Settings for permissions"))
         }
         .frame(minHeight: 32)
     }
@@ -2071,7 +2071,7 @@ struct SettingsView: View {
             Button {
                 handleScreenContextToggle(true)
             } label: {
-                Text("Grant")
+                Text(String(localized: "settings.permissions.action.grant", defaultValue: "Grant", bundle: .module, comment: "Button title to grant a permission"))
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundStyle(MuesliTheme.accent)
                     .frame(width: width)
@@ -2099,7 +2099,7 @@ struct SettingsView: View {
                 _ = CGRequestScreenCaptureAccess()
                 refreshPermissionStatuses()
             } label: {
-                Text("Grant")
+                Text(String(localized: "settings.permissions.action.grant", defaultValue: "Grant", bundle: .module, comment: "Button title to grant a permission"))
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundStyle(MuesliTheme.accent)
                     .frame(width: width)
@@ -2307,11 +2307,11 @@ struct SettingsView: View {
         let clamped = MeetingSummaryRetryPolicy.clampedRetryCount(retryCount)
         switch clamped {
         case 0:
-            return "No retries"
+            return String(localized: "settings.meetings.summary_retries.none", defaultValue: "No retries", bundle: .module, comment: "Summary retries picker option for zero retries")
         case 1:
-            return "1 retry"
+            return String(localized: "settings.meetings.summary_retries.one", defaultValue: "1 retry", bundle: .module, comment: "Summary retries picker option for one retry")
         default:
-            return "\(clamped) retries"
+            return String(format: String(localized: "settings.meetings.summary_retries.many", defaultValue: "%d retries", bundle: .module, comment: "Summary retries picker option for multiple retries"), clamped)
         }
     }
 
@@ -2378,7 +2378,7 @@ struct SettingsView: View {
     private var mutedMeetingDetectionAppsControl: some View {
         let muted = Set(appState.config.mutedMeetingDetectionAppBundleIDs)
         return VStack(alignment: .leading, spacing: 10) {
-            Text("Don't notify me when a call is detected in these apps:")
+            Text(String(localized: "settings.meeting_detection.muted_apps.description", defaultValue: "Don't notify me when a call is detected in these apps:", bundle: .module, comment: "Description for muted apps meeting detection setting"))
                 .font(MuesliTheme.body())
                 .foregroundStyle(MuesliTheme.textPrimary)
 
@@ -2488,7 +2488,7 @@ struct SettingsView: View {
             let items = appState.availableGoogleCalendars.map { cal in
                 CalendarToggleItem(
                     id: cal.id,
-                    title: cal.summary + (cal.isPrimary ? " (Primary)" : ""),
+                    title: cal.summary + (cal.isPrimary ? " " + String(localized: "settings.calendars.primary_suffix", defaultValue: "(Primary)", bundle: .module, comment: "Suffix appended to indicate the primary calendar") : ""),
                     colorHex: cal.colorHex,
                     isEnabled: !disabled.contains(cal.id)
                 )
@@ -2496,7 +2496,7 @@ struct SettingsView: View {
             groups.append(CalendarSourceGroup(
                 id: "google_oauth",
                 title: "Google Calendar",
-                subtitle: "Connected directly to Muesli",
+                subtitle: String(localized: "settings.calendars.google.connected_directly", defaultValue: "Connected directly to Muesli", bundle: .module, comment: "Subtitle indicating Google calendar source is directly connected to Muesli"),
                 iconName: "calendar.badge.plus",
                 items: items
             ))
@@ -2507,13 +2507,13 @@ struct SettingsView: View {
 
     private var calendarSourcesControl: some View {
         VStack(alignment: .leading, spacing: MuesliTheme.spacing16) {
-            Text("Calendar sources are listed first, with their calendars underneath. Disabled calendars are hidden from Muesli — no notifications, no Coming Up, no meeting detection.")
+            Text(String(localized: "settings.calendars.sources.explanation", defaultValue: "Calendar sources are listed first, with their calendars underneath. Disabled calendars are hidden from Muesli — no notifications, no Coming Up, no meeting detection.", bundle: .module, comment: "Explanation text for calendar source and disabled calendar behavior"))
                 .font(MuesliTheme.caption())
                 .foregroundStyle(MuesliTheme.textTertiary)
                 .fixedSize(horizontal: false, vertical: true)
 
             if calendarSourceGroups.isEmpty {
-                Text("No calendars detected. Make sure Calendar permission is granted in System Settings > Privacy & Security > Calendars.")
+                Text(String(localized: "settings.calendars.none_detected_permission_hint", defaultValue: "No calendars detected. Make sure Calendar permission is granted in System Settings > Privacy & Security > Calendars.", bundle: .module, comment: "Hint text shown when no calendars are detected due to missing permission"))
                     .font(MuesliTheme.caption())
                     .foregroundStyle(MuesliTheme.textTertiary)
                     .fixedSize(horizontal: false, vertical: true)
@@ -2524,7 +2524,7 @@ struct SettingsView: View {
             }
 
             if appState.isGoogleCalendarAuthenticated && !appState.availableEventKitCalendars.isEmpty {
-                Text("Google calendars may appear once from macOS Calendar and once from Muesli's Google connection. Turn off both copies to hide that calendar completely.")
+                Text(String(localized: "settings.calendars.google_duplicates_explanation", defaultValue: "Google calendars may appear once from macOS Calendar and once from Muesli's Google connection. Turn off both copies to hide that calendar completely.", bundle: .module, comment: "Explanation for duplicate Google calendar sources"))
                     .font(MuesliTheme.caption())
                     .foregroundStyle(MuesliTheme.textTertiary)
                     .fixedSize(horizontal: false, vertical: true)
@@ -2551,7 +2551,7 @@ struct SettingsView: View {
                         .foregroundStyle(MuesliTheme.textPrimary)
                         .lineLimit(1)
 
-                    Text("\(group.subtitle) • \(group.items.count) \(group.items.count == 1 ? "calendar" : "calendars")")
+                    Text("\(group.subtitle) • \(group.items.count) \(group.items.count == 1 ? String(localized: "settings.calendar_source.count.singular", defaultValue: "calendar", bundle: .module, comment: "Singular unit label for calendar count") : String(localized: "settings.calendar_source.count.plural", defaultValue: "calendars", bundle: .module, comment: "Plural unit label for calendar count"))")
                         .font(.system(size: 11))
                         .foregroundStyle(MuesliTheme.textTertiary)
                         .lineLimit(1)
@@ -2576,15 +2576,15 @@ struct SettingsView: View {
     private func calendarSourceSubtitle(for sourceTitle: String) -> String {
         let normalized = sourceTitle.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
         if normalized == "icloud" {
-            return "iCloud account in macOS Calendar"
+            return String(localized: "settings.calendars.source_subtitle.icloud_account", defaultValue: "iCloud account in macOS Calendar", bundle: .module, comment: "Subtitle for iCloud calendar source")
         }
         if normalized == "subscribed calendars" {
-            return "Subscribed in macOS Calendar"
+            return String(localized: "settings.calendars.source_subtitle.subscribed", defaultValue: "Subscribed in macOS Calendar", bundle: .module, comment: "Subtitle for subscribed calendar source")
         }
         if normalized == "other" {
-            return "System calendars from macOS"
+            return String(localized: "settings.calendars.source_subtitle.system_calendars", defaultValue: "System calendars from macOS", bundle: .module, comment: "Subtitle for system calendars source")
         }
-        return "Calendar account in macOS"
+        return String(localized: "settings.calendars.source_subtitle.account_macos", defaultValue: "Calendar account in macOS", bundle: .module, comment: "Subtitle for macOS calendar account source")
     }
 
     private func calendarSourceIconName(for sourceTitle: String) -> String {
@@ -2635,15 +2635,15 @@ struct SettingsView: View {
     private var googleCalendarListLoadStateView: some View {
         switch appState.googleCalendarListLoadState {
         case .loading:
-            Text("Loading Google calendars…")
+            Text(String(localized: "settings.google_calendar.loading_calendars", defaultValue: "Loading Google calendars…", bundle: .module, comment: "Loading status while fetching Google calendars"))
                 .font(MuesliTheme.caption())
                 .foregroundStyle(MuesliTheme.textTertiary)
         case .failed(let message):
             HStack(spacing: 8) {
-                Text("Failed to load Google calendars: \(message)")
+                Text(String(format: String(localized: "settings.google_calendar.load_failed_with_message", defaultValue: "Failed to load Google calendars: %@", bundle: .module, comment: "Error message when loading Google calendars fails"), "\(message)"))
                     .font(MuesliTheme.caption())
                     .foregroundStyle(MuesliTheme.textTertiary)
-                Button("Retry") {
+                Button(String(localized: "settings.google_calendar.retry", defaultValue: "Retry", bundle: .module, comment: "Retry button title for Google calendars loading")) {
                     Task { await controller.refreshGoogleCalendarList() }
                 }
                 .buttonStyle(.link)
@@ -2683,7 +2683,7 @@ struct SettingsView: View {
                     .foregroundStyle(MuesliTheme.textTertiary)
 
                 if appState.config.autoExportMarkdownFolderPath.isEmpty {
-                    Text("Choose a folder…")
+                    Text(String(localized: "settings.auto_export.choose_folder", defaultValue: "Choose a folder…", bundle: .module, comment: "Button title for selecting auto export folder"))
                         .font(.system(size: 12))
                         .foregroundStyle(MuesliTheme.textTertiary)
                         .lineLimit(1)
@@ -2705,7 +2705,7 @@ struct SettingsView: View {
                 RoundedRectangle(cornerRadius: MuesliTheme.cornerSmall)
                     .strokeBorder(MuesliTheme.surfaceBorder, lineWidth: 1)
             )
-            .help(appState.config.autoExportMarkdownFolderPath.isEmpty ? "No destination folder selected" : appState.config.autoExportMarkdownFolderPath)
+            .help(appState.config.autoExportMarkdownFolderPath.isEmpty ? String(localized: "settings.auto_export.no_destination_folder_selected", defaultValue: "No destination folder selected", bundle: .module, comment: "Status text when no auto export destination folder is selected") : appState.config.autoExportMarkdownFolderPath)
 
             if !appState.config.autoExportMarkdownFolderPath.isEmpty {
                 Button {
@@ -2723,8 +2723,8 @@ struct SettingsView: View {
                         )
                 }
                 .buttonStyle(.plain)
-                .accessibilityLabel("Clear destination folder")
-                .help("Clear destination folder")
+                .accessibilityLabel(String(localized: "settings.auto_export.clear_destination_folder_accessibility_label", defaultValue: "Clear destination folder", bundle: .module, comment: "Accessibility label for clearing auto export destination folder"))
+                .help(String(localized: "settings.auto_export.help.clear_destination_folder", defaultValue: "Clear destination folder", bundle: .module, comment: "Help text for clearing auto export destination folder"))
             }
 
             Button {
@@ -2742,8 +2742,8 @@ struct SettingsView: View {
                     )
             }
             .buttonStyle(.plain)
-            .accessibilityLabel("Choose destination folder")
-            .help("Choose destination folder")
+            .accessibilityLabel(String(localized: "settings.auto_export.choose_destination_folder", defaultValue: "Choose destination folder", bundle: .module, comment: "Action title for choosing auto export destination folder"))
+            .help(String(localized: "settings.auto_export.choose_destination_folder", defaultValue: "Choose destination folder", bundle: .module, comment: "Help text for choosing auto export destination folder"))
         }
     }
 
@@ -2756,7 +2756,7 @@ struct SettingsView: View {
                     .foregroundStyle(MuesliTheme.textTertiary)
 
                 if appState.config.meetingHookPath.isEmpty {
-                    Text("Choose a script…")
+                    Text(String(localized: "settings.meeting_hook.choose_script", defaultValue: "Choose a script…", bundle: .module, comment: "Button title for selecting meeting hook script"))
                         .font(.system(size: 12))
                         .foregroundStyle(MuesliTheme.textTertiary)
                         .lineLimit(1)
@@ -2779,7 +2779,7 @@ struct SettingsView: View {
                     .strokeBorder(MuesliTheme.surfaceBorder, lineWidth: 1)
             )
             .frame(maxWidth: .infinity)
-            .help(appState.config.meetingHookPath.isEmpty ? "No hook script selected" : appState.config.meetingHookPath)
+            .help(appState.config.meetingHookPath.isEmpty ? String(localized: "settings.meeting_hook.no_script_selected", defaultValue: "No hook script selected", bundle: .module, comment: "Status text when no meeting hook script is selected") : appState.config.meetingHookPath)
 
             if !appState.config.meetingHookPath.isEmpty {
                 Button {
@@ -2797,7 +2797,7 @@ struct SettingsView: View {
                         )
                 }
                 .buttonStyle(.plain)
-                .help("Clear hook script")
+                .help(String(localized: "settings.meeting_hook.help.clear_script", defaultValue: "Clear hook script", bundle: .module, comment: "Help text for clearing selected meeting hook script"))
             }
 
             Button {
@@ -2815,7 +2815,7 @@ struct SettingsView: View {
                     )
             }
             .buttonStyle(.plain)
-            .help("Choose hook script")
+            .help(String(localized: "settings.meeting_hook.help.choose_script", defaultValue: "Choose hook script", bundle: .module, comment: "Help text for choosing meeting hook script"))
         }
         .frame(maxWidth: .infinity, alignment: .trailing)
     }
@@ -2830,7 +2830,7 @@ struct SettingsView: View {
             ),
             in: 1...600
         ) {
-            Text("\(max(appState.config.meetingHookTimeoutSeconds, 1)) seconds")
+            Text(String(format: String(localized: "settings.meeting_hook.timeout.seconds", defaultValue: "%d seconds", bundle: .module, comment: "Meeting hook timeout value in seconds"), max(appState.config.meetingHookTimeoutSeconds, 1)))
                 .font(MuesliTheme.body())
                 .foregroundStyle(MuesliTheme.textPrimary)
                 .monospacedDigit()
@@ -2847,7 +2847,7 @@ struct SettingsView: View {
             items += controller.customMeetingTemplates().map { ($0.id, $0.name) }
             return items
         }()
-        let selectedLabel = allItems.first(where: { $0.id == selectionID })?.label ?? "Auto"
+        let selectedLabel = allItems.first(where: { $0.id == selectionID })?.label ?? String(localized: "settings.common.auto", defaultValue: "Auto", bundle: .module, comment: "Common automatic option label")
         FixedWidthPopUp(
             selection: selectedLabel,
             options: allItems.map(\.label),
@@ -2894,7 +2894,7 @@ struct SettingsView: View {
             HStack(spacing: 8) {
                 ProgressView()
                     .controlSize(.small)
-                Text("Loading models")
+                Text(String(localized: "settings.open_router_free_model.loading_models", defaultValue: "Loading models", bundle: .module, comment: "Loading status while fetching free model list"))
                     .font(.system(size: 12, weight: .medium))
                     .foregroundStyle(MuesliTheme.textTertiary)
             }
@@ -2912,7 +2912,7 @@ struct SettingsView: View {
                         .foregroundStyle(MuesliTheme.textTertiary)
                         .lineLimit(1)
                 }
-                Button("Load") {
+                Button(String(localized: "settings.open_router_free_model.load", defaultValue: "Load", bundle: .module, comment: "Button title for loading free model list")) {
                     loadOpenRouterFreeModels(force: true)
                 }
                 .font(.system(size: 12, weight: .medium))
@@ -2964,7 +2964,7 @@ struct SettingsView: View {
             Circle()
                 .fill(key.isEmpty ? MuesliTheme.textTertiary : MuesliTheme.success)
                 .frame(width: 6, height: 6)
-            Text(key.isEmpty ? "No API key configured" : "Key configured")
+            Text(key.isEmpty ? String(localized: "settings.api_key.status.not_configured", defaultValue: "No API key configured", bundle: .module, comment: "Status text shown when API key is not configured") : String(localized: "settings.api_key.status.configured", defaultValue: "Key configured", bundle: .module, comment: "Status text shown when API key is configured"))
                 .font(.system(size: 11))
                 .foregroundStyle(key.isEmpty ? MuesliTheme.textTertiary : MuesliTheme.success)
         }
@@ -3009,11 +3009,11 @@ struct SettingsView: View {
     private func recordingSaveLabel(for policy: MeetingRecordingSavePolicy) -> String {
         switch policy {
         case .never:
-            return "Never"
+            return String(localized: "settings.meetings.recording_save.never", defaultValue: "Never", bundle: .module, comment: "Recording save option for never saving recordings")
         case .prompt:
-            return "Ask every time"
+            return String(localized: "settings.meetings.recording_save.ask_every_time", defaultValue: "Ask every time", bundle: .module, comment: "Recording save option to ask every time")
         case .always:
-            return "Always"
+            return String(localized: "settings.meetings.recording_save.always", defaultValue: "Always", bundle: .module, comment: "Recording save option to always save recordings")
         }
     }
 
@@ -3040,13 +3040,13 @@ struct SettingsView: View {
     private func scheduledMeetingLeadTimeLabel(for leadTime: ScheduledMeetingNotificationLeadTime) -> String {
         switch leadTime {
         case .atStart:
-            return "At start time"
+            return String(localized: "settings.meetings.reminder_timing.at_start", defaultValue: "At start time", bundle: .module, comment: "Reminder timing option at meeting start time")
         case .oneMinute:
-            return "1 min before"
+            return String(localized: "settings.meetings.reminder_timing.one_min_before", defaultValue: "1 min before", bundle: .module, comment: "Reminder timing option one minute before meeting")
         case .threeMinutes:
-            return "3 min before"
+            return String(localized: "settings.meetings.reminder_timing.three_min_before", defaultValue: "3 min before", bundle: .module, comment: "Reminder timing option three minutes before meeting")
         case .fiveMinutes:
-            return "5 min before"
+            return String(localized: "settings.meetings.reminder_timing.five_min_before", defaultValue: "5 min before", bundle: .module, comment: "Reminder timing option five minutes before meeting")
         }
     }
 
