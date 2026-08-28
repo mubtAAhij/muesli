@@ -667,11 +667,7 @@ enum ComputerUseObservationCapture {
         _ windowID: CGWindowID,
         _ imageOption: CGWindowImageOption
     ) -> CGImage? {
-        if #available(macOS 14.0, *) {
-            return CGWindowListCreateImage(screenBounds, listOption, windowID, imageOption)
-        } else {
-            return captureWindowImage(screenBounds, listOption, windowID, imageOption)
-        }
+        captureWindowImage(screenBounds, listOption, windowID, imageOption)
     }
 
     @available(macOS, deprecated: 14.0, message: "Please use ScreenCaptureKit instead.")
