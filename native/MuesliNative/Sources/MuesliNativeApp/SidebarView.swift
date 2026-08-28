@@ -149,7 +149,7 @@ struct SidebarView: View {
                 appState.directMeetingCountsByFolder[folder.id] ?? 0
             } ?? 0
             if directCount > 0 {
-                Text(String(localized: "sidebar.folder.delete.move_to_unfiled_message", defaultValue: "%#@directCount@ in this folder will be moved to Unfiled. Subfolders will be kept.", bundle: .module, comment: "Warning describing how many direct meetings move to Unfiled when deleting a folder."), tableName: nil, bundle: .module, comment: "Warning describing how many direct meetings move to Unfiled when deleting a folder.", locale: nil)
+                Text(LocalizedStringKey("sidebar.folder.delete.move_to_unfiled_message"), tableName: nil, bundle: .module, comment: "Warning describing how many direct meetings move to Unfiled when deleting a folder.")
             } else {
                 Text(String(localized: "sidebar.folder.delete.warning", defaultValue: "This folder will be permanently removed. Subfolders will be kept.", bundle: .module, comment: "Additional warning text in folder deletion confirmation alert."))
             }
