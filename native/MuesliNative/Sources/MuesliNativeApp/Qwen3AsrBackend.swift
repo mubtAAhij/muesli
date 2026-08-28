@@ -67,7 +67,7 @@ actor Qwen3AsrTranscriber {
         var errorDescription: String? {
             switch self {
             case .notLoaded:
-                return "Qwen3 ASR models not loaded. Call loadModels() first."
+                return String(localized: "qwen3_asr_backend.error.models_not_loaded", defaultValue: "Qwen3 ASR models not loaded. Call loadModels() first.", bundle: .module, comment: "Error shown when transcription is requested before Qwen3 ASR models are loaded.")
             }
         }
     }
@@ -88,7 +88,7 @@ actor Qwen3AsrTranscriber {
         ) { modelDir in
             let preparing = ModelDownloadProgress.preparing(
                 modelID: plan.modelID,
-                message: "Loading Qwen3 ASR into Core ML..."
+                message: String(localized: "qwen3_asr_backend.status.loading_coreml", defaultValue: "Loading Qwen3 ASR into Core ML...", bundle: .module, comment: "Status shown while loading Qwen3 ASR model into Core ML.")
             )
             progress?(0.95, preparing.message)
             progressSnapshot?(preparing)
@@ -112,10 +112,10 @@ actor Qwen3AsrTranscriber {
         self.manager = mgr
         let preparing = ModelDownloadProgress.preparing(
             modelID: plan.modelID,
-            message: "Loading Qwen3 ASR into Core ML..."
+            message: String(localized: "qwen3_asr_backend.status.loading_coreml", defaultValue: "Loading Qwen3 ASR into Core ML...", bundle: .module, comment: "Status shown while loading Qwen3 ASR model into Core ML.")
         )
         progress?(1, nil)
-        progressSnapshot?(preparing.replacing(phase: .ready, message: "Model ready"))
+        progressSnapshot?(preparing.replacing(phase: .ready, message: String(localized: "qwen3_asr_backend.status.model_ready", defaultValue: "Model ready", bundle: .module, comment: "Status shown when Qwen3 ASR model loading is complete.")))
         fputs("[qwen3-asr] warmup complete, ready\n", stderr)
     }
 
