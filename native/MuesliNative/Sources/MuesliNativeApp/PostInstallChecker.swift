@@ -77,15 +77,13 @@ enum PostInstallChecker {
 
     private static func offerInstall(from bundlePath: String, bundleName: String, appName: String) {
         guard runAlert(
-            message: String(format: NSLocalizedString("Install %@ to Applications?",
-                comment: "Alert title: user launched app directly from DMG"),
+            message: String(format: String(localized: "post_install.prompt.install_to_applications", defaultValue: "Install %@ to Applications?", bundle: .module, comment: "Prompt title asking user to install app into Applications folder."),
                 appName),
-            info: String(format: NSLocalizedString("%@ will copy itself to your Applications folder and relaunch automatically.",
-                comment: "Alert body: explains what the install action does"),
+            info: String(format: String(localized: "post_install.prompt.install_and_relaunch_description", defaultValue: "%@ will copy itself to your Applications folder and relaunch automatically.", bundle: .module, comment: "Prompt body describing install and relaunch behavior."),
                 appName),
             buttons: [
-                NSLocalizedString("Install", comment: "Confirm install button"),
-                NSLocalizedString("Cancel", comment: "Cancel install button"),
+                String(localized: "post_install.action.install", defaultValue: "Install", bundle: .module, comment: "Primary action button label for install flow."),
+                String(localized: "post_install.action.cancel", defaultValue: "Cancel", bundle: .module, comment: "Cancel action button label in post-install prompts."),
             ]
         ) == .alertFirstButtonReturn else { return }
 
@@ -95,15 +93,13 @@ enum PostInstallChecker {
         var isDir: ObjCBool = false
         if FileManager.default.fileExists(atPath: destinationURL.path, isDirectory: &isDir), isDir.boolValue {
             guard runAlert(
-                message: String(format: NSLocalizedString("Replace existing %@?",
-                    comment: "Alert title: an older Muesli.app is already in Applications"),
+                message: String(format: String(localized: "post_install.prompt.replace_existing_title", defaultValue: "Replace existing %@?", bundle: .module, comment: "Prompt title asking whether to replace existing installed app."),
                     appName),
-                info: String(format: NSLocalizedString("An older version of %@ is already in Applications. Replace it?",
-                    comment: "Alert body: confirms replacing existing install"),
+                info: String(format: String(localized: "post_install.prompt.replace_existing_message", defaultValue: "An older version of %@ is already in Applications. Replace it?", bundle: .module, comment: "Prompt message explaining existing version in Applications folder."),
                     appName),
                 buttons: [
-                    NSLocalizedString("Replace", comment: "Confirm replace button"),
-                    NSLocalizedString("Cancel", comment: "Cancel replace button"),
+                    String(localized: "post_install.action.replace", defaultValue: "Replace", bundle: .module, comment: "Primary action button label to replace existing installation."),
+                    String(localized: "post_install.action.cancel", defaultValue: "Cancel", bundle: .module, comment: "Cancel action button label in replace prompt."),
                 ]
             ) == .alertFirstButtonReturn else { return }
 
@@ -296,17 +292,14 @@ enum PostInstallChecker {
             backing: .buffered,
             defer: false
         )
-        window.title = String(format: NSLocalizedString("Installing %@",
-            comment: "Install progress window title"), appName)
+        window.title = String(format: String(localized: "post_install.status.installing", defaultValue: "Installing %@", bundle: .module, comment: "Status text shown while installing app."), appName)
         window.isReleasedWhenClosed = false
         window.level = .floating
 
         let content = NSView(frame: window.contentView?.bounds ?? .zero)
         content.translatesAutoresizingMaskIntoConstraints = false
 
-        let label = NSTextField(labelWithString: String(format: NSLocalizedString(
-            "Copying %@ to Applications...",
-            comment: "Install progress label"), appName))
+        let label = NSTextField(labelWithString: String(format: String(localized: "post_install.status.copying_to_applications", defaultValue: "Copying %@ to Applications...", bundle: .module, comment: "Progress status while copying app to Applications folder."), appName))
         label.font = .systemFont(ofSize: 13)
         label.alignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -343,8 +336,7 @@ enum PostInstallChecker {
     private static func showInstallError(_ description: String) {
         fputs("[PostInstallChecker] install failed: \(description)\n", stderr)
         let alert = NSAlert()
-        alert.messageText = NSLocalizedString("Installation failed.",
-            comment: "Alert title: install error")
+        alert.messageText = String(localized: "post_install.error.installation_failed", defaultValue: "Installation failed.", bundle: .module, comment: "Error text shown when installation process fails.")
         alert.informativeText = description
         alert.runModal()
     }
@@ -392,16 +384,13 @@ enum PostInstallChecker {
         }
 
         return runAlert(
-            message: String(format: NSLocalizedString("Eject %@ installer disk?",
-                comment: "Alert title: installed app found mounted installer disk"),
+            message: String(format: String(localized: "post_install.prompt.eject_installer_disk_title", defaultValue: "Eject %@ installer disk?", bundle: .module, comment: "Prompt title asking whether to eject mounted installer disk."),
                 appName),
-            info: String(format: NSLocalizedString(
-                "%@ is already installed. It can eject the installer disk and move the downloaded DMG to Trash.",
-                comment: "Alert body: asks permission to clean up mounted installer disk"),
+            info: String(format: String(localized: "post_install.prompt.eject_installer_disk_message", defaultValue: "%@ is already installed. It can eject the installer disk and move the downloaded DMG to Trash.", bundle: .module, comment: "Prompt message explaining optional eject and trash cleanup."),
                 appName),
             buttons: [
-                NSLocalizedString("Keep", comment: "Keep mounted installer disk button"),
-                NSLocalizedString("Eject and Trash DMG", comment: "Confirm installer cleanup button"),
+                String(localized: "post_install.action.keep", defaultValue: "Keep", bundle: .module, comment: "Action button label to keep installer disk and DMG."),
+                String(localized: "post_install.action.eject_and_trash_dmg", defaultValue: "Eject and Trash DMG", bundle: .module, comment: "Action button label to eject installer disk and trash DMG."),
             ]
         ) == .alertSecondButtonReturn
     }

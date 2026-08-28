@@ -17,7 +17,7 @@ struct MeetingParticipantsView: View {
     @State private var errorMessage: String?
 
     private var peopleDescription: String {
-        participants.count == 1 ? "1 person" : "\(participants.count) people"
+        participants.count == 1 ? String(localized: "meeting_participants.people_description.one-1-person-1-person", defaultValue: "1 person", bundle: .module, comment: "Singular people description for meeting participants count.") : String(format: String(localized: "meeting_participants.people_description.one-1-person-1-person", defaultValue: "%@ people", bundle: .module, comment: ""), "\(participants.count)")
     }
 
     private var firstParticipantName: String? {
@@ -46,7 +46,7 @@ struct MeetingParticipantsView: View {
                             .foregroundStyle(MuesliTheme.textTertiary)
                     }
                 } else {
-                    Text("Add people")
+                    Text(String(localized: "meeting_participants.title.add_people", defaultValue: "Add people", bundle: .module, comment: "Button title to add participants to a meeting."))
                 }
             }
             .font(MuesliTheme.caption())
@@ -64,9 +64,9 @@ struct MeetingParticipantsView: View {
         .buttonStyle(.plain)
         .fixedSize(horizontal: false, vertical: true)
         .featureTourTarget(.meetingPeople)
-        .help(participants.isEmpty ? "Add people to this meeting" : "Show \(peopleDescription)")
+        .help(participants.isEmpty ? String(localized: "meeting_participants.empty_state.add_people", defaultValue: "Add people to this meeting", bundle: .module, comment: "Empty-state prompt to add participants.") : String(format: String(localized: "meeting_participants.accessibility.show_people_description", defaultValue: "Show %@", bundle: .module, comment: "Accessibility text to show current people description."), "\(peopleDescription)"))
         .accessibilityLabel(
-            participants.isEmpty ? "Add people to this meeting" : "\(peopleDescription) in this meeting"
+            participants.isEmpty ? String(localized: "meeting_participants.accessibility.add_people_to_this_meeting", defaultValue: "Add people to this meeting", bundle: .module, comment: "Accessibility label for adding people to meeting.") : String(format: String(localized: "meeting_participants.alert.update_failed.title", defaultValue: "%@ in this meeting", bundle: .module, comment: "Title text showing number of people in this meeting."), "\(peopleDescription)")
         )
         .popover(isPresented: $isPeoplePopoverPresented, arrowEdge: .bottom) {
             peoplePopover
@@ -88,19 +88,19 @@ struct MeetingParticipantsView: View {
                 Task { await attach(participant) }
             }
         }
-        .alert("Couldn't Update People", isPresented: errorBinding) {
-            Button("OK", role: .cancel) {
+        .alert(String(localized: "meeting_participants.alert.update_failed.title-couldn-t-update-people", defaultValue: "Couldn't Update People", bundle: .module, comment: "Alert title shown when participant update fails."), isPresented: errorBinding) {
+            Button(String(localized: "common.button.ok", defaultValue: "OK", bundle: .module, comment: "Confirmation button title in update failure alert."), role: .cancel) {
                 errorMessage = nil
             }
         } message: {
-            Text(errorMessage ?? "The meeting's people could not be updated.")
+            Text(errorMessage ?? String(localized: "meeting_participants.alert.update_failed.message", defaultValue: "The meeting's people could not be updated.", bundle: .module, comment: "Alert message when saving meeting participants fails."))
         }
     }
 
     private var peoplePopover: some View {
         VStack(alignment: .leading, spacing: MuesliTheme.spacing12) {
             HStack(spacing: MuesliTheme.spacing8) {
-                Text("People")
+                Text(String(localized: "meeting_participants.popover.title", defaultValue: "People", bundle: .module, comment: "Popover title for participant list."))
                     .font(MuesliTheme.title3())
 
                 if !participants.isEmpty {
@@ -117,7 +117,7 @@ struct MeetingParticipantsView: View {
             Divider()
 
             if participants.isEmpty {
-                Text("No one has been added yet.")
+                Text(String(localized: "meeting_participants.popover.empty_state", defaultValue: "No one has been added yet.", bundle: .module, comment: "Empty-state text for participants popover."))
                     .font(MuesliTheme.callout())
                     .foregroundStyle(MuesliTheme.textSecondary)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -142,18 +142,18 @@ struct MeetingParticipantsView: View {
             Button {
                 chooseExistingContact()
             } label: {
-                Label("Choose from Contacts…", systemImage: "person.crop.circle.badge.plus")
+                Label(String(localized: "meeting_participants.menu.choose_from_contacts", defaultValue: "Choose from Contacts…", bundle: .module, comment: "Menu action to choose existing contact."), systemImage: "person.crop.circle.badge.plus")
             }
 
             Button {
                 createNewContact()
             } label: {
-                Label("Create New Contact…", systemImage: "person.badge.plus")
+                Label(String(localized: "meeting_participants.menu.create_new_contact", defaultValue: "Create New Contact…", bundle: .module, comment: "Menu action to create a new contact."), systemImage: "person.badge.plus")
             }
         } label: {
             HStack(spacing: 5) {
                 Image(systemName: "person.badge.plus")
-                Text("Add person")
+                Text(String(localized: "meeting_participants.menu.add_person", defaultValue: "Add person", bundle: .module, comment: "Menu section label for adding a person."))
                 Image(systemName: "chevron.down")
                     .font(.system(size: 8, weight: .semibold))
             }
@@ -170,7 +170,7 @@ struct MeetingParticipantsView: View {
         }
         .menuStyle(.borderlessButton)
         .fixedSize()
-        .help("Choose or create an Apple contact")
+        .help(String(localized: "meeting_participants.menu.help.choose_or_create_contact", defaultValue: "Choose or create an Apple contact", bundle: .module, comment: "Helper text for participant contact picker."))
     }
 
     private func participantListRow(_ participant: MeetingParticipant) -> some View {
@@ -203,7 +203,7 @@ struct MeetingParticipantsView: View {
                     .frame(width: 24, height: 24)
             }
             .buttonStyle(.plain)
-            .help("Remove \(displayName)")
+            .help(String(format: String(localized: "meeting_participants.menu.remove_display_name", defaultValue: "Remove %@", bundle: .module, comment: "Menu action to remove a participant by display name."), "\(displayName)"))
         }
     }
 

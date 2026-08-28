@@ -15,7 +15,7 @@ actor SenseVoiceTranscriber {
         var errorDescription: String? {
             switch self {
             case .notLoaded:
-                return "SenseVoice models not loaded. Call loadModels() first."
+                return String(localized: "sensevoice_backend.error.models_not_loaded", defaultValue: "SenseVoice models not loaded. Call loadModels() first.", bundle: .module, comment: "Error shown when SenseVoice transcription is requested before models are loaded.")
             }
         }
     }
@@ -45,21 +45,21 @@ actor SenseVoiceTranscriber {
         ) { modelDirectory in
             let preparing = ModelDownloadProgress.preparing(
                 modelID: plan.modelID,
-                message: "Loading SenseVoice into Core ML..."
+                message: String(localized: "sensevoice_backend.status.loading_coreml", defaultValue: "Loading SenseVoice into Core ML...", bundle: .module, comment: "Status shown while loading SenseVoice model into Core ML.")
             )
             progressSnapshot?(preparing)
-            progress?(0.95, "Loading SenseVoice...")
+            progress?(0.95, String(localized: "sensevoice_backend.status.loading", defaultValue: "Loading SenseVoice...", bundle: .module, comment: "Status shown while loading SenseVoice model resources."))
             let models = try SenseVoiceModels.load(from: modelDirectory, precision: Self.precision)
             return SenseVoiceManager(models: models)
         }
         let preparing = ModelDownloadProgress.preparing(
             modelID: plan.modelID,
-            message: "Loading SenseVoice into Core ML..."
+            message: String(localized: "sensevoice_backend.status.loading_coreml", defaultValue: "Loading SenseVoice into Core ML...", bundle: .module, comment: "Status shown while loading SenseVoice model into Core ML.")
         )
         self.manager = loadedManager
         await warmupIfNeeded(progress: progress)
         progress?(1.0, nil)
-        progressSnapshot?(preparing.replacing(phase: .ready, message: "Model ready"))
+        progressSnapshot?(preparing.replacing(phase: .ready, message: String(localized: "sensevoice_backend.status.model_ready", defaultValue: "Model ready", bundle: .module, comment: "Status shown when SenseVoice model is loaded and ready.")))
         fputs("[sensevoice] models ready\n", stderr)
     }
 
@@ -100,7 +100,7 @@ actor SenseVoiceTranscriber {
     private func warmupIfNeeded(progress: ((Double, String?) -> Void)?) async {
         guard !hasCompletedWarmup, let manager else { return }
 
-        progress?(0.98, "Warming up SenseVoice...")
+        progress?(0.98, String(localized: "sensevoice_backend.status.warming_up", defaultValue: "Warming up SenseVoice...", bundle: .module, comment: "Status shown while performing SenseVoice warm-up pass."))
         fputs("[sensevoice] warmup: running silent audio for CoreML compilation...\n", stderr)
         do {
             let silence = [Float](repeating: 0, count: 16_000)

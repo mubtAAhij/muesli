@@ -30,7 +30,7 @@ struct ComputerUseExecutionResult: Equatable {
         ComputerUseExecutionResult(status: .failed, message: message)
     }
 
-    static func cancelled(_ message: String = "Cancelled") -> ComputerUseExecutionResult {
+    static func cancelled(_ message: String = String(localized: "computer_use.status.cancelled", defaultValue: "Cancelled", bundle: .module, comment: "Computer use execution status when operation is cancelled.")) -> ComputerUseExecutionResult {
         ComputerUseExecutionResult(status: .cancelled, message: message)
     }
 }
@@ -84,7 +84,7 @@ enum ComputerUseToolExecutor {
             return .unsupported(failure)
         }
         guard !toolCall.requiresConfirmation else {
-            return .needsConfirmation("Confirm: \(toolCall.summary)")
+            return .needsConfirmation(String(format: String(localized: "computer_use.confirmation.prompt", defaultValue: "Confirm: %@", bundle: .module, comment: "Confirmation prompt including tool call summary."), "\(toolCall.summary)"))
         }
 
         switch toolCall.tool {
@@ -98,7 +98,7 @@ enum ComputerUseToolExecutor {
             if !toolCall.canonicalBundleID.isEmpty || toolCall.appName?.isEmpty == false {
                 return await focusApp(named: toolCall.appName?.isEmpty == false ? toolCall.appName! : toolCall.canonicalBundleID)
             }
-            return .executed("Captured window state")
+            return .executed(String(localized: "computer_use.status.captured_window_state", defaultValue: "Captured window state", bundle: .module, comment: "Status text after capturing window state."))
         case .moveCursor:
             return moveCursor(toolCall, registry: registry)
         case .click, .clickElement, .clickPoint:
@@ -177,17 +177,17 @@ enum ComputerUseToolExecutor {
         let apps = NSWorkspace.shared.runningApplications
             .filter { ($0.localizedName?.isEmpty == false) || ($0.bundleIdentifier?.isEmpty == false) }
             .map { app in
-                "\(app.localizedName ?? "Unknown") (\(app.bundleIdentifier ?? "unknown"), pid \(app.processIdentifier))\(app.isActive ? " active" : "")"
+                String(format: String(localized: "computer_use.apps.item_summary", defaultValue: "%@ (%@, pid %d)%@", bundle: .module, comment: "Summary line for a running app entry with optional active suffix."), "\(app.localizedName ?? String(localized: "computer_use.apps.unknown_name", defaultValue: "Unknown", bundle: .module, comment: "Fallback app name when localized name is unavailable."))", "\(app.bundleIdentifier ?? String(localized: "computer_use.apps.unknown_bundle_id", defaultValue: "unknown", bundle: .module, comment: "Fallback bundle identifier when unavailable."))", app.processIdentifier, "\(app.isActive ? " " + String(localized: "computer_use.apps.active_suffix", defaultValue: "active", bundle: .module, comment: "Suffix appended when app is currently active.") : "")")
             }
             .prefix(80)
             .joined(separator: "\n")
-        return .executed(apps.isEmpty ? "No running apps" : apps)
+        return .executed(apps.isEmpty ? String(localized: "computer_use.apps.empty", defaultValue: "No running apps", bundle: .module, comment: "Message shown when no running applications are found.") : apps)
     }
 
     private static func listWindows(appBundleID: String) -> ComputerUseExecutionResult {
         let windows = windowInfos(appBundleID: appBundleID)
         guard !windows.isEmpty else {
-            return .executed("No visible windows")
+            return .executed(String(localized: "computer_use.windows.empty", defaultValue: "No visible windows", bundle: .module, comment: "Message shown when no visible windows are found."))
         }
         let text = windows.prefix(80).map { window in
             let frame: String
@@ -216,7 +216,7 @@ enum ComputerUseToolExecutor {
                 return nil
             }
             let title = window[kCGWindowName] as? String ?? ""
-            let ownerName = window[kCGWindowOwnerName] as? String ?? app?.localizedName ?? "Unknown"
+            let ownerName = window[kCGWindowOwnerName] as? String ?? app?.localizedName ?? String(localized: "computer_use.apps.unknown_name", defaultValue: "Unknown", bundle: .module, comment: "Fallback app name when app name is unavailable.")
             let windowID = window[kCGWindowNumber] as? Int
             return ComputerUseWindowInfo(
                 windowID: windowID,
@@ -236,11 +236,11 @@ enum ComputerUseToolExecutor {
             if let app = runningApplication(named: name) {
                 app.activate(options: [.activateAllWindows])
                 _ = try await waitUntilActive(app: app, timeout: 1.5)
-                return .executed("Opened \(name) (already running)")
+                return .executed(String(format: String(localized: "computer_use.open_app.opened_already_running", defaultValue: "Opened %@ (already running)", bundle: .module, comment: "Result message when opening an app that was already running."), "\(name)"))
             }
 
             guard let appURL = try await applicationURL(for: name) else {
-                return .failed("Could not find \(name)")
+                return .failed(String(format: String(localized: "computer_use.open_app.could_not_find", defaultValue: "Could not find %@", bundle: .module, comment: "Result message when requested app cannot be found."), "\(name)"))
             }
 
             let configuration = NSWorkspace.OpenConfiguration()
@@ -248,11 +248,11 @@ enum ComputerUseToolExecutor {
             let app = try await openApplication(at: appURL, configuration: configuration)
             app.activate(options: [.activateAllWindows])
             _ = try await waitUntilActive(app: app, timeout: 1.5)
-            return .executed("Opened \(name)")
+            return .executed(String(format: String(localized: "computer_use.open_app.opened", defaultValue: "Opened %@", bundle: .module, comment: "Result message when app is opened successfully."), "\(name)"))
         } catch is CancellationError {
-            return .cancelled("Cancelled opening \(name)")
+            return .cancelled(String(format: String(localized: "computer_use.open_app.cancelled", defaultValue: "Cancelled opening %@", bundle: .module, comment: "Result message when app open operation is cancelled."), "\(name)"))
         } catch {
-            return .failed("Could not open \(name): \(error.localizedDescription)")
+            return .failed(String(format: String(localized: "computer_use.open_app.could_not_open", defaultValue: "Could not open %@: %@", bundle: .module, comment: "Result message when app could not be opened with error detail."), "\(name)", "\(error.localizedDescription)"))
         }
     }
 
@@ -263,11 +263,11 @@ enum ComputerUseToolExecutor {
             do {
                 _ = try await waitUntilActive(app: app, timeout: 1.5)
             } catch is CancellationError {
-                return .cancelled("Cancelled focusing \(name)")
+                return .cancelled(String(format: String(localized: "computer_use.focus_app.cancelled", defaultValue: "Cancelled focusing %@", bundle: .module, comment: "Result message when app focus operation is cancelled."), "\(name)"))
             } catch {
-                return .failed("Could not focus \(name): \(error.localizedDescription)")
+                return .failed(String(format: String(localized: "computer_use.focus_app.could_not_focus", defaultValue: "Could not focus %@: %@", bundle: .module, comment: "Result message when app could not be focused with error detail."), "\(name)", "\(error.localizedDescription)"))
             }
-            return .executed("Focused \(name)")
+            return .executed(String(format: String(localized: "computer_use.focus_app.focused", defaultValue: "Focused %@", bundle: .module, comment: "Result message when app is focused successfully."), "\(name)"))
         }
         return await openApp(named: name)
     }
@@ -276,7 +276,7 @@ enum ComputerUseToolExecutor {
         guard let keyCode = keyCode(for: command.key),
               let source = CGEventSource(stateID: .combinedSessionState)
         else {
-            return .unsupported("Unsupported key \(command.key)")
+            return .unsupported(String(format: String(localized: "computer_use.press_key.unsupported_key", defaultValue: "Unsupported key %@", bundle: .module, comment: "Error shown when a key command is unsupported."), "\(command.key)"))
         }
 
         let flags = cgFlags(for: command.modifiers)
@@ -286,7 +286,7 @@ enum ComputerUseToolExecutor {
         keyUp?.flags = flags
         keyDown?.post(tap: .cghidEventTap)
         keyUp?.post(tap: .cghidEventTap)
-        return .executed("Pressed key")
+        return .executed(String(localized: "computer_use.press_key.pressed", defaultValue: "Pressed key", bundle: .module, comment: "Status shown after pressing a key."))
     }
 
     private static func scroll(_ toolCall: ComputerUseToolCall, registry: ComputerUseElementRegistry?) -> ComputerUseExecutionResult {
@@ -305,7 +305,7 @@ enum ComputerUseToolExecutor {
 
     private static func scroll(direction: ComputerUseScrollDirection, pages: Double) -> ComputerUseExecutionResult {
         guard let source = CGEventSource(stateID: .combinedSessionState) else {
-            return .failed("Could not create scroll event")
+            return .failed(String(localized: "computer_use.scroll.could_not_create_event", defaultValue: "Could not create scroll event", bundle: .module, comment: "Error shown when scroll event creation fails."))
         }
 
         let deltas = scrollDeltas(direction: direction, pages: pages)
@@ -319,7 +319,7 @@ enum ComputerUseToolExecutor {
             wheel3: 0
         )
         event?.post(tap: .cghidEventTap)
-        return .executed("Scrolled \(direction.rawValue)")
+        return .executed(String(format: String(localized: "computer_use.scroll.scrolled_direction", defaultValue: "Scrolled %@", bundle: .module, comment: "Status shown after scrolling in a direction."), "\(direction.rawValue)"))
     }
 
     private static func scrollElement(
@@ -332,18 +332,18 @@ enum ComputerUseToolExecutor {
         let advertisedActions = actionNames(of: element) ?? []
         guard advertisedActions.contains(action) else {
             let actions = advertisedActions.isEmpty ? "none" : advertisedActions.joined(separator: ", ")
-            return .unsupported("Element does not advertise \(action) for element-scoped scroll (actions: \(actions)).")
+            return .unsupported(String(format: String(localized: "computer_use.scroll_element.action_not_advertised", defaultValue: "Element does not advertise %@ for element-scoped scroll (actions: %@).", bundle: .module, comment: "Error shown when target element does not support requested scroll action."), "\(action)", "\(actions)"))
         }
         let count = max(1, min(8, Int(pages.rounded(.up))))
         for _ in 0..<count {
             guard AXUIElementPerformAction(element, action as CFString) == .success else {
-                return .failed("Could not perform \(action) on scroll target")
+                return .failed(String(format: String(localized: "computer_use.scroll_element.could_not_perform_action", defaultValue: "Could not perform %@ on scroll target", bundle: .module, comment: "Error shown when scroll action fails on target element."), "\(action)"))
             }
         }
         if let rect = rect(of: element) {
             ComputerUseCursorOverlay.shared.show(at: CGPoint(x: rect.midX, y: rect.midY), label: label)
         }
-        return .executed("Scrolled element \(direction.rawValue)")
+        return .executed(String(format: String(localized: "computer_use.scroll_element.scrolled_direction", defaultValue: "Scrolled element %@", bundle: .module, comment: "Status shown after scrolling an element in a direction."), "\(direction.rawValue)"))
     }
 
     private static func scrollActionName(direction: ComputerUseScrollDirection) -> String {
@@ -385,7 +385,7 @@ enum ComputerUseToolExecutor {
         if toolCall.x != nil, toolCall.y != nil {
             return clickPoint(toolCall, registry: registry)
         }
-        return .needsConfirmation("Confirm: unknown click target")
+        return .needsConfirmation(String(localized: "computer_use.click.confirm_unknown_target", defaultValue: "Confirm: unknown click target", bundle: .module, comment: "Confirmation prompt when click target is unknown."))
     }
 
     private static func performSecondaryAction(
@@ -393,7 +393,7 @@ enum ComputerUseToolExecutor {
         registry: ComputerUseElementRegistry?
     ) -> ComputerUseExecutionResult {
         guard let elementResult = elementTarget(toolCall, registry: registry) else {
-            return .failed("perform_secondary_action requires element_index or element_id")
+            return .failed(String(localized: "computer_use.perform_secondary_action.requires_element_target", defaultValue: "perform_secondary_action requires element_index or element_id", bundle: .module, comment: "Error when perform_secondary_action is missing element target identifiers."))
         }
         let element: AXUIElement
         switch elementResult {
@@ -412,20 +412,20 @@ enum ComputerUseToolExecutor {
         let advertisedActions = actionNames(of: element) ?? []
         guard advertisedActions.contains(actionName) else {
             let actions = advertisedActions.isEmpty ? "none" : advertisedActions.joined(separator: ", ")
-            return .unsupported("Element does not advertise \(actionName) (actions: \(actions)). Run get_app_state again if the target changed.")
+            return .unsupported(String(format: String(localized: "computer_use.perform_secondary_action.action_not_advertised", defaultValue: "Element does not advertise %@ (actions: %@). Run get_app_state again if the target changed.", bundle: .module, comment: "Error when target element does not advertise requested secondary action."), "\(actionName)", "\(actions)"))
         }
         if let rect = rect(of: element) {
             ComputerUseCursorOverlay.shared.show(at: CGPoint(x: rect.midX, y: rect.midY), label: toolCall.label)
         }
         guard AXUIElementPerformAction(element, actionName as CFString) == .success else {
-            return .failed("Could not perform \(actionName) on \(elementTargetLabel(toolCall))")
+            return .failed(String(format: String(localized: "computer_use.perform_secondary_action.could_not_perform", defaultValue: "Could not perform %@ on %@", bundle: .module, comment: "Error shown when secondary action fails on a target element."), "\(actionName)", "\(elementTargetLabel(toolCall))"))
         }
-        return .executed("Performed \(actionName) on \(elementTargetLabel(toolCall))")
+        return .executed(String(format: String(localized: "computer_use.perform_secondary_action.performed", defaultValue: "Performed %@ on %@", bundle: .module, comment: "Status shown when secondary action succeeds on a target element."), "\(actionName)", "\(elementTargetLabel(toolCall))"))
     }
 
     private static func setValue(_ toolCall: ComputerUseToolCall, registry: ComputerUseElementRegistry?) -> ComputerUseExecutionResult {
         guard let elementResult = elementTarget(toolCall, registry: registry) else {
-            return .failed("Stale or unknown element target")
+            return .failed(String(localized: "computer_use.set_value.stale_or_unknown_target", defaultValue: "Stale or unknown element target", bundle: .module, comment: "Error shown when set-value target is stale or unknown."))
         }
         let element: AXUIElement
         switch elementResult {
@@ -437,9 +437,9 @@ enum ComputerUseToolExecutor {
         let value = toolCall.value ?? ""
         let result = AXUIElementSetAttributeValue(element, kAXValueAttribute as CFString, value as CFTypeRef)
         if result == .success {
-            return .executed("Set value")
+            return .executed(String(localized: "computer_use.set_value.success", defaultValue: "Set value", bundle: .module, comment: "Status shown after setting a value successfully."))
         }
-        return .unsupported("Element does not support set_value")
+        return .unsupported(String(localized: "computer_use.set_value.unsupported", defaultValue: "Element does not support set_value", bundle: .module, comment: "Error when target element does not support setting value."))
     }
 
     private static func elementTarget(
@@ -448,13 +448,13 @@ enum ComputerUseToolExecutor {
     ) -> ElementTargetResult? {
         if let index = toolCall.elementIndex {
             guard let element = registry?.element(for: index) else {
-                return .failure("Stale or unknown element_index \(index). Run get_app_state again and use an element from the fresh snapshot.")
+                return .failure(String(format: String(localized: "computer_use.element_target.stale_or_unknown_index_retry", defaultValue: "Stale or unknown element_index %@. Run get_app_state again and use an element from the fresh snapshot.", bundle: .module, comment: "Guidance when element index is stale or unknown."), "\(index)"))
             }
             return .success(element)
         }
         if let elementID = toolCall.elementID?.trimmingCharacters(in: .whitespacesAndNewlines), !elementID.isEmpty {
             guard let element = registry?.element(for: elementID) else {
-                return .failure("Stale or unknown element_id \(elementID). Run get_app_state again and use an element from the fresh snapshot.")
+                return .failure(String(format: String(localized: "computer_use.element_target.stale_or_unknown_id_retry", defaultValue: "Stale or unknown element_id %@. Run get_app_state again and use an element from the fresh snapshot.", bundle: .module, comment: "Guidance when element id is stale or unknown."), "\(elementID)"))
             }
             return .success(element)
         }
@@ -471,7 +471,7 @@ enum ComputerUseToolExecutor {
         if let elementID = toolCall.elementID?.trimmingCharacters(in: .whitespacesAndNewlines), !elementID.isEmpty {
             return elementID
         }
-        return "element"
+        return String(localized: "computer_use.element.label", defaultValue: "element", bundle: .module, comment: "Fallback label used for a generic UI element target.")
     }
 
     private enum TextEntryMode {
@@ -487,8 +487,8 @@ enum ComputerUseToolExecutor {
 
         var completedMessage: String {
             switch self {
-            case .keyboard: "Typed text"
-            case .paste: "Pasted text"
+            case .keyboard: String(localized: "computer_use.enter_text.typed", defaultValue: "Typed text", bundle: .module, comment: "Status shown after typing text.")
+            case .paste: String(localized: "computer_use.enter_text.pasted", defaultValue: "Pasted text", bundle: .module, comment: "Status shown after pasting text.")
             }
         }
     }
@@ -599,12 +599,12 @@ enum ComputerUseToolExecutor {
         let element: AXUIElement?
         if let index = toolCall.elementIndex, index > 0 {
             guard let resolved = registry?.element(for: index) else {
-                return .failure("Stale or unknown element_index \(index). Run get_app_state again and use an element from the fresh snapshot.")
+                return .failure(String(format: String(localized: "computer_use.element_target.stale_or_unknown_index_retry", defaultValue: "Stale or unknown element_index %@. Run get_app_state again and use an element from the fresh snapshot.", bundle: .module, comment: "Guidance when element index is stale or unknown."), "\(index)"))
             }
             element = resolved
         } else if let elementID = toolCall.elementID, !elementID.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             guard let resolved = registry?.element(for: elementID) else {
-                return .failure("Stale or unknown element_id \(elementID). Run get_app_state again and use an element from the fresh snapshot.")
+                return .failure(String(format: String(localized: "computer_use.element_target.stale_or_unknown_id_retry", defaultValue: "Stale or unknown element_id %@. Run get_app_state again and use an element from the fresh snapshot.", bundle: .module, comment: "Guidance when element id is stale or unknown."), "\(elementID)"))
             }
             element = resolved
         } else {
@@ -629,26 +629,26 @@ enum ComputerUseToolExecutor {
 
     private static func clickElement(labeled rawLabel: String) -> ComputerUseExecutionResult {
         guard AXIsProcessTrusted() else {
-            return .failed("Accessibility permission required")
+            return .failed(String(localized: "computer_use.click_element.accessibility_permission_required", defaultValue: "Accessibility permission required", bundle: .module, comment: "Error shown when accessibility permission is required for click element."))
         }
         guard let app = NSWorkspace.shared.frontmostApplication else {
-            return .failed("No frontmost app")
+            return .failed(String(localized: "computer_use.click_element.no_frontmost_app", defaultValue: "No frontmost app", bundle: .module, comment: "Error when no frontmost app is available for click_element."))
         }
 
         let label = canonicalLabel(rawLabel)
         let axApp = AXUIElementCreateApplication(app.processIdentifier)
         let root = focusedWindow(in: axApp) ?? axApp
         guard let match = findElement(labeled: label, in: root, maxDepth: 8, visited: []) else {
-            return .failed("Could not find \(rawLabel)")
+            return .failed(String(format: String(localized: "computer_use.click_element.could_not_find", defaultValue: "Could not find %@", bundle: .module, comment: "Error when target label cannot be found for click_element."), "\(rawLabel)"))
         }
 
         if AXUIElementPerformAction(match, kAXPressAction as CFString) == .success {
-            return .executed("Clicked \(rawLabel)")
+            return .executed(String(format: String(localized: "computer_use.click_element.clicked", defaultValue: "Clicked %@", bundle: .module, comment: "Status after successfully clicking the resolved raw label target."), "\(rawLabel)"))
         }
         if clickCenter(of: match) {
-            return .executed("Clicked \(rawLabel)")
+            return .executed(String(format: String(localized: "computer_use.click_element.clicked_raw_label", defaultValue: "Clicked %@", bundle: .module, comment: "Status after clicking target identified by raw label."), "\(rawLabel)"))
         }
-        return .failed("Could not click \(rawLabel)")
+        return .failed(String(format: String(localized: "computer_use.click_element.could_not_click_raw_label", defaultValue: "Could not click %@", bundle: .module, comment: "Error when clicking target identified by raw label fails."), "\(rawLabel)"))
     }
 
     private static func clickElement(_ element: AXUIElement, fallbackLabel: String) -> ComputerUseExecutionResult {
@@ -659,25 +659,25 @@ enum ComputerUseToolExecutor {
             )
         }
         if axBool(element, kAXEnabledAttribute) == false {
-            return .failed("\(fallbackLabel) is disabled; click would likely be a no-op")
+            return .failed(String(format: String(localized: "computer_use.click_element.disabled_noop", defaultValue: "%@ is disabled; click would likely be a no-op", bundle: .module, comment: "Message when fallback click target is disabled and click would do nothing."), "\(fallbackLabel)"))
         }
 
         let advertisedActions = actionNames(of: element)
         if let advertisedActions, !advertisedActions.contains(kAXPressAction) {
             if clickCenter(of: element) {
-                return .executed("Clicked \(fallbackLabel) by coordinates; element does not advertise AXPress")
+                return .executed(String(format: String(localized: "computer_use.click_element.clicked_by_coordinates_no_axpress", defaultValue: "Clicked %@ by coordinates; element does not advertise AXPress", bundle: .module, comment: "Status when element was clicked by coordinates because AXPress is not available."), "\(fallbackLabel)"))
             }
             let actions = advertisedActions.isEmpty ? "none" : advertisedActions.joined(separator: ", ")
-            return .unsupported("\(fallbackLabel) does not advertise AXPress (actions: \(actions))")
+            return .unsupported(String(format: String(localized: "computer_use.click_element.axpress_not_advertised", defaultValue: "%@ does not advertise AXPress (actions: %@)", bundle: .module, comment: "Error when fallback element does not advertise AXPress action."), "\(fallbackLabel)", "\(actions)"))
         }
 
         if AXUIElementPerformAction(element, kAXPressAction as CFString) == .success {
-            return .executed("Clicked \(fallbackLabel)")
+            return .executed(String(format: String(localized: "computer_use.click_element.clicked_fallback_label", defaultValue: "Clicked %@", bundle: .module, comment: "Status after clicking fallback label target."), "\(fallbackLabel)"))
         }
         if clickCenter(of: element) {
-            return .executed("Clicked \(fallbackLabel) by coordinates after AXPress failed")
+            return .executed(String(format: String(localized: "computer_use.click_element.clicked_by_coordinates_after_axpress_failed", defaultValue: "Clicked %@ by coordinates after AXPress failed", bundle: .module, comment: "Status when element was clicked by coordinates after AXPress failed."), "\(fallbackLabel)"))
         }
-        return .failed("Could not click \(fallbackLabel)")
+        return .failed(String(format: String(localized: "computer_use.click_element.could_not_click_fallback_label", defaultValue: "Could not click %@", bundle: .module, comment: "Error when clicking fallback label target fails."), "\(fallbackLabel)"))
     }
 
     private static func clickPoint(
@@ -685,10 +685,10 @@ enum ComputerUseToolExecutor {
         registry: ComputerUseElementRegistry?
     ) -> ComputerUseExecutionResult {
         guard let point = screenPoint(for: toolCall, registry: registry) else {
-            return .failed("No current screenshot for point click")
+            return .failed(String(localized: "computer_use.click_point.no_current_screenshot", defaultValue: "No current screenshot for point click", bundle: .module, comment: "Error when point click cannot run without current screenshot."))
         }
         guard let source = CGEventSource(stateID: .combinedSessionState) else {
-            return .failed("Could not create mouse event")
+            return .failed(String(localized: "computer_use.click_point.could_not_create_mouse_event", defaultValue: "Could not create mouse event", bundle: .module, comment: "Error when click point cannot create a mouse event."))
         }
 
         ComputerUseCursorOverlay.shared.show(at: point, label: toolCall.label)
@@ -710,7 +710,7 @@ enum ComputerUseToolExecutor {
                 mouseCursorPosition: point,
                 mouseButton: button
             ) else {
-                return .failed("Could not create mouse event")
+                return .failed(String(localized: "computer_use.click_point.could_not_create_mouse_event", defaultValue: "Could not create mouse event", bundle: .module, comment: "Error when point click cannot create one of the mouse events."))
             }
             mouseDown.setIntegerValueField(.mouseEventClickState, value: Int64(clickIndex))
             mouseUp.setIntegerValueField(.mouseEventClickState, value: Int64(clickIndex))
@@ -718,7 +718,7 @@ enum ComputerUseToolExecutor {
             mouseUp.post(tap: .cghidEventTap)
         }
         let label = toolCall.label?.trimmingCharacters(in: .whitespacesAndNewlines)
-        return .executed("Clicked \(label?.isEmpty == false ? label! : "point")")
+        return .executed(String(format: String(localized: "computer_use.click_point.clicked_label", defaultValue: "Clicked %@", bundle: .module, comment: "Status after clicking a point with optional label fallback."), "\(label?.isEmpty == false ? label! : String(localized: "computer_use.click_point.point_fallback", defaultValue: "point", bundle: .module, comment: "Fallback label for point click status when no label is provided."))"))
     }
 
     private static func moveCursor(
@@ -726,11 +726,11 @@ enum ComputerUseToolExecutor {
         registry: ComputerUseElementRegistry?
     ) -> ComputerUseExecutionResult {
         guard let point = screenPoint(for: toolCall, registry: registry) else {
-            return .failed("No current screenshot for cursor move")
+            return .failed(String(localized: "computer_use.move_cursor.no_current_screenshot", defaultValue: "No current screenshot for cursor move", bundle: .module, comment: "Error when cursor move cannot run without current screenshot."))
         }
         CGWarpMouseCursorPosition(point)
         ComputerUseCursorOverlay.shared.show(at: point, label: toolCall.label)
-        return .executed("Moved cursor to \(Int(point.x.rounded())),\(Int(point.y.rounded()))")
+        return .executed(String(format: String(localized: "computer_use.move_cursor.moved_to_coordinates", defaultValue: "Moved cursor to %d,%d", bundle: .module, comment: "Status after moving cursor to rounded x and y coordinates."), Int(point.x.rounded()), Int(point.y.rounded())))
     }
 
     private static func drag(
@@ -745,7 +745,7 @@ enum ComputerUseToolExecutor {
                 registry: registry
               )
         else {
-            return .failed("No current screenshot for drag")
+            return .failed(String(localized: "computer_use.drag.no_current_screenshot", defaultValue: "No current screenshot for drag", bundle: .module, comment: "Error when drag cannot run without current screenshot."))
         }
         guard let source = CGEventSource(stateID: .combinedSessionState),
               let mouseDown = CGEvent(
@@ -761,7 +761,7 @@ enum ComputerUseToolExecutor {
                 mouseButton: .left
               )
         else {
-            return .failed("Could not create drag event")
+            return .failed(String(localized: "computer_use.drag.could_not_create_event", defaultValue: "Could not create drag event", bundle: .module, comment: "Error when drag event creation fails."))
         }
 
         ComputerUseCursorOverlay.shared.show(at: start, label: toolCall.label)
@@ -781,7 +781,7 @@ enum ComputerUseToolExecutor {
         }
         mouseUp.post(tap: .cghidEventTap)
         ComputerUseCursorOverlay.shared.show(at: end, label: toolCall.label)
-        return .executed("Dragged pointer")
+        return .executed(String(localized: "computer_use.drag.dragged_pointer", defaultValue: "Dragged pointer", bundle: .module, comment: "Status after pointer drag succeeds."))
     }
 
     private static func applicationURL(for appName: String) async throws -> URL? {
@@ -986,7 +986,7 @@ enum ComputerUseToolExecutor {
         toolCall: ComputerUseToolCall
     ) -> String {
         let appName = app?.localizedName ?? textEntryAppName(toolCall)
-        return appName.isEmpty ? "" : " in \(appName)"
+        return appName.isEmpty ? "" : " " + String(format: String(localized: "computer_use.text_entry_target.in_app_suffix", defaultValue: "in %@", bundle: .module, comment: "Suffix identifying target app name for text entry actions."), "\(appName)")
     }
 
     private static func focusedEditableTextTarget(requiredApp: NSRunningApplication?) -> AXUIElement? {

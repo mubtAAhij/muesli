@@ -27,7 +27,7 @@ enum TranscriptFormatter {
             var nextSpeakerNumber = 1
             for seg in diarizationSegments.sorted(by: { $0.startTimeSeconds < $1.startTimeSeconds }) {
                 if speakerLabelMap[seg.speakerId] == nil {
-                    speakerLabelMap[seg.speakerId] = "Speaker \(nextSpeakerNumber)"
+                    speakerLabelMap[seg.speakerId] = String(format: String(localized: "transcript_formatter.speaker.numbered", defaultValue: "Speaker %d", bundle: .module, comment: "Generated speaker label with incrementing speaker number in formatted transcripts."), nextSpeakerNumber)
                     nextSpeakerNumber += 1
                 }
             }
@@ -37,7 +37,7 @@ enum TranscriptFormatter {
                 return TaggedSegment(segment: segment, speaker: speaker)
             }
         } else {
-            taggedSystem = systemSegments.map { TaggedSegment(segment: $0, speaker: "Others") }
+            taggedSystem = systemSegments.map { TaggedSegment(segment: $0, speaker: String(localized: "transcript_formatter.speaker.others", defaultValue: "Others", bundle: .module, comment: "Speaker label for grouped non-user speakers in formatted transcript output.")) }
         }
 
         let tagged = (taggedMic + taggedSystem).sorted { $0.segment.start < $1.segment.start }
@@ -107,7 +107,7 @@ enum TranscriptFormatter {
         labelMap: [String: String]
     ) -> String {
         if labelMap.count == 1 {
-            return labelMap.values.first ?? "Others"
+            return labelMap.values.first ?? String(localized: "transcript_formatter.speaker.others", defaultValue: "Others", bundle: .module, comment: "Speaker label for grouped non-user speakers in formatted transcript output.")
         }
 
         let segStart = Float(segment.start)
@@ -128,7 +128,7 @@ enum TranscriptFormatter {
         }
 
         if let bestSpeakerId, bestOverlap > 0 {
-            return labelMap[bestSpeakerId] ?? "Others"
+            return labelMap[bestSpeakerId] ?? String(localized: "transcript_formatter.speaker.others", defaultValue: "Others", bundle: .module, comment: "Speaker label for grouped non-user speakers in formatted transcript output.")
         }
 
         if let nearestSpeakerId = nearestSpeaker(
@@ -136,9 +136,9 @@ enum TranscriptFormatter {
             in: diarizationSegments,
             maxGapSeconds: 2.0
         ) {
-            return labelMap[nearestSpeakerId] ?? "Others"
+            return labelMap[nearestSpeakerId] ?? String(localized: "transcript_formatter.speaker.others", defaultValue: "Others", bundle: .module, comment: "Speaker label for grouped non-user speakers in formatted transcript output.")
         }
-        return "Others"
+        return String(localized: "transcript_formatter.speaker.others", defaultValue: "Others", bundle: .module, comment: "Speaker label for grouped non-user speakers in formatted transcript output.")
     }
 
 

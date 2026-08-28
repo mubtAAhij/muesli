@@ -66,11 +66,11 @@ final class MeetingDetector {
         "us.zoom.xos": "Zoom",
         "us.zoom.ZoomPhone": "Zoom Phone",
         "com.apple.FaceTime": "FaceTime",
-        "com.microsoft.teams2": "Teams",
-        "com.microsoft.teams": "Teams",
+        "com.microsoft.teams2": String(localized: "meeting_detector.platform.teams", defaultValue: "Teams", bundle: .module, comment: "Detected meeting platform label for Microsoft Teams."),
+        "com.microsoft.teams": String(localized: "meeting_detector.platform.teams", defaultValue: "Teams", bundle: .module, comment: "Detected meeting platform label for Microsoft Teams."),
         "com.tinyspeck.slackmacgap": "Slack",
-        "com.webex.meetingmanager": "Webex",
-        "com.cisco.webexmeetingsapp": "Webex",
+        "com.webex.meetingmanager": String(localized: "meeting_detector.platform.webex", defaultValue: "Webex", bundle: .module, comment: "Detected meeting platform label for Webex."),
+        "com.cisco.webexmeetingsapp": String(localized: "meeting_detector.platform.webex", defaultValue: "Webex", bundle: .module, comment: "Detected meeting platform label for Webex."),
         "net.whatsapp.WhatsApp": "WhatsApp",
     ]
 
@@ -137,7 +137,7 @@ final class MeetingDetector {
 
         if let cal = signals.calendarEvent {
             let (appName, _, sourceID) = bestSnapshot(signals.activitySnapshot) ?? bestApp(from: signals.runningApps)
-            return MeetingDetection(appName: appName ?? "Meeting", meetingTitle: cal.title, sourceID: sourceID)
+            return MeetingDetection(appName: appName ?? String(localized: "meeting_detector.default_title.meeting", defaultValue: "Meeting", bundle: .module, comment: "Default fallback title for detected meetings."), meetingTitle: cal.title, sourceID: sourceID)
         }
 
         if let (appName, _, sourceID) = bestSnapshot(signals.activitySnapshot) {
@@ -196,7 +196,7 @@ final class MeetingDetector {
                 if let bid = appBundleID { detectedKeys.insert(bid) }
                 if let cal = signals.calendarEvent { detectedKeys.insert("cal:\(cal.id)") }
                 let title = signals.calendarEvent?.title
-                return MeetingDetection(appName: appName ?? "Meeting", meetingTitle: title, sourceID: sourceID)
+                return MeetingDetection(appName: appName ?? String(localized: "meeting_detector.default_title.meeting", defaultValue: "Meeting", bundle: .module, comment: "Default fallback title for detected meetings."), meetingTitle: title, sourceID: sourceID)
             }
         }
 
@@ -211,7 +211,7 @@ final class MeetingDetector {
                 let (appName, appBundleID, sourceID) = bestSnapshot(signals.activitySnapshot) ?? bestApp(from: signals.runningApps)
                 // Also mark the identified app to prevent double-triggering
                 if let bid = appBundleID { detectedKeys.insert(bid) }
-                return MeetingDetection(appName: appName ?? "Meeting", meetingTitle: cal.title, sourceID: sourceID)
+                return MeetingDetection(appName: appName ?? String(localized: "meeting_detector.default_title.meeting", defaultValue: "Meeting", bundle: .module, comment: "Default fallback title for detected meetings."), meetingTitle: cal.title, sourceID: sourceID)
             }
         }
 

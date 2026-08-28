@@ -209,29 +209,29 @@ public enum ModelDownloadError: Error, LocalizedError, Sendable {
     public var errorDescription: String? {
         switch self {
         case .emptyManifest(let modelID):
-            return "No files were specified for model download \(modelID)"
+            return String(format: String(localized: "model_download.error.no_files_specified", defaultValue: "No files were specified for model download %@", comment: "Error shown when model download is requested without any files."), "\(modelID)")
         case .invalidRelativePath(let path):
-            return "The model contains an invalid relative path: \(path)"
+            return String(format: String(localized: "model_download.error.invalid_relative_path", defaultValue: "The model contains an invalid relative path: %@", comment: "Error shown when a model manifest contains an invalid relative file path."), "\(path)")
         case .invalidHTTPStatus(let status, let path):
             return "HTTP " + String(status) + " while downloading " + path
         case .stalled(let path):
-            return "Download stalled while receiving " + path
+            return String(localized: "model_download.error.download_stalled_receiving", defaultValue: "Download stalled while receiving", comment: "Prefix for stalled download error before appending file context.") + " " + path
         case .invalidContentLength(let path, let expected, let actual):
-            return "The server reported an invalid size for " + path + " (expected " + String(expected) + " bytes, reported " + String(actual) + ")"
+            return String(localized: "model_download.error.invalid_reported_size_prefix", defaultValue: "The server reported an invalid size for", comment: "Prefix for invalid server-reported size error before appending file context.") + " " + path + " (expected " + String(expected) + " bytes, reported " + String(actual) + ")"
         case .sizeMismatch(let path, let expected, let actual):
-            return "Downloaded " + path + " is incomplete (expected " + String(expected) + " bytes, received " + String(actual) + ")"
+            return String(localized: "model_download.status.downloaded_prefix_primary", defaultValue: "Downloaded", comment: "Primary status prefix used while reporting downloaded bytes for a model file.") + " " + path + " is incomplete (expected " + String(expected) + " bytes, received " + String(actual) + ")"
         case .checksumMismatch(let path):
-            return "Downloaded " + path + " failed integrity validation"
+            return String(localized: "model_download.status.downloaded_prefix_secondary", defaultValue: "Downloaded", comment: "Secondary status prefix used while reporting downloaded bytes for a model file.") + " " + path + " failed integrity validation"
         case .etagMismatch(let path):
             return "The partial download for " + path + " is from an older model revision"
         case .insufficientDiskSpace(let required, let available):
             return "Not enough disk space (need " + String(required) + " bytes, have " + String(available) + ")"
         case .diskSpaceUnavailable(let path):
-            return "Could not determine available disk space for " + path
+            return String(localized: "model_download.error.could_not_determine_available_disk_space_for", defaultValue: "Could not determine available disk space for", comment: "Prefix for error when available disk space cannot be determined for target path.") + " " + path
         case .retriesExhausted(let path, let detail):
-            return "Could not download " + path + " after three attempts: " + detail
+            return String(localized: "model_download.error.could_not_download", defaultValue: "Could not download", comment: "Prefix for generic model file download failure message.") + " " + path + " after three attempts: " + detail
         case .conflictingInFlightDownload(let modelID):
-            return "Another download for model " + modelID + " is already active in this location"
+            return String(localized: "model_download.error.another_download_for_model", defaultValue: "Another download for model", comment: "Prefix for conflict error when another download for the same model is active.") + " " + modelID + " is already active in this location"
         }
     }
 }
@@ -412,7 +412,7 @@ public actor ModelDownloadCoordinator {
             $0 + fileProgress[DownloadFileKey(job: jobKey, relativePath: $1.relativePath), default: 0]
         }
         startedAt[jobKey] = Date()
-        emit(manifest, jobKey: jobKey, phase: .downloading, message: "Starting download")
+        emit(manifest, jobKey: jobKey, phase: .downloading, message: String(localized: "model_download.status.starting_download", defaultValue: "Starting download", comment: "Status message shown when model download is starting."))
 
         var pending: [ModelDownloadFile] = []
         for file in manifest.files {
@@ -455,7 +455,7 @@ public actor ModelDownloadCoordinator {
             }
         }
         try? fm.removeItem(at: stateURL(for: directory))
-        emit(manifest, jobKey: jobKey, phase: .ready, message: "Model ready")
+        emit(manifest, jobKey: jobKey, phase: .ready, message: String(localized: "model_download.status.model_ready", defaultValue: "Model ready", comment: "Status message shown when model download and preparation complete."))
     }
 
     private func downloadFile(
@@ -531,7 +531,7 @@ public actor ModelDownloadCoordinator {
                 attempt += 1
             }
         }
-        throw ModelDownloadError.retriesExhausted(file.relativePath, lastError?.localizedDescription ?? "unknown error")
+        throw ModelDownloadError.retriesExhausted(file.relativePath, lastError?.localizedDescription ?? String(localized: "model_download.error.unknown_error", defaultValue: "unknown error", comment: "Fallback message for unknown model download errors."))
     }
 
     private func stream(

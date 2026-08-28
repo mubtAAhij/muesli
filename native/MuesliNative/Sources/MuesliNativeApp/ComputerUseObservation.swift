@@ -344,7 +344,7 @@ enum ComputerUseObservationCapture {
         if target != nil, let app, !app.isActive {
             app.activate(options: [.activateAllWindows])
         }
-        let appName = app?.localizedName ?? "Unknown"
+        let appName = app?.localizedName ?? String(localized: "computer_use_observation.app_name.unknown", defaultValue: "Unknown", bundle: .module, comment: "Fallback app name when source application is unknown.")
         let bundleID = app?.bundleIdentifier ?? ""
         let capturedAt = Date()
 
@@ -641,7 +641,7 @@ enum ComputerUseObservationCapture {
            let frame = cgWindowBounds(appWindow) ?? fallbackFrame,
            frame.width > 0,
            frame.height > 0,
-           let image = CGWindowListCreateImage(
+           let image = captureWindowImageAvailable(
                .null,
                .optionIncludingWindow,
                windowID,
@@ -652,13 +652,32 @@ enum ComputerUseObservationCapture {
         }
 
         guard let displayFrame = displayFrame(containing: fallbackFrame),
-              let image = CGWindowListCreateImage(
+              let image = captureWindowImageAvailable(
                   displayFrame,
                   .optionOnScreenOnly,
                   kCGNullWindowID,
                   [.bestResolution]
               ) else { return nil }
         return screenshotObservation(image: image, frame: displayFrame)
+    }
+
+    private static func captureWindowImageAvailable(
+        _ screenBounds: CGRect,
+        _ listOption: CGWindowListOption,
+        _ windowID: CGWindowID,
+        _ imageOption: CGWindowImageOption
+    ) -> CGImage? {
+        captureWindowImage(screenBounds, listOption, windowID, imageOption)
+    }
+
+    @available(macOS, deprecated: 14.0, message: "Please use ScreenCaptureKit instead.")
+    private static func captureWindowImage(
+        _ screenBounds: CGRect,
+        _ listOption: CGWindowListOption,
+        _ windowID: CGWindowID,
+        _ imageOption: CGWindowImageOption
+    ) -> CGImage? {
+        CGWindowListCreateImage(screenBounds, listOption, windowID, imageOption)
     }
 
     private static func screenshotObservation(image: CGImage, frame: CGRect) -> ComputerUseScreenshotObservation {

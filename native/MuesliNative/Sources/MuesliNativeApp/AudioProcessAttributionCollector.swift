@@ -114,19 +114,19 @@ final class AudioProcessAttributionCollector {
             mScope: kAudioObjectPropertyScopeGlobal,
             mElement: kAudioObjectPropertyElementMain
         )
-        var value: CFString?
-        var dataSize = UInt32(MemoryLayout<CFString?>.size)
+        var unmanagedValue: Unmanaged<CFString>?
+        var dataSize = UInt32(MemoryLayout<Unmanaged<CFString>?>.size)
         guard AudioObjectGetPropertyData(
             objectID,
             &address,
             0,
             nil,
             &dataSize,
-            &value
+            &unmanagedValue
         ) == noErr else {
             return nil
         }
-        return value as String?
+        return unmanagedValue?.takeUnretainedValue() as String?
     }
 
     private func boolProperty(_ selector: AudioObjectPropertySelector, objectID: AudioObjectID) -> Bool {

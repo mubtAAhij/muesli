@@ -9,13 +9,13 @@ public enum Nemotron35ModelStoreError: Error, LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .invalidURL(let value):
-            return "Invalid Nemotron model URL: \(value)"
+            return String(format: String(localized: "nemotron35.error.invalid_model_url", defaultValue: "Invalid Nemotron model URL: %@", comment: "Error shown when Nemotron model URL in metadata is invalid."), "\(value)")
         case .invalidResponse(let value):
-            return "Invalid Nemotron model response: \(value)"
+            return String(format: String(localized: "nemotron35.error.invalid_model_response", defaultValue: "Invalid Nemotron model response: %@", comment: "Error shown when Nemotron model metadata response is invalid."), "\(value)")
         case .httpError(let code, let path):
-            return "HTTP \(code) downloading Nemotron model file \(path)"
+            return String(format: String(localized: "nemotron35.error.http_downloading_model_file", defaultValue: "HTTP %d downloading Nemotron model file %@", comment: "Error shown when HTTP status indicates failure while downloading Nemotron model file."), code, "\(path)")
         case .retriesExhausted(let path, let underlying):
-            return "Failed to download Nemotron model file \(path) after retries: \(underlying.localizedDescription)"
+            return String(format: String(localized: "nemotron35.error.download_failed_after_retries", defaultValue: "Failed to download Nemotron model file %@ after retries: %@", comment: "Error shown when Nemotron model file download fails after retries, including path and underlying error."), "\(path)", "\(underlying.localizedDescription)")
         }
     }
 }
@@ -86,7 +86,7 @@ public enum Nemotron35ModelStore {
         }
 
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        progress?(0.0, "Downloading Nemotron 3.5 model...")
+        progress?(0.0, String(localized: "nemotron35.download.progress.downloading_model", defaultValue: "Downloading Nemotron 3.5 model...", comment: "Progress status shown while downloading Nemotron 3.5 model."))
 
         let apiURL = "https://huggingface.co/api/models/\(repoID)/tree/main/\(variantPath)"
         let files = try await collectFiles(
@@ -105,14 +105,14 @@ public enum Nemotron35ModelStore {
             maximumConcurrency: 2
         )
         try await ModelDownloadCoordinator.shared.download(manifest, to: directory) { snapshot in
-            progress?(snapshot.fractionCompleted ?? 0, "Downloading Nemotron 3.5 model...")
+            progress?(snapshot.fractionCompleted ?? 0, String(localized: "nemotron35.download.progress.downloading_model", defaultValue: "Downloading Nemotron 3.5 model...", comment: "Progress status shown while downloading Nemotron 3.5 model."))
             progressSnapshot?(snapshot)
         }
 
         if let revision = await fetchRemoteRevision() {
             recordInstalledRevision(revision)
         }
-        progress?(1.0, "Nemotron 3.5 model ready")
+        progress?(1.0, String(localized: "nemotron35.download.status.model_ready", defaultValue: "Nemotron 3.5 model ready", comment: "Status shown when Nemotron 3.5 model download and setup are complete."))
         return directory
     }
 

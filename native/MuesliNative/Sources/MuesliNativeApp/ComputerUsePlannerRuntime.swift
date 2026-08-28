@@ -106,11 +106,11 @@ final class ComputerUsePlannerRuntime {
             }
             if Date() >= deadline {
                 traceEvents.append(traceEvent(kind: "timed_out", title: "Timed out", body: "CUA timed out", status: "timed_out", step: step))
-                return .init(status: .timedOut, message: "CUA timed out", traceEvents: traceEvents)
+                return .init(status: .timedOut, message: String(localized: "computer_use.runtime.status.cua_timed_out", defaultValue: "CUA timed out", bundle: .module, comment: "Runtime status text when computer-use action times out."), traceEvents: traceEvents)
             }
             if let maxSteps, step > maxSteps {
-                traceEvents.append(traceEvent(kind: "failed", title: "Failed", body: "CUA reached its step limit", status: "failed", step: maxSteps))
-                return .init(status: .failed, message: "CUA reached its step limit", traceEvents: traceEvents)
+                traceEvents.append(traceEvent(kind: "failed", title: "Failed", body: String(localized: "computer_use.runtime.status.cua_step_limit_reached", defaultValue: "CUA reached its step limit", bundle: .module, comment: "Runtime status text when computer-use action reaches step limit."), status: "failed", step: maxSteps))
+                return .init(status: .failed, message: String(localized: "computer_use.runtime.status.cua_step_limit_reached", defaultValue: "CUA reached its step limit", bundle: .module, comment: "Runtime status text when computer-use action reaches step limit."), traceEvents: traceEvents)
             }
             defer { step += 1 }
 
@@ -150,12 +150,12 @@ final class ComputerUsePlannerRuntime {
                 if invalidToolCallRepairCount <= maxInvalidToolCallRepairs {
                     continue
                 }
-                traceEvents.append(traceEvent(kind: "failed", title: "Planner failed", body: repairMessage, status: "failed", step: step))
+                traceEvents.append(traceEvent(kind: "failed", title: String(localized: "computer_use.runtime.status.planner_failed", defaultValue: "Planner failed", bundle: .module, comment: "Runtime status text when planner fails."), body: repairMessage, status: "failed", step: step))
                 return .init(status: .failed, message: repairMessage, traceEvents: traceEvents)
             } catch {
                 traceEvents.append(traceEvent(
                     kind: "failed",
-                    title: "Planner failed",
+                    title: String(localized: "computer_use.runtime.status.planner_failed", defaultValue: "Planner failed", bundle: .module, comment: "Runtime status text when planner fails."),
                     body: error.localizedDescription,
                     status: "failed",
                     step: step
@@ -181,7 +181,7 @@ final class ComputerUsePlannerRuntime {
             }
             if toolCall.requiresConfirmation {
                 onStatus("Confirm")
-                let message = "Confirm: \(toolCall.summary)"
+                let message = String(format: String(localized: "computer_use.runtime.confirmation.message", defaultValue: "Confirm: %@", bundle: .module, comment: "Runtime confirmation message including tool call summary."), "\(toolCall.summary)")
                 traceEvents.append(traceEvent(kind: "confirm", title: "Confirmation required", body: message, status: "confirm", step: step))
                 return .init(status: .needsConfirmation, message: message, traceEvents: traceEvents)
             }
@@ -241,7 +241,7 @@ final class ComputerUsePlannerRuntime {
                     delta: nil
                 ))
                 if let blocked = feedback.blocked {
-                    traceEvents.append(traceEvent(kind: "failed", title: "Repeated action stopped", body: blocked, status: "failed", step: step))
+                    traceEvents.append(traceEvent(kind: "failed", title: String(localized: "computer_use.runtime.status.repeated_action_stopped", defaultValue: "Repeated action stopped", bundle: .module, comment: "Runtime status text when repeated action is stopped."), body: blocked, status: "failed", step: step))
                     return .init(status: .failed, message: blocked, traceEvents: traceEvents)
                 }
                 continue
@@ -303,7 +303,7 @@ final class ComputerUsePlannerRuntime {
                         delta: delta,
                         counts: &unchangedActionCounts
                     ) {
-                        traceEvents.append(traceEvent(kind: "failed", title: "Repeated action stopped", body: blocked, status: "failed", step: step))
+                        traceEvents.append(traceEvent(kind: "failed", title: String(localized: "computer_use.runtime.status.repeated_action_stopped", defaultValue: "Repeated action stopped", bundle: .module, comment: "Runtime status text when repeated action is stopped."), body: blocked, status: "failed", step: step))
                         return .init(status: .failed, message: blocked, traceEvents: traceEvents)
                     }
                 case .needsConfirmation:
@@ -360,7 +360,7 @@ final class ComputerUsePlannerRuntime {
     private func cancelledResult(traceEvents: [ComputerUseTraceEvent], step: Int) -> ComputerUsePlannerRuntimeResult {
         var events = traceEvents
         events.append(traceEvent(kind: "cancelled", title: "Cancelled", body: "CUA cancelled", status: "cancelled", step: step))
-        return .init(status: .cancelled, message: "CUA cancelled", traceEvents: events)
+        return .init(status: .cancelled, message: String(localized: "computer_use.runtime.status.cua_cancelled", defaultValue: "CUA cancelled", bundle: .module, comment: "Runtime status text when computer-use action is cancelled."), traceEvents: events)
     }
 
     private func outcome(
@@ -388,7 +388,7 @@ final class ComputerUsePlannerRuntime {
     }
 
     private func observationEvent(_ observation: ComputerUseObservation, step: Int?) -> ComputerUseTraceEvent {
-        let app = observation.appName.isEmpty ? "Unknown app" : observation.appName
+        let app = observation.appName.isEmpty ? String(localized: "computer_use_planner.app.unknown", defaultValue: "Unknown app", bundle: .module, comment: "Fallback app name when target app cannot be identified.") : observation.appName
         let window = observation.windowTitle.isEmpty ? "No focused window" : observation.windowTitle
         var details = ["state \(observation.stateID)", "\(app) - \(window) - \(observation.elements.count) AX candidates"]
         if let screenshot = observation.screenshot {
@@ -437,7 +437,7 @@ final class ComputerUsePlannerRuntime {
            before.bundleID != after.bundleID {
             return ComputerUseStateDelta(
                 status: .targetLost,
-                summary: "Target app changed from \(before.appName) (\(before.bundleID)) to \(after.appName) (\(after.bundleID)); re-query state before acting again.",
+                summary: String(format: String(localized: "computer_use_planner.state_delta.target_app_changed", defaultValue: "Target app changed from %@ (%@) to %@ (%@); re-query state before acting again.", bundle: .module, comment: "Guidance message when target app changes between observations."), "\(before.appName)", "\(before.bundleID)", "\(after.appName)", "\(after.bundleID)"),
                 beforeStateID: before.stateID,
                 afterStateID: after.stateID
             )
@@ -448,11 +448,11 @@ final class ComputerUsePlannerRuntime {
         let status: ComputerUseVerificationStatus = beforeSignature == afterSignature ? .unchanged : .changed
         let summary: String
         if status == .changed {
-            summary = "Observed UI state changed after \(toolCall.summary)."
+            summary = String(format: String(localized: "computer_use_planner.state_delta.ui_state_changed", defaultValue: "Observed UI state changed after %@.", bundle: .module, comment: "Message noting UI state changed after a tool call."), "\(toolCall.summary)")
         } else if toolCall.tool == .typeText || toolCall.tool == .pasteText || toolCall.tool == .setValue {
-            summary = "\(toolCall.summary) executed but no focused value, selected text, or visible AX text change was observed; refocus the editable target or use a different insertion primitive."
+            summary = String(format: String(localized: "computer_use_planner.state_delta.no_text_change_guidance", defaultValue: "%@ executed but no focused value, selected text, or visible AX text change was observed; refocus the editable target or use a different insertion primitive.", bundle: .module, comment: "Guidance message when insertion action causes no observable text change."), "\(toolCall.summary)")
         } else {
-            summary = "\(toolCall.summary) executed but no relevant UI change was observed; choose a different strategy."
+            summary = String(format: String(localized: "computer_use_planner.state_delta.no_relevant_change_guidance", defaultValue: "%@ executed but no relevant UI change was observed; choose a different strategy.", bundle: .module, comment: "Guidance message when action executes without relevant UI changes."), "\(toolCall.summary)")
         }
         return ComputerUseStateDelta(
             status: status,
@@ -464,7 +464,7 @@ final class ComputerUsePlannerRuntime {
 
     private func verifiedOutcomeMessage(base: String, delta: ComputerUseStateDelta?) -> String {
         guard let delta else { return base }
-        return "\(base). Verification: \(delta.summary)"
+        return String(format: String(localized: "computer_use_planner.verified_outcome.message", defaultValue: "%@. Verification: %@", bundle: .module, comment: "Verified outcome message combining base summary and delta summary."), "\(base)", "\(delta.summary)")
     }
 
     private func observationToolFeedback(
@@ -479,20 +479,20 @@ final class ComputerUsePlannerRuntime {
         guard observationSignature(before) == observationSignature(after) else {
             counts.removeValue(forKey: key)
             return (
-                "\(base). Captured fresh state; continue from the visible AX/screenshot context.",
+                String(format: String(localized: "computer_use_planner.observation_feedback.captured_fresh_state", defaultValue: "%@. Captured fresh state; continue from the visible AX/screenshot context.", bundle: .module, comment: "Observation feedback when fresh UI state has been captured."), "\(base)"),
                 nil
             )
         }
 
         let count = (counts[key] ?? 0) + 1
         counts[key] = count
-        let message = "\(base). State is unchanged after \(toolCall.summary); choose a concrete action now and do not call get_app_state/get_window_state again unless the target app or window changes."
+        let message = String(format: String(localized: "computer_use_planner.message.state_unchanged_choose_action", defaultValue: "%@. State is unchanged after %@; choose a concrete action now and do not call get_app_state/get_window_state again unless the target app or window changes.", bundle: .module, comment: "Guidance message when repeated observation shows unchanged state."), "\(base)", "\(toolCall.summary)")
         guard count >= maxUnchangedObservationLoops else {
             return (message, nil)
         }
         return (
             message,
-            "CUA stopped repeated \(toolCall.summary) after \(maxUnchangedObservationLoops) unchanged observations with no intervening action. Choose a concrete action instead of observing again."
+            String(format: String(localized: "computer_use_planner.feedback.repeated_observation_stopped", defaultValue: "CUA stopped repeated %@ after %d unchanged observations with no intervening action. Choose a concrete action instead of observing again.", bundle: .module, comment: "Feedback message when repeated observation loop is stopped."), "\(toolCall.summary)", maxUnchangedObservationLoops)
         )
     }
 
@@ -514,7 +514,7 @@ final class ComputerUsePlannerRuntime {
         let count = (counts[key] ?? 0) + 1
         counts[key] = count
         guard count >= 2 else { return nil }
-        return "CUA stopped repeated \(toolCall.summary) after two unchanged attempts: no relevant UI change was observed. Choose a different strategy after running get_app_state."
+        return String(format: String(localized: "computer_use_planner.feedback.repeated_unchanged_attempts", defaultValue: "CUA stopped repeated %@ after two unchanged attempts: no relevant UI change was observed. Choose a different strategy after running get_app_state.", bundle: .module, comment: "Feedback message when repeated unchanged attempts are halted."), "\(toolCall.summary)")
     }
 
     private func repeatedActionKey(_ toolCall: ComputerUseToolCall) -> String {
@@ -636,27 +636,27 @@ final class ComputerUsePlannerRuntime {
         case .click, .clickElement, .clickPoint:
             return result.message.hasPrefix("Clicked") ? result.message : "Clicked"
         case .performSecondaryAction:
-            return "Performed action"
+            return String(localized: "computer_use_planner.result_status.performed_action", defaultValue: "Performed action", bundle: .module, comment: "Generic result status label for completed action.")
         case .moveCursor:
             return "Moving cursor"
         case .typeText:
             return "Typed text"
         case .pasteText:
-            return "Pasted text"
+            return String(localized: "computer_use_planner.result_status.pasted_text", defaultValue: "Pasted text", bundle: .module, comment: "Result status label after pasting text.")
         case .openNewBrowserTab:
             return "Opened new tab"
         case .navigateURL, .navigateActiveBrowserTab:
             return "Navigated"
         case .pressKey, .hotkey:
-            return "Pressed key"
+            return String(localized: "computer_use_planner.result_status.pressed_key", defaultValue: "Pressed key", bundle: .module, comment: "Result status after pressing a key.")
         case .scroll:
-            return "Scrolled"
+            return String(localized: "computer_use_planner.result_status.scrolled", defaultValue: "Scrolled", bundle: .module, comment: "Result status after scrolling.")
         case .setValue:
-            return "Set value"
+            return String(localized: "computer_use_planner.result_status.set_value", defaultValue: "Set value", bundle: .module, comment: "Result status after setting a value.")
         case .drag:
-            return "Dragged"
+            return String(localized: "computer_use_planner.result_status.dragged", defaultValue: "Dragged", bundle: .module, comment: "Result status after dragging.")
         case .activateBrowserTab:
-            return "Switched tab"
+            return String(localized: "computer_use_planner.result_status.switched_tab", defaultValue: "Switched tab", bundle: .module, comment: "Result status after switching tabs.")
         default:
             return nil
         }
@@ -666,35 +666,35 @@ final class ComputerUsePlannerRuntime {
         switch toolCall.tool {
         case .launchApp:
             let target = toolCall.appName?.trimmingCharacters(in: .whitespacesAndNewlines)
-            return "Opening \(target?.isEmpty == false ? target! : "app")"
+            return String(format: "Opening %@", "\(target?.isEmpty == false ? target! : String(localized: "computer_use_planner.status.target_app_fallback", defaultValue: "app", bundle: .module, comment: "Fallback target name when no explicit app target is provided."))")
         case .click, .clickElement, .clickPoint:
             return "Clicking"
         case .performSecondaryAction:
-            return "Performing action"
+            return String(localized: "computer_use_planner.status.performing_action", defaultValue: "Performing action", bundle: .module, comment: "Status while performing an action.")
         case .moveCursor:
-            return toolCall.label?.isEmpty == false ? "Moving to \(toolCall.label!)" : "Moving cursor"
+            return toolCall.label?.isEmpty == false ? String(format: "Moving to %@", "\(toolCall.label!)") : "Moving cursor"
         case .setValue:
-            return "Setting value"
+            return String(localized: "computer_use_planner.status.setting_value", defaultValue: "Setting value", bundle: .module, comment: "Status while setting a value.")
         case .typeText:
             return "Typing"
         case .pasteText:
-            return "Pasting"
+            return String(localized: "computer_use_planner.status.pasting", defaultValue: "Pasting", bundle: .module, comment: "Status while pasting text.")
         case .pressKey, .hotkey:
             return "Pressing key"
         case .scroll:
             return "Scrolling"
         case .drag:
-            return "Dragging"
+            return String(localized: "computer_use_planner.status.dragging", defaultValue: "Dragging", bundle: .module, comment: "Status while dragging.")
         case .openNewBrowserTab:
             return "Opening new tab"
         case .navigateURL, .navigateActiveBrowserTab:
             return "Navigating"
         case .activateBrowserTab:
-            return "Switching tab"
+            return String(localized: "computer_use_planner.status.switching_tab", defaultValue: "Switching tab", bundle: .module, comment: "Planner status while switching tabs.")
         case .listApps, .listWindows, .listBrowserTabs, .pageGetText, .pageQueryDOM:
-            return "Reading"
+            return String(localized: "computer_use_planner.status.reading", defaultValue: "Reading", bundle: .module, comment: "Planner status while reading UI content.")
         case .getAppState, .getWindowState:
-            return "Observing"
+            return String(localized: "computer_use_planner.status.observing", defaultValue: "Observing", bundle: .module, comment: "Planner status while observing UI state.")
         case .finish:
             return "Done"
         case .fail:
@@ -708,7 +708,7 @@ final class ComputerUsePlannerRuntime {
     ) async throws -> ComputerUsePlannerResponse {
         var attempt = 0
         while true {
-            onStatus("Planning step \(request.step)")
+            onStatus(String(format: "Planning step %@", "\(request.step)"))
             traceEvents.append(traceEvent(
                 kind: "planning",
                 title: "Planning",
@@ -725,7 +725,7 @@ final class ComputerUsePlannerRuntime {
                     throw error
                 }
                 attempt += 1
-                let message = "Planner request failed transiently: \(error.localizedDescription). Retrying once."
+                let message = String(format: String(localized: "computer_use_planner.message.transient_failure_retrying", defaultValue: "Planner request failed transiently: %@. Retrying once.", bundle: .module, comment: "Message shown when a transient planner error occurs and a retry will happen."), "\(error.localizedDescription)")
                 onStatus("Retrying planner")
                 traceEvents.append(traceEvent(
                     kind: "planner_retry",
@@ -764,10 +764,10 @@ final class ComputerUsePlannerRuntime {
         guard result.status == .failed || result.status == .unsupported else { return nil }
         let message = result.message.trimmingCharacters(in: .whitespacesAndNewlines)
         if browserToolCanFallBackToScreen(toolCall.tool), isBrowserAutomationPermissionFailure(message) {
-            return "\(message). Continue with get_app_state plus AX/screenshot tools: click_element/click_point, paste_text/type_text, press_key/hotkey, and scroll. Do not retry browser page tools unless the user grants Chrome Apple Events JavaScript permission."
+            return String(format: String(localized: "computer_use_planner.recovery.browser_automation_permission_guidance", defaultValue: "%@. Continue with get_app_state plus AX/screenshot tools: click_element/click_point, paste_text/type_text, press_key/hotkey, and scroll. Do not retry browser page tools unless the user grants Chrome Apple Events JavaScript permission.", bundle: .module, comment: "Recovery guidance after browser automation permission issues."), "\(message)")
         }
         if (toolCall.tool == .typeText || toolCall.tool == .pasteText), isTextFocusFailure(message) {
-            return "\(message). Continue with get_app_state and focus an editable target using click_element or set_value before retrying text entry. Prefer paste_text for Apple Notes and native rich-text editors. Do not repeat text entry until the focused target changes."
+            return String(format: String(localized: "computer_use_planner.recovery.text_entry_retry_guidance", defaultValue: "%@. Continue with get_app_state and focus an editable target using click_element or set_value before retrying text entry. Prefer paste_text for Apple Notes and native rich-text editors. Do not repeat text entry until the focused target changes.", bundle: .module, comment: "Recovery guidance when text entry produced no effect."), "\(message)")
         }
         return nil
     }
