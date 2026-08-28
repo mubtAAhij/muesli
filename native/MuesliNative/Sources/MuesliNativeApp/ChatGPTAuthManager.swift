@@ -15,13 +15,13 @@ enum ChatGPTAuthError: Error, LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .notAuthenticated: return "Not signed in to ChatGPT"
-        case .callbackTimeout: return "Sign-in timed out — no response from browser"
-        case .callbackMissingCode: return "OAuth callback missing authorization code"
-        case .callbackStateMismatch: return "OAuth state mismatch — possible CSRF attack"
-        case .tokenExchangeFailed(let msg): return "Token exchange failed: \(msg)"
-        case .refreshFailed(let msg): return "Token refresh failed: \(msg)"
-        case .portInUse: return "Callback port 1455 is already in use"
+        case .notAuthenticated: return String(localized: "chatgpt_auth.error.not_signed_in", defaultValue: "Not signed in to ChatGPT", bundle: .module, comment: "Error shown when user tries ChatGPT actions without being signed in.")
+        case .callbackTimeout: return String(localized: "chatgpt_auth.error.signin_timed_out", defaultValue: "Sign-in timed out — no response from browser", bundle: .module, comment: "Error shown when ChatGPT OAuth browser sign-in times out.")
+        case .callbackMissingCode: return String(localized: "chatgpt_auth.error.callback_missing_code", defaultValue: "OAuth callback missing authorization code", bundle: .module, comment: "Error shown when OAuth callback lacks required authorization code.")
+        case .callbackStateMismatch: return String(localized: "chatgpt_auth.error.state_mismatch", defaultValue: "OAuth state mismatch — possible CSRF attack", bundle: .module, comment: "Error shown when OAuth state verification fails, indicating possible CSRF.")
+        case .tokenExchangeFailed(let msg): return String(format: String(localized: "chatgpt_auth.error.token_exchange_failed", defaultValue: "Token exchange failed: %@", bundle: .module, comment: "Error shown when exchanging OAuth authorization code for token fails."), "\(msg)")
+        case .refreshFailed(let msg): return String(format: String(localized: "chatgpt_auth.error.token_refresh_failed", defaultValue: "Token refresh failed: %@", bundle: .module, comment: "Error shown when refreshing ChatGPT OAuth token fails."), "\(msg)")
+        case .portInUse: return String(localized: "chatgpt_auth.error.callback_port_in_use", defaultValue: "Callback port 1455 is already in use", bundle: .module, comment: "Error shown when local OAuth callback port is unavailable because it is already in use.")
         }
     }
 }
