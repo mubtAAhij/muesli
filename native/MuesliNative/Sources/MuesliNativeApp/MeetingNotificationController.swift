@@ -337,17 +337,19 @@ final class MeetingNotificationController {
     private func autoDismissNow() {
         guard !isDismissPaused else { return }
         animateOut { [weak self] in
-            guard let self else { return }
-            let wasPaused = self.isDismissPaused
-            let autoDismiss = self.onAutoDismiss
-            let shouldFireAutoDismiss = Self.firesAutoDismissCallbackAfterFade(wasDismissPaused: wasPaused)
-            if shouldFireAutoDismiss,
-               Self.suppressesCloseCallbackDuringAutoDismiss(hasAutoDismissHandler: autoDismiss != nil) {
-                self.onClose = nil
-            }
-            self.close()
-            if shouldFireAutoDismiss {
-                autoDismiss?()
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                let wasPaused = self.isDismissPaused
+                let autoDismiss = self.onAutoDismiss
+                let shouldFireAutoDismiss = Self.firesAutoDismissCallbackAfterFade(wasDismissPaused: wasPaused)
+                if shouldFireAutoDismiss,
+                   Self.suppressesCloseCallbackDuringAutoDismiss(hasAutoDismissHandler: autoDismiss != nil) {
+                    self.onClose = nil
+                }
+                self.close()
+                if shouldFireAutoDismiss {
+                    autoDismiss?()
+                }
             }
         }
     }
@@ -392,24 +394,30 @@ final class MeetingNotificationController {
     @objc private func handleStartRecording() {
         let action = onStartRecording
         animateOut { [weak self] in
-            self?.close()
-            action?()
+            Task { @MainActor [weak self] in
+                self?.close()
+                action?()
+            }
         }
     }
 
     @objc private func handleJoinAndRecord() {
         let action = onJoinAndRecord
         animateOut { [weak self] in
-            self?.close()
-            action?()
+            Task { @MainActor [weak self] in
+                self?.close()
+                action?()
+            }
         }
     }
 
     @objc private func handleJoinOnly() {
         let action = onJoinOnly
         animateOut { [weak self] in
-            self?.close()
-            action?()
+            Task { @MainActor [weak self] in
+                self?.close()
+                action?()
+            }
         }
     }
 
@@ -429,8 +437,10 @@ final class MeetingNotificationController {
     @objc private func handleDismiss() {
         let action = onDismiss
         animateOut { [weak self] in
-            self?.close()
-            action?()
+            Task { @MainActor [weak self] in
+                self?.close()
+                action?()
+            }
         }
     }
 
