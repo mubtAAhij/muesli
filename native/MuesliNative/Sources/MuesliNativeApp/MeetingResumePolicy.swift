@@ -15,7 +15,7 @@ enum MeetingResumePolicy {
 
     /// Separator inserted between the prior transcript and the newly recorded one
     /// when a meeting is resumed (Approach A — concatenate, see the PRD).
-    static let resumeSeparator = "\n\n— Resumed —\n\n"
+    static let resumeSeparator = "\n\n" + String(localized: "meeting_resume_policy.resume_separator", defaultValue: "— Resumed —", bundle: .module, comment: "Separator inserted into notes when a meeting recording resumes.") + "\n\n"
 
     /// Concatenates the prior transcript with the newly recorded one. If nothing
     /// new was captured (empty/whitespace), the prior transcript is returned
