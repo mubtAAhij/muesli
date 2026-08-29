@@ -476,7 +476,7 @@ final class RouteAwareMeetingMicRecorder: MeetingMicRecording {
                     candidateID: candidate.id,
                     generation: generation,
                     error: NSError(domain: "MeetingMicrophoneRoute", code: 1, userInfo: [
-                        NSLocalizedDescriptionKey: "The selected microphone did not produce audio."
+                        NSLocalizedDescriptionKey: String(localized: "meeting_mic_recording.error.selected_microphone_no_audio", defaultValue: "The selected microphone did not produce audio.", bundle: .module, comment: "Error shown when selected microphone produces no audio")
                     ])
                 )
             }
