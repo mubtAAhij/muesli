@@ -14,11 +14,11 @@ enum LiveTranscriptCopyContent {
         }
         let others = partialOthers.trimmingCharacters(in: .whitespacesAndNewlines)
         if !others.isEmpty {
-            sections.append("Others: \(others)")
+            sections.append(String(format: String(localized: "live_transcript.export.others_line", defaultValue: "Others: %@", bundle: .module, comment: "Export line label for transcript text spoken by other participants"), "\(others)"))
         }
         let you = partialYou.trimmingCharacters(in: .whitespacesAndNewlines)
         if !you.isEmpty {
-            sections.append("You: \(you)")
+            sections.append(String(format: String(localized: "live_transcript.export.you_line", defaultValue: "You: %@", bundle: .module, comment: "Export line label for transcript text spoken by current user"), "\(you)"))
         }
         return sections.joined(separator: "\n")
     }
@@ -81,7 +81,7 @@ struct LiveTranscriptBubble: View {
                 .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .help("Copy message")
+        .help(String(localized: "live_transcript.copy_message.help", defaultValue: "Copy message", bundle: .module, comment: "Accessibility/help text for copying a transcript message"))
         .opacity(isHovered ? 1 : 0)
         .allowsHitTesting(isHovered)
         .accessibilityHidden(!isHovered)
@@ -169,7 +169,7 @@ struct LiveTranscriptFeedView: View {
     var body: some View {
         LazyVStack(alignment: .leading, spacing: 6) {
             if messages.isEmpty && trimmedPartialYou.isEmpty && trimmedPartialOthers.isEmpty {
-                Text("Waiting for speech…")
+                Text(String(localized: "live_transcript.status.waiting_for_speech", defaultValue: "Waiting for speech…", bundle: .module, comment: "Status text shown while waiting for new speech in live transcript"))
                     .font(MuesliTheme.body())
                     .foregroundStyle(MuesliTheme.textTertiary)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -187,7 +187,7 @@ struct LiveTranscriptFeedView: View {
                 }
                 if !trimmedPartialOthers.isEmpty {
                     LiveTranscriptBubble(
-                        speaker: "Others",
+                        speaker: String(localized: "live_transcript.speaker.others", defaultValue: "Others", bundle: .module, comment: "Speaker label for non-user participants in live transcript"),
                         timestamp: nil,
                         lines: [trimmedPartialOthers],
                         isUser: false,
@@ -301,7 +301,7 @@ struct LiveTranscriptView: View {
                 HStack(spacing: 6) {
                     Image(systemName: didCopy ? "checkmark" : "doc.on.doc")
                         .font(.system(size: 11, weight: .semibold))
-                    Text(didCopy ? "Copied" : "Copy")
+                    Text(didCopy ? String(localized: "live_transcript.copy_button.copied", defaultValue: "Copied", bundle: .module, comment: "Copy button label shown after transcript content has been copied") : String(localized: "live_transcript.copy_button.copy", defaultValue: "Copy", bundle: .module, comment: "Copy button label for transcript content"))
                         .font(.system(size: 12, weight: .semibold))
                 }
                 .foregroundStyle(didCopy ? MuesliTheme.success : MuesliTheme.textPrimary)
