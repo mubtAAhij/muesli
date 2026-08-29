@@ -500,8 +500,8 @@ final class MeetingSession {
                 let mic = MeetingStreamingPartialSession(engine: engines.mic, label: "You")
                 mic.onPartialUpdate = { [weak self] text in self?.onPartialTranscript?("You", text) }
                 await mic.connect()
-                let system = MeetingStreamingPartialSession(engine: engines.system, label: "Others")
-                system.onPartialUpdate = { [weak self] text in self?.onPartialTranscript?("Others", text) }
+                let system = MeetingStreamingPartialSession(engine: engines.system, label: String(localized: "meeting_session.speaker.others", defaultValue: "Others", bundle: .module, comment: "Speaker label representing non-local participants in meeting session UI"))
+                system.onPartialUpdate = { [weak self] text in self?.onPartialTranscript?(String(localized: "meeting_session.speaker.others", defaultValue: "Others", bundle: .module, comment: "Speaker label representing non-local participants in meeting session UI"), text) }
                 await system.connect()
 
                 let stillRecording = self.chunkRotationQueue.sync { self.isRecording }
@@ -1115,7 +1115,7 @@ final class MeetingSession {
                 guard self.systemChunkCollector.retire(id: retireID, segments: resolvedSegments) else { return }
                 self.commitSystemPartialSegment(id: retireID)
                 guard !resolvedSegments.isEmpty else { return }
-                self.onChunkTranscribed?(resolvedSegments, "Others")
+                self.onChunkTranscribed?(resolvedSegments, String(localized: "meeting_session.speaker.others", defaultValue: "Others", bundle: .module, comment: "Speaker label representing non-local participants in meeting session UI"))
             }
         } else {
             task.cancel()
