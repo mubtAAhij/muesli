@@ -8051,7 +8051,7 @@ public final class MuesliController: NSObject {
         guard !computerUseLastFloatingStatus.isEmpty else { return true }
         if elapsed >= computerUseFloatingStatusMinimumDwell { return true }
         switch status {
-        case .completedFinalAction, .failed, .cancelled:
+        case .done, .failed, .cancelled:
             return true
         default:
             break
@@ -8071,7 +8071,7 @@ public final class MuesliController: NSObject {
     @MainActor
     private func shouldReplaceComputerUseTranscript(with status: ComputerUseStatusIdentity) -> Bool {
         switch status {
-        case .completedFinalAction, .failed, .cancelled:
+        case .done, .failed, .cancelled:
             return false
         default:
             break
