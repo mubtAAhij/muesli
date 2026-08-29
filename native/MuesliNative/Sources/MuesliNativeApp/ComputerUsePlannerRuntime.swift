@@ -640,13 +640,13 @@ final class ComputerUsePlannerRuntime {
         case .moveCursor:
             return .runningAction(String(localized: "computer_use_planner.result_status.moving_cursor", defaultValue: "Moving cursor", bundle: .module, comment: "Planner result status when cursor movement action is in progress"))
         case .typeText:
-            return ComputerUseStatusIdentity.typedText
+            return .runningAction(String(localized: "computer_use_planner.result_status.typed_text", defaultValue: "Typed text", bundle: .module, comment: "Planner result status when text typing action completed"))
         case .pasteText:
             return .runningAction(String(localized: "computer_use_planner.result_status.pasted_text", defaultValue: "Pasted text", bundle: .module, comment: "Planner result status when text paste action completed"))
         case .openNewBrowserTab:
             return .opening(target: String(localized: "computer_use_planner.result_status.new_tab_target", defaultValue: "new tab", bundle: .module, comment: "Target label for a newly opened browser tab result."))
         case .navigateURL, .navigateActiveBrowserTab:
-            return ComputerUseStatusIdentity.navigated
+            return .runningAction(String(localized: "computer_use_planner.result_status.navigated", defaultValue: "Navigated", bundle: .module, comment: "Result status when browser navigation completed."))
         case .pressKey, .hotkey:
             return .runningAction(String(localized: "computer_use_planner.result_status.pressed_key", defaultValue: "Pressed key", bundle: .module, comment: "Result status when a key press action was performed."))
         case .scroll:
