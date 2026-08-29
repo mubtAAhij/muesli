@@ -12,15 +12,15 @@ enum LocalVQEError: Error, LocalizedError {
     var errorDescription: String? {
         switch self {
         case .modelMissing(let url):
-            return "LocalVQE model not found at \(url.path)"
+            return String(format: String(localized: "local_vqe_processor.error.model_not_found", defaultValue: "LocalVQE model not found at %@", bundle: .module, comment: "Error shown when LocalVQE model file cannot be found at expected path"), "\(url.path)")
         case .libraryMissing(let candidates):
-            return "LocalVQE library not found in: \(candidates.map(\.path).joined(separator: ", "))"
+            return String(format: String(localized: "local_vqe_processor.error.library_not_found", defaultValue: "LocalVQE library not found in: %@", bundle: .module, comment: "Error shown when LocalVQE runtime library is missing from candidate paths"), "\(candidates.map(\.path).joined(separator: ", "))")
         case .loadFailed(let message):
-            return "LocalVQE failed to load: \(message)"
+            return String(format: String(localized: "local_vqe_processor.error.load_failed", defaultValue: "LocalVQE failed to load: %@", bundle: .module, comment: "Error shown when LocalVQE runtime fails to load with message"), "\(message)")
         case .invalidRuntime(let sampleRate, let hopLength):
-            return "LocalVQE runtime reported unsupported sampleRate=\(sampleRate), hopLength=\(hopLength)"
+            return String(format: String(localized: "local_vqe_processor.error.unsupported_runtime", defaultValue: "LocalVQE runtime reported unsupported sampleRate=%d, hopLength=%d", bundle: .module, comment: "Error shown when LocalVQE runtime reports unsupported audio configuration"), sampleRate, hopLength)
         case .processFailed(let message):
-            return "LocalVQE frame processing failed: \(message)"
+            return String(format: String(localized: "local_vqe_processor.error.frame_processing_failed", defaultValue: "LocalVQE frame processing failed: %@", bundle: .module, comment: "Error shown when LocalVQE fails while processing an audio frame"), "\(message)")
         }
     }
 }
@@ -96,7 +96,7 @@ enum LocalVQEModelStore {
     private static func validateModel(at url: URL) throws {
         let actualHash = try sha256Hex(for: url)
         guard actualHash == sha256 else {
-            throw LocalVQEError.loadFailed("model checksum mismatch at \(url.path): expected \(sha256), got \(actualHash)")
+            throw LocalVQEError.loadFailed(String(format: String(localized: "local_vqe_processor.error.checksum_mismatch", defaultValue: "model checksum mismatch at %@: expected %@, got %@", bundle: .module, comment: "Error shown when downloaded model checksum does not match expected value"), "\(url.path)", "\(sha256)", "\(actualHash)"))
         }
     }
 
@@ -199,9 +199,9 @@ final class LocalVQEAudioProcessor: MeetingAecProcessor {
     }
 
     func processFrame(mic: [Float], reference: [Float]) throws -> [Float] {
-        guard let context else { throw LocalVQEError.loadFailed("runtime is not loaded") }
+        guard let context else { throw LocalVQEError.loadFailed(String(localized: "local_vqe_processor.error.runtime_not_loaded", defaultValue: "runtime is not loaded", bundle: .module, comment: "Error shown when LocalVQE runtime is accessed before loading")) }
         guard mic.count == frameSize, reference.count == frameSize else {
-            throw LocalVQEError.processFailed("expected \(frameSize) samples, got mic=\(mic.count), reference=\(reference.count)")
+            throw LocalVQEError.processFailed(String(format: String(localized: "local_vqe_processor.error.invalid_frame_sizes", defaultValue: "expected %d samples, got mic=%d, reference=%d", bundle: .module, comment: "Error shown when input frame sizes do not match required sample counts"), frameSize, mic.count, reference.count))
         }
 
         var output = [Float](repeating: 0, count: frameSize)
