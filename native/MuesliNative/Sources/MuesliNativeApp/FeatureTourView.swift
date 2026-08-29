@@ -261,8 +261,8 @@ struct FeatureTourOverlay: View {
                 }
                 .buttonStyle(.plain)
                 .foregroundStyle(MuesliTheme.textSecondary)
-                .help("End walkthrough")
-                .accessibilityLabel("End walkthrough")
+                .help(String(localized: "feature_tour.action.end_walkthrough", defaultValue: "End walkthrough", bundle: .module, comment: "Button label to end the feature walkthrough."))
+                .accessibilityLabel(String(localized: "feature_tour.action.end_walkthrough", defaultValue: "End walkthrough", bundle: .module, comment: "Confirmation action label to end the feature walkthrough."))
             }
 
             Text(step.message)
@@ -272,12 +272,12 @@ struct FeatureTourOverlay: View {
                 .fixedSize(horizontal: false, vertical: true)
 
             HStack(spacing: MuesliTheme.spacing12) {
-                Text("\(stepIndex + 1) of \(tour.steps.count)")
+                Text(String(format: String(localized: "feature_tour.progress.step_of_total", defaultValue: "%d of %d", bundle: .module, comment: "Progress label showing current walkthrough step out of total steps."), stepIndex + 1, tour.steps.count))
                     .font(MuesliTheme.caption())
                     .monospacedDigit()
                     .foregroundStyle(MuesliTheme.textTertiary)
 
-                Button("Skip", action: onDismiss)
+                Button(String(localized: "feature_tour.action.skip", defaultValue: "Skip", bundle: .module, comment: "Action label to skip the current feature tour flow."), action: onDismiss)
                     .buttonStyle(.plain)
                     .foregroundStyle(MuesliTheme.textSecondary)
 
@@ -285,14 +285,14 @@ struct FeatureTourOverlay: View {
 
                 if stepIndex > 0 {
                     Button(action: onBack) {
-                        Label("Back", systemImage: "chevron.left")
+                        Label(String(localized: "feature_tour.back", defaultValue: "Back", bundle: .module, comment: "Navigation button label to go to previous tour step."), systemImage: "chevron.left")
                     }
                     .buttonStyle(.bordered)
                 }
 
                 Button(action: onNext) {
                     Label(
-                        stepIndex == tour.steps.count - 1 ? "Done" : "Next",
+                        stepIndex == tour.steps.count - 1 ? String(localized: "feature_tour.done", defaultValue: "Done", bundle: .module, comment: "Button label to finish the feature tour.") : String(localized: "feature_tour.next", defaultValue: "Next", bundle: .module, comment: "Button label to proceed to next tour step."),
                         systemImage: stepIndex == tour.steps.count - 1 ? "checkmark" : "chevron.right"
                     )
                 }
@@ -337,10 +337,10 @@ struct FeatureTourInvitationView: View {
                         .frame(width: 26, height: 26)
 
                     VStack(alignment: .leading, spacing: 5) {
-                        Text("MUESLI \(tour.displayVersion)")
+                        Text(String(format: String(localized: "feature_tour.header.version_title", defaultValue: "MUESLI %@", bundle: .module, comment: "Feature tour header title including app version."), "\(tour.displayVersion)"))
                             .font(.system(size: 10, weight: .bold))
                             .foregroundStyle(MuesliTheme.accent)
-                        Text("Want a quick tour of what’s new?")
+                        Text(String(localized: "feature_tour.prompt.whats_new", defaultValue: "Want a quick tour of what’s new?", bundle: .module, comment: "Prompt inviting user to start what's new walkthrough."))
                             .font(.system(size: 21, weight: .bold))
                             .foregroundStyle(MuesliTheme.textPrimary)
                     }
@@ -354,11 +354,11 @@ struct FeatureTourInvitationView: View {
                     }
                     .buttonStyle(.plain)
                     .foregroundStyle(MuesliTheme.textSecondary)
-                    .help("Skip walkthrough")
-                    .accessibilityLabel("Skip walkthrough")
+                    .help(String(localized: "feature_tour.action.skip_walkthrough", defaultValue: "Skip walkthrough", bundle: .module, comment: "Action label to skip the walkthrough from welcome prompt."))
+                    .accessibilityLabel(String(localized: "feature_tour.action.skip_walkthrough", defaultValue: "Skip walkthrough", bundle: .module, comment: "Confirmation action label to skip the walkthrough."))
                 }
 
-                Text("See \(tour.steps.count) additions in the places where you’ll actually use them. You can replay this later from What’s New in Muesli.")
+                Text(String(format: String(localized: "feature_tour.prompt.summary_with_count", defaultValue: "See %d additions in the places where you’ll actually use them. You can replay this later from What’s New in Muesli.", bundle: .module, comment: "Summary text describing number of walkthrough additions and replay hint."), tour.steps.count))
                     .font(MuesliTheme.body())
                     .foregroundStyle(MuesliTheme.textSecondary)
                     .lineSpacing(2)
@@ -366,10 +366,10 @@ struct FeatureTourInvitationView: View {
 
                 HStack(spacing: MuesliTheme.spacing12) {
                     Spacer()
-                    Button("Skip", action: onSkip)
+                    Button(String(localized: "feature_tour.action.skip", defaultValue: "Skip", bundle: .module, comment: "Action label to skip the walkthrough onboarding prompt."), action: onSkip)
                         .buttonStyle(.bordered)
                     Button(action: onAccept) {
-                        Label("Take the Tour", systemImage: "arrow.right")
+                        Label(String(localized: "feature_tour.take_the_tour", defaultValue: "Take the Tour", bundle: .module, comment: "Primary action label to start the feature tour."), systemImage: "arrow.right")
                     }
                     .buttonStyle(.borderedProminent)
                 }
