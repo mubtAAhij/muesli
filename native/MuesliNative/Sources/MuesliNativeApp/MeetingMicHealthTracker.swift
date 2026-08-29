@@ -12,9 +12,9 @@ enum MeetingMicHealthState: String, Codable, Equatable {
         case .healthy, .waitingForAudio:
             return nil
         case .micCallbacksMissing:
-            return "Microphone audio is not reaching Muesli. This meeting transcript may miss your side."
+            return String(localized: "meeting_mic_health_tracker.user_message.audio_not_reaching", defaultValue: "Microphone audio is not reaching Muesli. This meeting transcript may miss your side.", bundle: .module, comment: "Warning shown when microphone audio is not being received")
         case .micAllZeroWhileSystemActive:
-            return "Microphone audio is silent. This meeting transcript may miss your side."
+            return String(localized: "meeting_mic_health_tracker.user_message.audio_silent", defaultValue: "Microphone audio is silent. This meeting transcript may miss your side.", bundle: .module, comment: "Warning shown when microphone audio appears silent")
         }
     }
 }
