@@ -41,7 +41,7 @@ struct SearchResultsView: View {
             Button {
                 controller.clearSearch()
             } label: {
-                Text("Clear")
+                Text(String(localized: "search_results.clear", defaultValue: "Clear", bundle: .module, comment: "Button label to clear search results or query."))
                     .font(MuesliTheme.callout())
                     .foregroundStyle(MuesliTheme.accent)
             }
@@ -84,7 +84,7 @@ struct SearchResultsView: View {
         switch selectedTab {
         case .dictations:
             if appState.searchResultDictations.isEmpty {
-                noResultsForTab("dictations")
+                noResultsForTab(String(localized: "search_results.no_results.subject.dictations", defaultValue: "dictations", bundle: .module, comment: "Lowercase subject noun used in no-results messaging for dictations."))
             } else {
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 0) {
@@ -111,7 +111,7 @@ struct SearchResultsView: View {
             }
         case .meetings:
             if appState.searchResultMeetings.isEmpty {
-                noResultsForTab("meetings")
+                noResultsForTab(String(localized: "search_results.no_results.subject.meetings", defaultValue: "meetings", bundle: .module, comment: "Lowercase subject noun used in no-results messaging for meetings."))
             } else {
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 0) {
@@ -135,7 +135,7 @@ struct SearchResultsView: View {
             Image(systemName: "magnifyingglass")
                 .font(.system(size: 32))
                 .foregroundStyle(MuesliTheme.textTertiary)
-            Text("No results for \"\(appState.searchQuery)\"")
+            Text(String(format: String(localized: "search_results.no_results.for_query", defaultValue: "No results for \"%@\"", bundle: .module, comment: "Message shown when a search query returns no results."), "\(appState.searchQuery)"))
                 .font(MuesliTheme.body())
                 .foregroundStyle(MuesliTheme.textSecondary)
         }
@@ -145,7 +145,7 @@ struct SearchResultsView: View {
     @ViewBuilder
     private func noResultsForTab(_ name: String) -> some View {
         VStack(spacing: MuesliTheme.spacing8) {
-            Text("No matching \(name)")
+            Text(String(format: String(localized: "search_results.no_results.no_matching_name", defaultValue: "No matching %@", bundle: .module, comment: "Message shown when no matching item exists for the provided name."), "\(name)"))
                 .font(MuesliTheme.body())
                 .foregroundStyle(MuesliTheme.textSecondary)
         }
@@ -191,7 +191,7 @@ private struct SearchDictationRow: View {
                             .foregroundStyle(MuesliTheme.textTertiary)
                     }
                     .buttonStyle(.plain)
-                    .help("Copy CUA trace")
+                    .help(String(localized: "search_results.copy_cua_trace.help", defaultValue: "Copy CUA trace", bundle: .module, comment: "Help text for action that copies a CUA trace."))
                 }
 
                 Button(action: onCopy) {
@@ -276,13 +276,13 @@ private struct SearchMeetingRow: View {
 
     private func formatDuration(_ seconds: Double) -> String {
         let rounded = Int(seconds.rounded())
-        if rounded < 60 { return "\(rounded)s" }
+        if rounded < 60 { return String(format: String(localized: "search_results.duration.seconds", defaultValue: "%ds", bundle: .module, comment: "Compact duration format in seconds."), rounded) }
         let m = rounded / 60
         let s = rounded % 60
-        if m < 60 { return s > 0 ? "\(m)m \(s)s" : "\(m)m" }
+        if m < 60 { return s > 0 ? String(format: String(localized: "search_results.duration.minutes_seconds", defaultValue: "%dm %ds", bundle: .module, comment: "Compact duration format in minutes and seconds."), m, s) : String(format: String(localized: "search_results.duration.minutes", defaultValue: "%dm", bundle: .module, comment: "Compact duration format in minutes only."), m) }
         let h = m / 60
         let rm = m % 60
-        return rm > 0 ? "\(h)h \(rm)m" : "\(h)h"
+        return rm > 0 ? String(format: String(localized: "search_results.duration.hours_minutes", defaultValue: "%dh %dm", bundle: .module, comment: "Compact duration format in hours and minutes."), h, rm) : String(format: String(localized: "search_results.duration.hours", defaultValue: "%dh", bundle: .module, comment: "Compact duration format in hours only."), h)
     }
 }
 
