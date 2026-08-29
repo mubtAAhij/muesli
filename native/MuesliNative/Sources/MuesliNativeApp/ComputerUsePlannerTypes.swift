@@ -1,5 +1,59 @@
 import Foundation
 
+enum ComputerUseStatusIdentity: Equatable {
+    case observingScreen
+    case screenFallback
+    case planningStep(String)
+    case retryingPlanner
+    case opening(target: String)
+    case runningAction(String)
+    case done
+    case failed
+    case confirm
+    case timedOut
+    case cancelled
+
+    var localizedTitle: String {
+        switch self {
+        case .observingScreen:
+            return String(localized: "computer_use.status.observing_screen", defaultValue: "Observing screen", bundle: .module, comment: "Status shown while observing the screen.")
+        case .screenFallback:
+            return String(localized: "computer_use.status.screen_fallback", defaultValue: "Screen fallback", bundle: .module, comment: "Status shown when using a screen fallback.")
+        case .planningStep(let step):
+            return String(format: String(localized: "computer_use.status.planning_step", defaultValue: "Planning step %@", bundle: .module, comment: "Status shown while planning a specific step."), step)
+        case .retryingPlanner:
+            return String(localized: "computer_use.status.retrying_planner", defaultValue: "Retrying planner", bundle: .module, comment: "Status shown when retrying planner request.")
+        case .opening(let target):
+            return String(format: String(localized: "computer_use.status.opening_target", defaultValue: "Opening %@", bundle: .module, comment: "Status shown while opening a target application."), target)
+        case .runningAction(let title):
+            return title
+        case .done:
+            return "Done"
+        case .failed:
+            return String(localized: "computer_use.status.failed", defaultValue: "Failed", bundle: .module, comment: "Status shown when computer use task fails.")
+        case .confirm:
+            return "Confirm"
+        }
+    }
+
+    var token: String {
+        switch self {
+        case .done:
+            return "done"
+        case .timedOut:
+            return "timed_out"
+        case .failed:
+            return "failed"
+        case .confirm:
+            return "confirm"
+        case .cancelled:
+            return "cancelled"
+        default:
+            return ""
+        }
+    }
+}
+
 enum ComputerUseToolName: String, Codable, Equatable, CaseIterable {
     case listApps = "list_apps"
     case launchApp = "launch_app"
@@ -573,19 +627,19 @@ struct ComputerUseToolInvocation: Codable, Equatable {
             return "move cursor to \(coordinateSummary(x, y))"
         case .click:
             if let elementIndex {
-                return "click element \(elementIndexLabel(elementIndex))"
+                return String(format: String(localized: "computer_use_planner_types.action.click_element", defaultValue: "click element %@", bundle: .module, comment: "Planner action summary for clicking a specific indexed element"), "\(elementIndexLabel(elementIndex))")
             }
             if !trimmed(elementID).isEmpty {
-                return "click \(trimmed(label).isEmpty ? trimmed(elementID) : trimmed(label))"
+                return String(format: String(localized: "computer_use_planner_types.action.click_target", defaultValue: "click %@", bundle: .module, comment: "Planner action summary for clicking a target by label or identifier"), "\(trimmed(label).isEmpty ? trimmed(elementID) : trimmed(label))")
             }
-            return "click \(trimmed(label).isEmpty ? "point" : trimmed(label)) at \(coordinateSummary(x, y))"
+            return String(format: String(localized: "computer_use_planner_types.action.click_target_at_coordinates", defaultValue: "click %@ at %@", bundle: .module, comment: "Planner action summary for clicking a named target or point at coordinates"), "\(trimmed(label).isEmpty ? String(localized: "computer_use_planner_types.target.point", defaultValue: "point", bundle: .module, comment: "Fallback target noun used when click action has no label") : trimmed(label))", "\(coordinateSummary(x, y))")
         case .clickElement:
             if let elementIndex {
-                return "click element \(elementIndexLabel(elementIndex))"
+                return String(format: String(localized: "computer_use_planner_types.action.click_element", defaultValue: "click element %@", bundle: .module, comment: "Planner action summary for clicking a specific indexed element"), "\(elementIndexLabel(elementIndex))")
             }
-            return "click \(trimmed(label).isEmpty ? trimmed(elementID) : trimmed(label))"
+            return String(format: String(localized: "computer_use_planner_types.action.click_target", defaultValue: "click %@", bundle: .module, comment: "Planner action summary for clicking a target by label or identifier"), "\(trimmed(label).isEmpty ? trimmed(elementID) : trimmed(label))")
         case .clickPoint:
-            return "click \(trimmed(label).isEmpty ? "point" : trimmed(label)) at \(coordinateSummary(x, y))"
+            return String(format: String(localized: "computer_use_planner_types.action.click_target_at_coordinates", defaultValue: "click %@ at %@", bundle: .module, comment: "Planner action summary for clicking a named target or point at coordinates"), "\(trimmed(label).isEmpty ? String(localized: "computer_use_planner_types.target.point", defaultValue: "point", bundle: .module, comment: "Fallback target noun used when click action has no label") : trimmed(label))", "\(coordinateSummary(x, y))")
         case .performSecondaryAction:
             let target = elementIndex.map(elementIndexLabel) ?? trimmed(elementID)
             return "perform \(trimmed(actionName)) on \(target)"
