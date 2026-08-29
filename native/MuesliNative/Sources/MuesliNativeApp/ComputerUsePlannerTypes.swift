@@ -33,6 +33,10 @@ enum ComputerUseStatusIdentity: Equatable {
             return String(localized: "computer_use.status.failed", defaultValue: "Failed", bundle: .module, comment: "Status shown when computer use task fails.")
         case .confirm:
             return "Confirm"
+        case .timedOut:
+            return String(localized: "computer_use.status.timed_out", defaultValue: "Timed out", bundle: .module, comment: "Status shown when computer use task times out.")
+        case .cancelled:
+            return String(localized: "computer_use.status.cancelled", defaultValue: "Cancelled", bundle: .module, comment: "Status shown when computer use task is cancelled.")
         }
     }
 
