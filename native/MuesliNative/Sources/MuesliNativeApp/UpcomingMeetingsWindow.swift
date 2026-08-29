@@ -17,11 +17,11 @@ enum UpcomingMeetingsWindow: Int, CaseIterable, Identifiable {
     var label: String {
         switch self {
         case .today:
-            return "Today only"
+            return String(localized: "upcoming_meetings_window.range_label.today_only", defaultValue: "Today only", bundle: .module, comment: "Range label for showing only today's upcoming meetings")
         case .twoDays:
-            return "Two days"
+            return String(localized: "upcoming_meetings_window.range_label.two_days", defaultValue: "Two days", bundle: .module, comment: "Range label for showing two days of upcoming meetings")
         case .threeDays:
-            return "Three days"
+            return String(localized: "upcoming_meetings_window.range_label.three_days", defaultValue: "Three days", bundle: .module, comment: "Range label for showing three days of upcoming meetings")
         }
     }
 
