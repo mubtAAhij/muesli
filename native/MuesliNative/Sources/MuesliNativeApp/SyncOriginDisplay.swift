@@ -3,8 +3,8 @@ import MuesliCore
 
 enum SyncOriginDisplay {
     static let iOSSource = "ios"
-    static let iOSBadgeLabel = "iOS"
-    static let iOSBadgeHelp = "Synced from Muesli for iOS"
+    static let iOSBadgeLabel = String(localized: "sync_origin_display.ios_badge_label", defaultValue: "iOS", bundle: .module, comment: "Badge label indicating record originated from iOS")
+    static let iOSBadgeHelp = String(localized: "sync_origin_display.ios_badge_help", defaultValue: "Synced from Muesli for iOS", bundle: .module, comment: "Accessibility/help text for iOS-origin sync badge")
 
     static func badgeLabel(forDictationSource source: String) -> String? {
         source.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() == iOSSource
@@ -20,9 +20,9 @@ enum SyncOriginDisplay {
 extension RecordOriginFilter {
     var label: String {
         switch self {
-        case .all: return "All"
-        case .thisMac: return "This Mac"
-        case .fromIPhone: return "From iPhone"
+        case .all: return String(localized: "sync_origin_display.filter_label.all", defaultValue: "All", bundle: .module, comment: "Filter option label to show records from all sources")
+        case .thisMac: return String(localized: "sync_origin_display.filter_label.this_mac", defaultValue: "This Mac", bundle: .module, comment: "Filter option label to show records from this Mac")
+        case .fromIPhone: return String(localized: "sync_origin_display.filter_label.from_iphone", defaultValue: "From iPhone", bundle: .module, comment: "Filter option label to show records synced from iPhone")
         }
     }
 }
@@ -31,7 +31,7 @@ struct RecordOriginPicker: View {
     @Binding var selection: RecordOriginFilter
 
     var body: some View {
-        Picker("Record source", selection: $selection) {
+        Picker(String(localized: "sync_origin_display.record_source.label", defaultValue: "Record source", bundle: .module, comment: "Label for record source filter control"), selection: $selection) {
             ForEach(RecordOriginFilter.allCases, id: \.self) { origin in
                 Text(origin.label).tag(origin)
             }
@@ -39,8 +39,8 @@ struct RecordOriginPicker: View {
         .pickerStyle(.segmented)
         .labelsHidden()
         .frame(width: 240)
-        .help("Filter by the device where the recording was created")
-        .accessibilityLabel("Record source")
+        .help(String(localized: "sync_origin_display.record_source.help_text", defaultValue: "Filter by the device where the recording was created", bundle: .module, comment: "Help text explaining record source filter purpose"))
+        .accessibilityLabel(String(localized: "sync_origin_display.record_source.label", defaultValue: "Record source", bundle: .module, comment: "Label for record source filter control"))
     }
 }
 
