@@ -8008,7 +8008,7 @@ public final class MuesliController: NSObject {
 
         let now = Date()
         let elapsed = now.timeIntervalSince(computerUseLastFloatingStatusAt)
-        if shouldShowComputerUseStatusImmediately(floatingStatus, elapsed: elapsed) {
+        if shouldShowComputerUseStatusImmediately(status, elapsed: elapsed) {
             computerUseFloatingStatusWorkItem?.cancel()
             computerUseFloatingStatusWorkItem = nil
             applyComputerUseFloatingStatus(floatingStatus, at: now)
@@ -8050,11 +8050,11 @@ public final class MuesliController: NSObject {
     private func shouldShowComputerUseStatusImmediately(_ status: ComputerUseStatusIdentity, elapsed: TimeInterval) -> Bool {
         guard !computerUseLastFloatingStatus.isEmpty else { return true }
         if elapsed >= computerUseFloatingStatusMinimumDwell { return true }
-        if status.isTerminal { return true }
+        if status.isTerminalStatus { return true }
         if computerUseLastFloatingStatus == ComputerUseStatusIdentity.runningAction("Thinking...").localizedTitle, elapsed >= 0.25 {
             return true
         }
-        if status.isConcreteFloatingStatus {
+        if status.shouldDisplayAsFloatingStatus {
             return elapsed >= 0.2
         }
         return false
@@ -8062,7 +8062,7 @@ public final class MuesliController: NSObject {
 
     @MainActor
     private func shouldReplaceComputerUseTranscript(with status: ComputerUseStatusIdentity) -> Bool {
-        if status.isLowPriorityTranscriptStatus {
+        if status.shouldRemainInTranscript {
             return false
         }
         return true
