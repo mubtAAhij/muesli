@@ -8050,20 +8050,31 @@ public final class MuesliController: NSObject {
     private func shouldShowComputerUseStatusImmediately(_ status: ComputerUseStatusIdentity, elapsed: TimeInterval) -> Bool {
         guard !computerUseLastFloatingStatus.isEmpty else { return true }
         if elapsed >= computerUseFloatingStatusMinimumDwell { return true }
-        if status.isTerminalStatus { return true }
+        switch status {
+        case .completed, .failed, .cancelled:
+            return true
+        default:
+            break
+        }
         if computerUseLastFloatingStatus == ComputerUseStatusIdentity.runningAction("Thinking...").localizedTitle, elapsed >= 0.25 {
             return true
         }
-        if status.shouldDisplayAsFloatingStatus {
+        switch status {
+        case .planningStep, .runningAction:
             return elapsed >= 0.2
+        default:
+            break
         }
         return false
     }
 
     @MainActor
     private func shouldReplaceComputerUseTranscript(with status: ComputerUseStatusIdentity) -> Bool {
-        if status.shouldRemainInTranscript {
+        switch status {
+        case .completed, .failed, .cancelled:
             return false
+        default:
+            break
         }
         return true
     }
