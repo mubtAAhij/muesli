@@ -1,3 +1,4 @@
+ import Dispatch
 import AppKit
 import CryptoKit
 import Foundation
@@ -142,9 +143,12 @@ final class ChatGPTAuthManager {
                 continuation.resume(throwing: ChatGPTAuthError.portInUse)
                 return
             }
+            let resumedLock = NSLock()
             var resumed = false
 
             let timeoutWork = DispatchWorkItem { [weak listener] in
+                resumedLock.lock()
+                defer { resumedLock.unlock() }
                 guard !resumed else { return }
                 resumed = true
                 listener?.cancel()
@@ -157,8 +161,15 @@ final class ChatGPTAuthManager {
 
             listener.stateUpdateHandler = { state in
                 if case .failed = state {
-                    guard !resumed else { return }
+                    resumedLock.lock()
+                    defer { resumedLock.unlock() }
+                    resumedLock.lock()
+                    guard !resumed else {
+                        resumedLock.unlock()
+                        return
+                    }
                     resumed = true
+                    resumedLock.unlock()
                     timeoutWork.cancel()
                     continuation.resume(throwing: ChatGPTAuthError.portInUse)
                 }
@@ -183,8 +194,8 @@ final class ChatGPTAuthManager {
                     }
 
                     // Parse code + state from: GET /callback?code=XXX&state=YYY HTTP/1.1
-                    let code = self.extractCode(from: request)
-                    let callbackState = self.extractParam(named: "state", from: request)
+                    let code = Self.extractCode(from: request)
+                    let callbackState = Self.extractParam(named: "state", from: request)
 
                     // Validate state before sending success page to prevent CSRF
                     guard callbackState == expectedState else {
@@ -238,7 +249,7 @@ final class ChatGPTAuthManager {
         }
     }
 
-    func extractCode(from httpRequest: String) -> String? {
+    static func extractCode(from httpRequest: String) -> String? {
         // Parse "GET /callback?code=XXX&... HTTP/1.1"
         guard let pathLine = httpRequest.split(separator: "\r\n").first ?? httpRequest.split(separator: "\n").first,
               let pathPart = pathLine.split(separator: " ").dropFirst().first else {
@@ -249,7 +260,7 @@ final class ChatGPTAuthManager {
         return components.queryItems?.first(where: { $0.name == "code" })?.value
     }
 
-    func extractParam(named name: String, from httpRequest: String) -> String? {
+    static func extractParam(named name: String, from httpRequest: String) -> String? {
         guard let pathLine = httpRequest.split(separator: "\r\n").first ?? httpRequest.split(separator: "\n").first,
               let pathPart = pathLine.split(separator: " ").dropFirst().first else {
             return nil
