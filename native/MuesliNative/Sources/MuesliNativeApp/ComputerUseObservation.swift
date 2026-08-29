@@ -344,7 +344,7 @@ enum ComputerUseObservationCapture {
         if target != nil, let app, !app.isActive {
             app.activate(options: [.activateAllWindows])
         }
-        let appName = app?.localizedName ?? "Unknown"
+        let appName = app?.localizedName ?? String(localized: "computer_use_observation.app_name.unknown", defaultValue: "Unknown", bundle: .module, comment: "Fallback app name when the source application is unknown")
         let bundleID = app?.bundleIdentifier ?? ""
         let capturedAt = Date()
 
@@ -641,7 +641,7 @@ enum ComputerUseObservationCapture {
            let frame = cgWindowBounds(appWindow) ?? fallbackFrame,
            frame.width > 0,
            frame.height > 0,
-           let image = CGWindowListCreateImage(
+           let image = captureWindowImage(
                .null,
                .optionIncludingWindow,
                windowID,
@@ -652,7 +652,7 @@ enum ComputerUseObservationCapture {
         }
 
         guard let displayFrame = displayFrame(containing: fallbackFrame),
-              let image = CGWindowListCreateImage(
+              let image = captureWindowImage(
                   displayFrame,
                   .optionOnScreenOnly,
                   kCGNullWindowID,
@@ -675,6 +675,16 @@ enum ComputerUseObservationCapture {
             scaleY: scaleY,
             imageDataURL: imageDataURL(image)
         )
+    }
+
+    @available(macOS, deprecated: 14.0, message: "Use ScreenCaptureKit for capture on macOS 14+")
+    private static func captureWindowImage(
+        _ screenBounds: CGRect,
+        _ windowOption: CGWindowListOption,
+        _ windowID: CGWindowID,
+        _ imageOption: CGWindowImageOption
+    ) -> CGImage? {
+        CGWindowListCreateImage(screenBounds, windowOption, windowID, imageOption)
     }
 
     nonisolated static func shouldUseDisplayFallbackForScreenshot(width: Int, height: Int, frame: CGRect) -> Bool {

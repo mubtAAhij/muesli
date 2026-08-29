@@ -267,14 +267,14 @@ private struct FloatingMeetingTranscriptPanelView: View {
 
     private var header: some View {
         HStack(spacing: MuesliTheme.spacing8) {
-            Text("Live transcript")
+            Text(String(localized: "floating_meeting_transcript_panel.header.live_transcript", defaultValue: "Live transcript", bundle: .module, comment: "Header title for floating live meeting transcript panel"))
                 .font(MuesliTheme.callout().weight(.semibold))
                 .foregroundStyle(MuesliTheme.textPrimary)
             Spacer()
             Circle()
                 .fill(model.isPaused ? MuesliTheme.textTertiary : MuesliTheme.success)
                 .frame(width: 6, height: 6)
-            Text(model.isPaused ? "Paused" : "Live")
+            Text(model.isPaused ? String(localized: "floating_meeting_transcript_panel.status.paused", defaultValue: "Paused", bundle: .module, comment: "Status badge text when live transcript panel is paused") : String(localized: "floating_meeting_transcript_panel.status.live", defaultValue: "Live", bundle: .module, comment: "Status badge text when live transcript panel is actively updating"))
                 .font(MuesliTheme.caption())
                 .foregroundStyle(MuesliTheme.textSecondary)
             Button(action: onDismiss) {
@@ -285,7 +285,7 @@ private struct FloatingMeetingTranscriptPanelView: View {
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            .help("Hide live transcript")
+            .help(String(localized: "floating_meeting_transcript_panel.help.hide_live_transcript", defaultValue: "Hide live transcript", bundle: .module, comment: "Accessibility help text for action that hides floating live transcript panel"))
             Button(action: copyTranscript) {
                 Image(systemName: model.didCopy ? "checkmark" : "doc.on.doc")
                     .font(.system(size: 12, weight: .semibold))
@@ -295,7 +295,7 @@ private struct FloatingMeetingTranscriptPanelView: View {
             }
             .buttonStyle(.plain)
             .disabled(copyText.isEmpty)
-            .help("Copy transcript")
+            .help(String(localized: "floating_meeting_transcript_panel.help.copy_transcript", defaultValue: "Copy transcript", bundle: .module, comment: "Accessibility help text for action that copies meeting transcript text"))
         }
         .padding(.horizontal, MuesliTheme.spacing16)
         .frame(height: 42)

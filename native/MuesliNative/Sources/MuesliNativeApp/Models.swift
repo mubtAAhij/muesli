@@ -20,126 +20,126 @@ struct BackendOption: Equatable {
     static let parakeetMultilingual = BackendOption(
         backend: "fluidaudio",
         model: "FluidInference/parakeet-tdt-0.6b-v3-coreml",
-        label: "Parakeet v3",
-        sizeLabel: "~450 MB",
-        description: "The best default for everyday dictation: quick enough to feel responsive, reliable in normal rooms, and able to follow 25 languages.",
+        label: String(localized: "backend_option.parakeet_v3.title", defaultValue: "Parakeet v3", bundle: .module, comment: "Backend option title for Parakeet v3"),
+        sizeLabel: String(localized: "backend_option.parakeet_v3.size", defaultValue: "~450 MB", bundle: .module, comment: "Displayed download size for Parakeet v3 model option"),
+        description: String(localized: "backend_option.parakeet_v3.description", defaultValue: "The best default for everyday dictation: quick enough to feel responsive, reliable in normal rooms, and able to follow 25 languages.", bundle: .module, comment: "Description for Parakeet v3 backend option"),
         recommended: true
     )
 
     static let parakeetEnglish = BackendOption(
         backend: "fluidaudio",
         model: "FluidInference/parakeet-tdt-0.6b-v2-coreml",
-        label: "Parakeet v2",
-        sizeLabel: "~450 MB",
-        description: "A quick, dependable English-only option. Choose it if you mainly dictate in English and prefer the older Parakeet model.",
+        label: String(localized: "backend_option.parakeet_v2.title", defaultValue: "Parakeet v2", bundle: .module, comment: "Backend option title for Parakeet v2"),
+        sizeLabel: String(localized: "backend_option.parakeet_v2.size", defaultValue: "~450 MB", bundle: .module, comment: "Displayed download size for Parakeet v2 model option"),
+        description: String(localized: "backend_option.parakeet_v2.description", defaultValue: "A quick, dependable English-only option. Choose it if you mainly dictate in English and prefer the older Parakeet model.", bundle: .module, comment: "Description for Parakeet v2 backend option"),
         recommended: false
     )
 
     static let whisperSmall = BackendOption(
         backend: "whisper",
         model: "small",
-        label: "Whisper Small Multilingual",
-        sizeLabel: "~250 MB",
-        description: "A balanced multilingual Whisper option for everyday notes. It handles accents and background noise better than Tiny while keeping the download modest. Auto-detect language by default, or choose one yourself.",
+        label: String(localized: "backend_option.whisper_small.title", defaultValue: "Whisper Small Multilingual", bundle: .module, comment: "Backend option title for Whisper Small multilingual model"),
+        sizeLabel: String(localized: "backend_option.whisper_small.size", defaultValue: "~250 MB", bundle: .module, comment: "Displayed download size for Whisper Small multilingual model option"),
+        description: String(localized: "backend_option.whisper_small.description", defaultValue: "A balanced multilingual Whisper option for everyday notes. It handles accents and background noise better than Tiny while keeping the download modest. Auto-detect language by default, or choose one yourself.", bundle: .module, comment: "Description for Whisper Small multilingual backend option"),
         recommended: false
     )
 
     static let whisperTiny = BackendOption(
         backend: "whisper",
         model: "tiny",
-        label: "Whisper Tiny Multilingual",
-        sizeLabel: "~153 MB",
-        description: "The quickest Whisper download and lightest multilingual option for occasional notes. It gives up some accuracy on accents, noise, and longer speech. Auto-detect language by default, or choose one yourself.",
+        label: String(localized: "backend_option.whisper_tiny.title", defaultValue: "Whisper Tiny Multilingual", bundle: .module, comment: "Backend option title for Whisper Tiny multilingual model"),
+        sizeLabel: String(localized: "backend_option.whisper_tiny.size", defaultValue: "~153 MB", bundle: .module, comment: "Displayed download size for Whisper Tiny multilingual model option"),
+        description: String(localized: "backend_option.whisper_tiny.description", defaultValue: "The quickest Whisper download and lightest multilingual option for occasional notes. It gives up some accuracy on accents, noise, and longer speech. Auto-detect language by default, or choose one yourself.", bundle: .module, comment: "Description for Whisper Tiny multilingual backend option"),
         recommended: false
     )
 
     static let whisperLargeTurbo = BackendOption(
         backend: "whisper",
         model: "large-v3-v20240930_626MB",
-        label: "Whisper Large Turbo Multilingual",
-        sizeLabel: "~626 MB",
-        description: "Whisper's strongest multilingual option. Better for mixed languages and difficult audio, with a larger download and more processing time than Small. Auto-detect language by default, or pin a language.",
+        label: String(localized: "backend_option.whisper_large_turbo.title", defaultValue: "Whisper Large Turbo Multilingual", bundle: .module, comment: "Backend option title for Whisper Large Turbo multilingual model"),
+        sizeLabel: String(localized: "backend_option.whisper_large_turbo.size", defaultValue: "~626 MB", bundle: .module, comment: "Displayed download size for Whisper Large Turbo multilingual model option"),
+        description: String(localized: "backend_option.whisper_large_turbo.description", defaultValue: "Whisper's strongest multilingual option. Better for mixed languages and difficult audio, with a larger download and more processing time than Small. Auto-detect language by default, or pin a language.", bundle: .module, comment: "Description for Whisper Large Turbo multilingual backend option"),
         recommended: false
     )
 
     static let whisperTinyEnglish = BackendOption(
         backend: "whisper",
         model: "tiny.en",
-        label: "Whisper Tiny English",
-        sizeLabel: "~153 MB",
-        description: "The quickest English-only Whisper option for lightweight notes. Choose it when you always speak English and do not need automatic language detection.",
+        label: String(localized: "backend_option.whisper_tiny_english.title", defaultValue: "Whisper Tiny English", bundle: .module, comment: "Backend option title for Whisper Tiny English model"),
+        sizeLabel: String(localized: "backend_option.whisper_tiny_english.size", defaultValue: "~153 MB", bundle: .module, comment: "Displayed download size for Whisper Tiny English model option"),
+        description: String(localized: "backend_option.whisper_tiny_english.description", defaultValue: "The quickest English-only Whisper option for lightweight notes. Choose it when you always speak English and do not need automatic language detection.", bundle: .module, comment: "Description for Whisper Tiny English backend option"),
         recommended: false
     )
 
     static let whisperSmallEnglish = BackendOption(
         backend: "whisper",
         model: "small.en",
-        label: "Whisper Small English",
-        sizeLabel: "~250 MB",
-        description: "A balanced English-only Whisper option for everyday dictation. It handles accents and background noise better than Tiny when you do not need other languages.",
+        label: String(localized: "backend_option.whisper_small_english.title", defaultValue: "Whisper Small English", bundle: .module, comment: "Backend option title for Whisper Small English model"),
+        sizeLabel: String(localized: "backend_option.whisper_small_english.size", defaultValue: "~250 MB", bundle: .module, comment: "Displayed download size for Whisper Small English model option"),
+        description: String(localized: "backend_option.whisper_small_english.description", defaultValue: "A balanced English-only Whisper option for everyday dictation. It handles accents and background noise better than Tiny when you do not need other languages.", bundle: .module, comment: "Description for Whisper Small English backend option"),
         recommended: false
     )
 
     static let whisperMediumEnglish = BackendOption(
         backend: "whisper",
         model: "medium.en",
-        label: "Whisper Medium English",
-        sizeLabel: "~1.5 GB",
-        description: "A larger English-only Whisper option for difficult accents and noisier recordings. It favors accuracy over download size and speed.",
+        label: String(localized: "backend_option.whisper_medium_english.title", defaultValue: "Whisper Medium English", bundle: .module, comment: "Backend option title for Whisper Medium English model"),
+        sizeLabel: String(localized: "backend_option.whisper_medium_english.size", defaultValue: "~1.5 GB", bundle: .module, comment: "Displayed download size for Whisper Medium English model option"),
+        description: String(localized: "backend_option.whisper_medium_english.description", defaultValue: "A larger English-only Whisper option for difficult accents and noisier recordings. It favors accuracy over download size and speed.", bundle: .module, comment: "Description for Whisper Medium English backend option"),
         recommended: false
     )
 
     static let nemotron35Multilingual = BackendOption(
         backend: "nemotron35",
         model: "FluidInference/Nemotron-3.5-ASR-Streaming-Multilingual-0.6b-CoreML",
-        label: "Nemotron 3.5 Multilingual",
-        sizeLabel: "~665 MB",
-        description: "Live text appears as you speak in more than 100 locales, including Hindi, Chinese, and Japanese, with language auto-detection and punctuation. It works for hold-to-talk, hands-free dictation, and meetings, but it only appends words—it does not go back to correct earlier text.",
+        label: String(localized: "backend_option.nemotron35_multilingual.title", defaultValue: "Nemotron 3.5 Multilingual", bundle: .module, comment: "Backend option title for Nemotron 3.5 multilingual model"),
+        sizeLabel: String(localized: "backend_option.nemotron35_multilingual.size", defaultValue: "~665 MB", bundle: .module, comment: "Displayed download size for Nemotron 3.5 multilingual model option"),
+        description: String(localized: "backend_option.nemotron35_multilingual.description", defaultValue: "Live text appears as you speak in more than 100 locales, including Hindi, Chinese, and Japanese, with language auto-detection and punctuation. It works for hold-to-talk, hands-free dictation, and meetings, but it only appends words—it does not go back to correct earlier text.", bundle: .module, comment: "Description for Nemotron 3.5 multilingual backend option"),
         recommended: false
     )
 
     static let cohereTranscribe = BackendOption(
         backend: "cohere",
         model: "phequals/cohere-transcribe-coreml-mixed-precision",
-        label: "Cohere Transcribe",
-        sizeLabel: "~3.8 GB",
-        description: "The most deliberate option for difficult accents and tricky audio. It supports 14 languages and can be more accurate than faster models, but the download is large and you only see the result after you stop speaking.",
+        label: String(localized: "backend_option.cohere_transcribe.title", defaultValue: "Cohere Transcribe", bundle: .module, comment: "Backend option title for Cohere Transcribe model"),
+        sizeLabel: String(localized: "backend_option.cohere_transcribe.size", defaultValue: "~3.8 GB", bundle: .module, comment: "Displayed download size for Cohere Transcribe model option"),
+        description: String(localized: "backend_option.cohere_transcribe.description", defaultValue: "The most deliberate option for difficult accents and tricky audio. It supports 14 languages and can be more accurate than faster models, but the download is large and you only see the result after you stop speaking.", bundle: .module, comment: "Description for Cohere Transcribe backend option"),
         recommended: false
     )
 
     static let indicASR = BackendOption(
         backend: "indicasr",
         model: "phequals/indic-conformer-600m-multilingual-coreml-rnnt",
-        label: "Indic ASR",
-        sizeLabel: "~618 MB",
-        description: "Built specifically for seven Indian languages. Choose your language before recording; it can help where general multilingual models struggle, but results still vary enough to keep it experimental.",
+        label: String(localized: "backend_option.indic_asr.title", defaultValue: "Indic ASR", bundle: .module, comment: "Backend option title for Indic ASR model"),
+        sizeLabel: String(localized: "backend_option.indic_asr.size", defaultValue: "~618 MB", bundle: .module, comment: "Displayed download size for Indic ASR model option"),
+        description: String(localized: "backend_option.indic_asr.description", defaultValue: "Built specifically for seven Indian languages. Choose your language before recording; it can help where general multilingual models struggle, but results still vary enough to keep it experimental.", bundle: .module, comment: "Description for Indic ASR backend option"),
         recommended: false
     )
 
     static let senseVoiceSmall = BackendOption(
         backend: "sensevoice",
         model: "FluidInference/sensevoice-small-coreml",
-        label: "SenseVoice Small",
+        label: String(localized: "backend_option.sensevoice_small.title", defaultValue: "SenseVoice Small", bundle: .module, comment: "Backend option title for SenseVoice Small model"),
         sizeLabel: SenseVoiceTranscriber.downloadedModelSizeLabel,
-        description: "A compact option covering more than 50 languages, with punctuation included in the result. Quality varies by language and accent, so try it with your own voice before relying on it.",
+        description: String(localized: "backend_option.sensevoice_small.description", defaultValue: "A compact option covering more than 50 languages, with punctuation included in the result. Quality varies by language and accent, so try it with your own voice before relying on it.", bundle: .module, comment: "Description for SenseVoice Small backend option"),
         recommended: false
     )
 
     static let gemma4E2BLiteRT = BackendOption(
         backend: "gemma4-litert",
         model: Gemma4LiteRTModelStore.repoID,
-        label: "Gemma 4 E2B",
-        sizeLabel: "~2.6 GB",
-        description: "A research preview, not a dependable dictation model yet. It is large, slow to get ready, requires macOS 15 or later, and may produce an answer instead of a faithful transcript.",
+        label: String(localized: "backend_option.gemma4_e2b.title", defaultValue: "Gemma 4 E2B", bundle: .module, comment: "Backend option title for Gemma 4 E2B model"),
+        sizeLabel: String(localized: "backend_option.gemma4_e2b.size", defaultValue: "~2.6 GB", bundle: .module, comment: "Displayed download size for Gemma 4 E2B model option"),
+        description: String(localized: "backend_option.gemma4_e2b.description", defaultValue: "A research preview, not a dependable dictation model yet. It is large, slow to get ready, requires macOS 15 or later, and may produce an answer instead of a faithful transcript.", bundle: .module, comment: "Description for Gemma 4 E2B backend option"),
         recommended: false
     )
 
     static let appleSpeechAnalyzer = BackendOption(
         backend: "apple-speech",
         model: "apple-speech-transcriber",
-        label: "Apple Speech",
-        sizeLabel: "System managed",
-        description: "Apple's private, on-device speech model for macOS 26. It is designed for dictation, meetings, distant speakers, and long recordings, while macOS manages the language assets and updates.",
+        label: String(localized: "backend_option.apple_speech.title", defaultValue: "Apple Speech", bundle: .module, comment: "Backend option title for Apple Speech model"),
+        sizeLabel: String(localized: "backend_option.apple_speech.size", defaultValue: "System managed", bundle: .module, comment: "Displayed size text for Apple Speech model option"),
+        description: String(localized: "backend_option.apple_speech.description", defaultValue: "Apple's private, on-device speech model for macOS 26. It is designed for dictation, meetings, distant speakers, and long recordings, while macOS manages the language assets and updates.", bundle: .module, comment: "Description for Apple Speech backend option"),
         recommended: false
     )
 
@@ -159,9 +159,9 @@ struct BackendOption: Equatable {
     static let qwen3Asr = BackendOption(
         backend: "qwen",
         model: "FluidInference/qwen3-asr-0.6b-coreml",
-        label: "Qwen3 ASR",
-        sizeLabel: "~1.3 GB",
-        description: "Strong multilingual transcription across 52 languages when accuracy matters more than instant results. Expect a short 2–3 second wait compared with Parakeet, and about 30 seconds of one-time preparation the first time it runs.",
+        label: String(localized: "backend_option.qwen3_asr.title", defaultValue: "Qwen3 ASR", bundle: .module, comment: "Backend option title for Qwen3 ASR model"),
+        sizeLabel: String(localized: "backend_option.qwen3_asr.size", defaultValue: "~1.3 GB", bundle: .module, comment: "Displayed download size for Qwen3 ASR model option"),
+        description: String(localized: "backend_option.qwen3_asr.description", defaultValue: "Strong multilingual transcription across 52 languages when accuracy matters more than instant results. Expect a short 2–3 second wait compared with Parakeet, and about 30 seconds of one-time preparation the first time it runs.", bundle: .module, comment: "Description for Qwen3 ASR backend option"),
         recommended: false
     )
 
@@ -355,19 +355,19 @@ enum Nemotron35Language: String, CaseIterable, Codable, Sendable {
 
     var label: String {
         switch self {
-        case .auto: return "Auto-detect"
-        case .english: return "English"
-        case .hindi: return "Hindi"
-        case .spanish: return "Spanish"
-        case .french: return "French"
-        case .german: return "German"
-        case .italian: return "Italian"
-        case .portuguese: return "Portuguese"
-        case .chinese: return "Chinese"
-        case .japanese: return "Japanese"
-        case .korean: return "Korean"
-        case .russian: return "Russian"
-        case .arabic: return "Arabic"
+        case .auto: return String(localized: "language.label.auto_detect", defaultValue: "Auto-detect", bundle: .module, comment: "Language picker label for automatic language detection")
+        case .english: return String(localized: "language.label.english", defaultValue: "English", bundle: .module, comment: "Language picker label for English")
+        case .hindi: return String(localized: "language.label.hindi", defaultValue: "Hindi", bundle: .module, comment: "Language picker label for Hindi")
+        case .spanish: return String(localized: "language.label.spanish", defaultValue: "Spanish", bundle: .module, comment: "Language picker label for Spanish")
+        case .french: return String(localized: "language.label.french", defaultValue: "French", bundle: .module, comment: "Language picker label for French")
+        case .german: return String(localized: "language.label.german", defaultValue: "German", bundle: .module, comment: "Language picker label for German")
+        case .italian: return String(localized: "language.label.italian", defaultValue: "Italian", bundle: .module, comment: "Language picker label for Italian")
+        case .portuguese: return String(localized: "language.label.portuguese", defaultValue: "Portuguese", bundle: .module, comment: "Language picker label for Portuguese")
+        case .chinese: return String(localized: "language.label.chinese", defaultValue: "Chinese", bundle: .module, comment: "Language picker label for Chinese")
+        case .japanese: return String(localized: "language.label.japanese", defaultValue: "Japanese", bundle: .module, comment: "Language picker label for Japanese")
+        case .korean: return String(localized: "language.label.korean", defaultValue: "Korean", bundle: .module, comment: "Language picker label for Korean")
+        case .russian: return String(localized: "language.label.russian", defaultValue: "Russian", bundle: .module, comment: "Language picker label for Russian")
+        case .arabic: return String(localized: "language.label.arabic", defaultValue: "Arabic", bundle: .module, comment: "Language picker label for Arabic")
         }
     }
 
@@ -405,19 +405,19 @@ enum WhisperKitLanguage: String, CaseIterable, Codable, Sendable {
 
     var label: String {
         switch self {
-        case .auto: return "Auto-detect"
-        case .english: return "English"
-        case .hindi: return "Hindi"
-        case .spanish: return "Spanish"
-        case .french: return "French"
-        case .german: return "German"
-        case .italian: return "Italian"
-        case .portuguese: return "Portuguese"
-        case .chinese: return "Chinese"
-        case .japanese: return "Japanese"
-        case .korean: return "Korean"
-        case .russian: return "Russian"
-        case .arabic: return "Arabic"
+        case .auto: return String(localized: "language.label.auto_detect", defaultValue: "Auto-detect", bundle: .module, comment: "Language picker label for automatic language detection")
+        case .english: return String(localized: "language.label.english", defaultValue: "English", bundle: .module, comment: "Language picker label for English")
+        case .hindi: return String(localized: "language.label.hindi", defaultValue: "Hindi", bundle: .module, comment: "Language picker label for Hindi")
+        case .spanish: return String(localized: "language.label.spanish", defaultValue: "Spanish", bundle: .module, comment: "Language picker label for Spanish")
+        case .french: return String(localized: "language.label.french", defaultValue: "French", bundle: .module, comment: "Language picker label for French")
+        case .german: return String(localized: "language.label.german", defaultValue: "German", bundle: .module, comment: "Language picker label for German")
+        case .italian: return String(localized: "language.label.italian", defaultValue: "Italian", bundle: .module, comment: "Language picker label for Italian")
+        case .portuguese: return String(localized: "language.label.portuguese", defaultValue: "Portuguese", bundle: .module, comment: "Language picker label for Portuguese")
+        case .chinese: return String(localized: "language.label.chinese", defaultValue: "Chinese", bundle: .module, comment: "Language picker label for Chinese")
+        case .japanese: return String(localized: "language.label.japanese", defaultValue: "Japanese", bundle: .module, comment: "Language picker label for Japanese")
+        case .korean: return String(localized: "language.label.korean", defaultValue: "Korean", bundle: .module, comment: "Language picker label for Korean")
+        case .russian: return String(localized: "language.label.russian", defaultValue: "Russian", bundle: .module, comment: "Language picker label for Russian")
+        case .arabic: return String(localized: "language.label.arabic", defaultValue: "Arabic", bundle: .module, comment: "Language picker label for Arabic")
         }
     }
 
@@ -463,8 +463,8 @@ enum MeetingLiveCaptionBackend: String, CaseIterable, Codable, Sendable {
 
     var settingsLabel: String {
         switch self {
-        case .parakeetRealtimeEOU: return "\(label) (live preview only)"
-        case .nemotron35: return "\(label) (live + final)"
+        case .parakeetRealtimeEOU: return String(format: String(localized: "settings.label.live_preview_only", defaultValue: "%@ (live preview only)", bundle: .module, comment: "Settings label suffix for live preview only mode"), "\(label)")
+        case .nemotron35: return String(format: String(localized: "settings.label.live_and_final", defaultValue: "%@ (live + final)", bundle: .module, comment: "Settings label suffix for live and final mode"), "\(label)")
         }
     }
 
@@ -541,7 +541,7 @@ struct SummaryModelPreset {
         let trimmedModel = currentModel.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedModel.isEmpty else { return presets }
         guard !presets.contains(where: { $0.id == trimmedModel }) else { return presets }
-        return presets + [SummaryModelPreset(id: trimmedModel, label: "Custom: \(trimmedModel)")]
+        return presets + [SummaryModelPreset(id: trimmedModel, label: String(format: String(localized: "summary_model.custom", defaultValue: "Custom: %@", bundle: .module, comment: "Summary model label when using a custom model name"), "\(trimmedModel)"))]
     }
 
     static func supportedChatGPTModel(_ model: String) -> String {
@@ -625,7 +625,7 @@ extension OpenRouterModel {
 
     var summaryPresetLabel: String {
         if let contextLength, contextLength > 0 {
-            return "\(name) (\(Self.formatContextLength(contextLength)) ctx)"
+            return String(format: String(localized: "summary.preset.label_with_context", defaultValue: "%@ (%@ ctx)", bundle: .module, comment: "Summary preset label with context length abbreviation"), "\(name)", "\(Self.formatContextLength(contextLength))")
         }
         return name
     }
@@ -689,7 +689,7 @@ struct MeetingSummaryBackendOption: Equatable {
 
     static let customLLM = MeetingSummaryBackendOption(
         backend: "custom_llm",
-        label: "Custom LLM"
+        label: String(localized: "meeting_summary.backend.custom_llm", defaultValue: "Custom LLM", bundle: .module, comment: "Meeting summary backend display label for custom LLM provider")
     )
 
     static let all: [MeetingSummaryBackendOption] = [.chatGPT, .openAI, .openRouter, .ollama, .lmStudio, .customLLM]
@@ -741,9 +741,9 @@ struct PostProcessorOption: Identifiable, Equatable {
     // HF repo must be public (or token-gated) before distributing alpha builds.
     static let finetunedV2 = PostProcessorOption(
         id: "qwen3-postproc-v2",
-        label: "Muesli Cleanup (Legacy)",
-        sizeLabel: "~390 MB",
-        description: "An earlier cleanup model for Muesli dictation. It handles filler words, corrections, and spoken lists, but is less consistent than the current model.",
+        label: String(localized: "postprocessor.finetuned_v2.title", defaultValue: "Muesli Cleanup (Legacy)", bundle: .module, comment: "Title for legacy Muesli cleanup postprocessor option"),
+        sizeLabel: String(localized: "postprocessor.finetuned_v2.size", defaultValue: "~390 MB", bundle: .module, comment: "Displayed download size for legacy Muesli cleanup postprocessor option"),
+        description: String(localized: "postprocessor.finetuned_v2.description", defaultValue: "An earlier cleanup model for Muesli dictation. It handles filler words, corrections, and spoken lists, but is less consistent than the current model.", bundle: .module, comment: "Description for legacy Muesli cleanup postprocessor option"),
         downloadURL: URL(string: "https://huggingface.co/phequals/qwen3-postproc-v2/resolve/main/qwen3-postproc-v2-q4_k_m.gguf")!,
         filename: "qwen3-postproc-v2-q4_k_m.gguf"
     )
@@ -751,9 +751,9 @@ struct PostProcessorOption: Identifiable, Equatable {
     // Vanilla Qwen3.5-0.8B. Stable for basic cleanup; does not reliably convert spoken list cues.
     static let qwen35_0_8b = PostProcessorOption(
         id: "qwen35-0.8b",
-        label: "Qwen Basic Cleanup",
-        sizeLabel: "~533 MB",
-        description: "A general-purpose option for typos and filler words. It may miss “scratch that” edits and spoken list formatting.",
+        label: String(localized: "postprocessor.qwen35_0_8b.title", defaultValue: "Qwen Basic Cleanup", bundle: .module, comment: "Title for Qwen basic cleanup postprocessor option"),
+        sizeLabel: String(localized: "postprocessor.qwen35_0_8b.size", defaultValue: "~533 MB", bundle: .module, comment: "Displayed download size for Qwen basic cleanup postprocessor option"),
+        description: String(localized: "postprocessor.qwen35_0_8b.description", defaultValue: "A general-purpose option for typos and filler words. It may miss “scratch that” edits and spoken list formatting.", bundle: .module, comment: "Description for Qwen basic cleanup postprocessor option"),
         downloadURL: URL(string: "https://huggingface.co/unsloth/Qwen3.5-0.8B-GGUF/resolve/main/Qwen3.5-0.8B-Q4_K_M.gguf")!,
         filename: "Qwen3.5-0.8B-Q4_K_M.gguf"
     )
@@ -761,9 +761,9 @@ struct PostProcessorOption: Identifiable, Equatable {
     // Fine-tuned Qwen3.5-0.8B v3 trained on Muesli dictation correction data.
     static let finetunedV3 = PostProcessorOption(
         id: "qwen35-postproc-v3",
-        label: "Muesli Cleanup",
-        sizeLabel: "~505 MB",
-        description: "The best overall choice for everyday dictation. It removes filler words, follows “scratch that,” and turns spoken list cues into clean formatting.",
+        label: String(localized: "postprocessor.finetuned_v3.title", defaultValue: "Muesli Cleanup", bundle: .module, comment: "Title for current Muesli cleanup postprocessor option"),
+        sizeLabel: String(localized: "postprocessor.finetuned_v3.size", defaultValue: "~505 MB", bundle: .module, comment: "Displayed download size for current Muesli cleanup postprocessor option"),
+        description: String(localized: "postprocessor.finetuned_v3.description", defaultValue: "The best overall choice for everyday dictation. It removes filler words, follows “scratch that,” and turns spoken list cues into clean formatting.", bundle: .module, comment: "Description for current Muesli cleanup postprocessor option"),
         downloadURL: URL(string: "https://huggingface.co/phequals/qwen35-postproc-v3-gguf/resolve/main/qwen35-postproc-v3-Q4_K_M.gguf")!,
         filename: "qwen35-postproc-v3-Q4_K_M.gguf"
     )
@@ -853,7 +853,7 @@ enum TranscriptCleanupPrompts {
     static let builtIns: [TranscriptCleanupPromptPreset] = [
         TranscriptCleanupPromptPreset(
             id: defaultID,
-            name: "Default Cleanup",
+            name: String(localized: "transcript_cleanup_preset.default_cleanup.title", defaultValue: "Default Cleanup", bundle: .module, comment: "Title for default transcript cleanup preset"),
             prompt: PostProcessorOption.defaultSystemPrompt,
             isCustom: false
         ),
@@ -972,22 +972,22 @@ enum IndicatorAnchor: String, Codable, CaseIterable {
 
     var label: String {
         switch self {
-        case .topLeading: return "Top Left"
-        case .topCenter: return "Top Center"
-        case .topTrailing: return "Top Right"
-        case .midLeading: return "Middle Left"
-        case .midTrailing: return "Middle Right"
-        case .bottomLeading: return "Bottom Left"
-        case .bottomCenter: return "Bottom Center"
-        case .bottomTrailing: return "Bottom Right"
-        case .custom: return "Custom"
+        case .topLeading: return String(localized: "position.label.top_left", defaultValue: "Top Left", bundle: .module, comment: "Position label for top left placement")
+        case .topCenter: return String(localized: "position.label.top_center", defaultValue: "Top Center", bundle: .module, comment: "Position label for top center placement")
+        case .topTrailing: return String(localized: "position.label.top_right", defaultValue: "Top Right", bundle: .module, comment: "Position label for top right placement")
+        case .midLeading: return String(localized: "position.label.middle_left", defaultValue: "Middle Left", bundle: .module, comment: "Position label for middle left placement")
+        case .midTrailing: return String(localized: "position.label.middle_right", defaultValue: "Middle Right", bundle: .module, comment: "Position label for middle right placement")
+        case .bottomLeading: return String(localized: "position.label.bottom_left", defaultValue: "Bottom Left", bundle: .module, comment: "Position label for bottom left placement")
+        case .bottomCenter: return String(localized: "position.label.bottom_center", defaultValue: "Bottom Center", bundle: .module, comment: "Position label for bottom center placement")
+        case .bottomTrailing: return String(localized: "position.label.bottom_right", defaultValue: "Bottom Right", bundle: .module, comment: "Position label for bottom right placement")
+        case .custom: return String(localized: "position.label.custom", defaultValue: "Custom", bundle: .module, comment: "Position label for custom placement")
         }
     }
 }
 
 struct HotkeyConfig: Codable, Equatable {
     var keyCode: UInt16 = 61
-    var label: String = "Right Option"
+    var label: String = String(localized: "modifier_key.label.right_option", defaultValue: "Right Option", bundle: .module, comment: "Modifier key display label for right option key")
 
     // Key combination support (e.g. Cmd+Shift+R).
     // When set, the hotkey fires on keyDown with these modifiers held.
@@ -1006,30 +1006,30 @@ struct HotkeyConfig: Codable, Equatable {
 
     static func label(for keyCode: UInt16) -> String? {
         switch keyCode {
-        case 55: return "Left Cmd"
-        case 54: return "Right Cmd"
-        case 63: return "Fn"
-        case 59: return "Left Ctrl"
-        case 62: return "Right Ctrl"
-        case 58: return "Left Option"
-        case 61: return "Right Option"
-        case 56: return "Left Shift"
-        case 60: return "Right Shift"
+        case 55: return String(localized: "modifier_key.label.left_cmd", defaultValue: "Left Cmd", bundle: .module, comment: "Modifier key display label for left command key")
+        case 54: return String(localized: "modifier_key.label.right_cmd", defaultValue: "Right Cmd", bundle: .module, comment: "Modifier key display label for right command key")
+        case 63: return String(localized: "modifier_key.label.fn", defaultValue: "Fn", bundle: .module, comment: "Modifier key display label for function key")
+        case 59: return String(localized: "modifier_key.label.left_ctrl", defaultValue: "Left Ctrl", bundle: .module, comment: "Modifier key display label for left control key")
+        case 62: return String(localized: "modifier_key.label.right_ctrl", defaultValue: "Right Ctrl", bundle: .module, comment: "Modifier key display label for right control key")
+        case 58: return String(localized: "modifier_key.label.left_option", defaultValue: "Left Option", bundle: .module, comment: "Modifier key display label for left option key")
+        case 61: return String(localized: "modifier_key.label.right_option", defaultValue: "Right Option", bundle: .module, comment: "Modifier key display label for right option key")
+        case 56: return String(localized: "modifier_key.label.left_shift", defaultValue: "Left Shift", bundle: .module, comment: "Modifier key display label for left shift key")
+        case 60: return String(localized: "modifier_key.label.right_shift", defaultValue: "Right Shift", bundle: .module, comment: "Modifier key display label for right shift key")
         default: return nil
         }
     }
 
     static func symbolLabel(for keyCode: UInt16) -> String? {
         switch keyCode {
-        case 55: return "Left ⌘"
-        case 54: return "Right ⌘"
-        case 63: return "fn"
-        case 59: return "Left ⌃"
-        case 62: return "Right ⌃"
-        case 58: return "Left ⌥"
-        case 61: return "Right ⌥"
-        case 56: return "Left ⇧"
-        case 60: return "Right ⇧"
+        case 55: return String(localized: "modifier_key.symbol.left_cmd", defaultValue: "Left ⌘", bundle: .module, comment: "Modifier key symbol label for left command key")
+        case 54: return String(localized: "modifier_key.symbol.right_cmd", defaultValue: "Right ⌘", bundle: .module, comment: "Modifier key symbol label for right command key")
+        case 63: return String(localized: "modifier_key.symbol.fn", defaultValue: "fn", bundle: .module, comment: "Modifier key symbol label for function key")
+        case 59: return String(localized: "modifier_key.symbol.left_ctrl", defaultValue: "Left ⌃", bundle: .module, comment: "Modifier key symbol label for left control key")
+        case 62: return String(localized: "modifier_key.symbol.right_ctrl", defaultValue: "Right ⌃", bundle: .module, comment: "Modifier key symbol label for right control key")
+        case 58: return String(localized: "modifier_key.symbol.left_option", defaultValue: "Left ⌥", bundle: .module, comment: "Modifier key symbol label for left option key")
+        case 61: return String(localized: "modifier_key.symbol.right_option", defaultValue: "Right ⌥", bundle: .module, comment: "Modifier key symbol label for right option key")
+        case 56: return String(localized: "modifier_key.symbol.left_shift", defaultValue: "Left ⇧", bundle: .module, comment: "Modifier key symbol label for left shift key")
+        case 60: return String(localized: "modifier_key.symbol.right_shift", defaultValue: "Right ⇧", bundle: .module, comment: "Modifier key symbol label for right shift key")
         default: return nil
         }
     }
@@ -1076,7 +1076,7 @@ struct HotkeyConfig: Codable, Equatable {
     }
 
     static let `default` = HotkeyConfig()
-    static let computerUseDefault = HotkeyConfig(keyCode: 54, label: "Right Cmd")
+    static let computerUseDefault = HotkeyConfig(keyCode: 54, label: String(localized: "hotkey.default.computer_use.right_cmd", defaultValue: "Right Cmd", bundle: .module, comment: "Default hotkey label for computer use right command key"))
     static let meetingRecordingDefault = HotkeyConfig(
         keyCode: UInt16.max,
         label: "⌘⇧R",

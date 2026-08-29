@@ -13,14 +13,22 @@ struct MeetingCandidate: Equatable {
 
         var displayName: String {
             switch self {
-            case .googleMeet: return "Google Meet"
-            case .zoom: return "Zoom"
-            case .teams: return "Teams"
-            case .webex: return "Webex"
-            case .facetime: return "FaceTime"
-            case .slack: return "Slack"
-            case .whatsApp: return "WhatsApp"
-            case .unknown: return "Meeting"
+            case .googleMeet:
+                return String(localized: "meeting_candidate.platform.google_meet", defaultValue: "Google Meet", bundle: .module, comment: "Display name for Google Meet meeting platform")
+            case .zoom:
+                return String(localized: "meeting_candidate.platform.zoom", defaultValue: "Zoom", bundle: .module, comment: "Display name for Zoom meeting platform")
+            case .teams:
+                return String(localized: "meeting_candidate.platform.teams", defaultValue: "Teams", bundle: .module, comment: "Display name for Microsoft Teams meeting platform")
+            case .webex:
+                return String(localized: "meeting_candidate.platform.webex", defaultValue: "Webex", bundle: .module, comment: "Display name for Webex meeting platform")
+            case .facetime:
+                return String(localized: "meeting_candidate.platform.facetime", defaultValue: "FaceTime", bundle: .module, comment: "Display name for FaceTime meeting platform")
+            case .slack:
+                return String(localized: "meeting_candidate.platform.whatsapp", defaultValue: "Slack", bundle: .module, comment: "Display name for Slack meeting platform")
+            case .whatsApp:
+                return String(localized: "meeting_candidate.platform.generic", defaultValue: "WhatsApp", bundle: .module, comment: "Display name for WhatsApp meeting platform")
+            case .unknown:
+                return String(localized: "meeting-candidate.platform.unknown", defaultValue: "Meeting", bundle: .module, comment: "Fallback display name for unknown meeting platform")
             }
         }
     }
@@ -244,15 +252,15 @@ final class MeetingCandidateResolver {
     }
 
     static let dedicatedApps: [String: (name: String, platform: MeetingCandidate.Platform)] = [
-        "us.zoom.xos": ("Zoom", .zoom),
-        "us.zoom.ZoomPhone": ("Zoom Phone", .zoom),
-        "com.apple.FaceTime": ("FaceTime", .facetime),
+        "us.zoom.xos": (String(localized: "meeting_candidate.dedicated_app.zoom-zoom", defaultValue: "Zoom", bundle: .module, comment: "Dedicated app name for Zoom meetings"), .zoom),
+        "us.zoom.ZoomPhone": (String(localized: "meeting_candidate.dedicated_app.zoom_phone", defaultValue: "Zoom Phone", bundle: .module, comment: ""), .zoom),
+        "com.apple.FaceTime": (String(localized: "meeting_candidate.dedicated_app.facetime", defaultValue: "FaceTime", bundle: .module, comment: ""), .facetime),
         "com.microsoft.teams2": ("Teams", .teams),
         "com.microsoft.teams": ("Teams", .teams),
-        "com.tinyspeck.slackmacgap": ("Slack", .slack),
+        "com.tinyspeck.slackmacgap": (String(localized: "meeting_candidate.dedicated_app.slack", defaultValue: "Slack", bundle: .module, comment: ""), .slack),
         "com.webex.meetingmanager": ("Webex", .webex),
         "com.cisco.webexmeetingsapp": ("Webex", .webex),
-        "net.whatsapp.WhatsApp": ("WhatsApp", .whatsApp),
+        "net.whatsapp.WhatsApp": (String(localized: "meeting_candidate.dedicated_app.whatsapp", defaultValue: "WhatsApp", bundle: .module, comment: ""), .whatsApp),
     ]
 
     static let weakDedicatedAppBundleIDs: Set<String> = [
@@ -266,11 +274,11 @@ final class MeetingCandidateResolver {
     ]
 
     static let browserApps: [String: String] = [
-        "com.google.Chrome": "Chrome",
-        "com.brave.Browser": "Brave",
-        "company.thebrowser.Browser": "Arc",
-        "com.microsoft.edgemac": "Edge",
-        "com.apple.Safari": "Safari",
+        "com.google.Chrome": String(localized: "meeting_candidate.browser_app.chrome", defaultValue: "Chrome", bundle: .module, comment: ""),
+        "com.brave.Browser": String(localized: "meeting_candidate.browser_app.brave", defaultValue: "Brave", bundle: .module, comment: ""),
+        "company.thebrowser.Browser": String(localized: "meeting_candidate.browser_app.arc", defaultValue: "Arc", bundle: .module, comment: ""),
+        "com.microsoft.edgemac": String(localized: "meeting_candidate.browser_app.edge", defaultValue: "Edge", bundle: .module, comment: ""),
+        "com.apple.Safari": String(localized: "meeting_candidate.browser_app.safari", defaultValue: "Safari", bundle: .module, comment: ""),
     ]
 
     var selfBundleID: String = Bundle.main.bundleIdentifier ?? "com.muesli.app"
@@ -388,7 +396,7 @@ final class MeetingCandidateResolver {
             return candidate(
                 id: "cal:\(calendarEvent.id)",
                 platform: app?.platform ?? .unknown,
-                appName: app?.name ?? "Meeting",
+                appName: app?.name ?? String(localized: "meeting_candidate.fallback.meeting", defaultValue: "Meeting", bundle: .module, comment: "Fallback app name when no calendar meeting app is identified"),
                 url: nil,
                 title: calendarEvent.title,
                 evidence: mediaEvidence(from: snapshot).union([.calendarEvent]),

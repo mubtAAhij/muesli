@@ -32,7 +32,7 @@ final class MeetingMicrophoneRecorder: NSObject, AVAudioRecorderDelegate {
         guard let recorder, recorder.record() else {
             cancel()
             throw NSError(domain: "MeetingMicrophoneRecorder", code: 1, userInfo: [
-                NSLocalizedDescriptionKey: "Could not start full-session meeting microphone recording",
+                NSLocalizedDescriptionKey: String(localized: "meeting_microphone_recorder.error.start_failed", defaultValue: "Could not start full-session meeting microphone recording", bundle: .module, comment: "Error when full-session meeting microphone recording cannot start"),
             ])
         }
     }

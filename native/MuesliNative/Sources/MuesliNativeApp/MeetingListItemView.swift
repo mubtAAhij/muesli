@@ -124,11 +124,11 @@ struct MeetingListItemView: View {
         .contentShape(Rectangle())
         .onTapGesture(perform: onSelect)
         .onHover { isHovering = $0 }
-        .alert("Delete Meeting", isPresented: $showDeleteConfirmation) {
-            Button("Delete", role: .destructive) { onDelete?() }
-            Button("Cancel", role: .cancel) {}
+        .alert(String(localized: "meeting_list_item.delete_meeting.alert_title", defaultValue: "Delete Meeting", bundle: .module, comment: ""), isPresented: $showDeleteConfirmation) {
+            Button(String(localized: "common.delete", defaultValue: "Delete", bundle: .module, comment: ""), role: .destructive) { onDelete?() }
+            Button(String(localized: "common.cancel", defaultValue: "Cancel", bundle: .module, comment: ""), role: .cancel) {}
         } message: {
-            Text("Are you sure you want to delete this meeting? Saved notes, transcript, and any retained recording will be removed.")
+            Text(String(localized: "meeting_list_item.delete_meeting.alert_message", defaultValue: "Are you sure you want to delete this meeting? Saved notes, transcript, and any retained recording will be removed.", bundle: .module, comment: ""))
         }
     }
 
@@ -141,13 +141,13 @@ struct MeetingListItemView: View {
                 if record.followUpToID != nil {
                     relationshipIcon(
                         "arrow.turn.down.right",
-                        help: "Follow-up meeting"
+                        help: String(localized: "meeting_list_item.relationship.follow_up_meeting", defaultValue: "Follow-up meeting", bundle: .module, comment: "")
                     )
                 }
                 if hasFollowUps {
                     relationshipIcon(
                         "arrow.triangle.branch",
-                        help: "Has follow-up meetings"
+                        help: String(localized: "meeting_list_item.relationship.has_follow_up_meetings", defaultValue: "Has follow-up meetings", bundle: .module, comment: "")
                     )
                 }
             }
@@ -190,10 +190,10 @@ struct MeetingListItemView: View {
                 .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .help("Move to folder")
+        .help(String(localized: "meeting_list_item.folder_menu.move_to_folder.help", defaultValue: "Move to folder", bundle: .module, comment: ""))
         .popover(isPresented: $showFolderPopover, arrowEdge: .leading) {
             VStack(alignment: .leading, spacing: 0) {
-                folderPopoverRow(icon: "tray", label: "Unfiled", isActive: record.folderID == nil) {
+                folderPopoverRow(icon: "tray", label: String(localized: "meeting_list_item.folder.unfiled", defaultValue: "Unfiled", bundle: .module, comment: ""), isActive: record.folderID == nil) {
                     onMove(nil)
                     showFolderPopover = false
                 }
@@ -201,7 +201,7 @@ struct MeetingListItemView: View {
                 ForEach(folders) { folder in
                     let hasChildren = folderIDsWithChildren.contains(folder.id)
                     folderPopoverRow(
-                        icon: hasChildren ? "folder.fill" : "folder",
+                        icon: hasChildren ? "folder.fill" : String(localized: "meeting_list_item.folder.generic_name", defaultValue: "folder", bundle: .module, comment: ""),
                         label: folderBreadcrumb(folder),
                         isActive: record.folderID == folder.id
                     ) {
@@ -211,7 +211,7 @@ struct MeetingListItemView: View {
                 }
                 if onCreateFolderAndMove != nil {
                     Divider().padding(.vertical, 4)
-                    folderPopoverRow(icon: "folder.badge.plus", label: "New Folder...") {
+                    folderPopoverRow(icon: "folder.badge.plus", label: String(localized: "meeting_list_item.folder.new_folder_menu", defaultValue: "New Folder...", bundle: .module, comment: "")) {
                         showFolderPopover = false
                         newFolderName = ""
                         showNewFolderPrompt = true
@@ -220,17 +220,17 @@ struct MeetingListItemView: View {
             }
             .padding(8)
         }
-        .alert("New Folder", isPresented: $showNewFolderPrompt) {
-            TextField("Folder name", text: $newFolderName)
-            Button("Create") {
+        .alert(String(localized: "meeting_list_item.new_folder.alert_title", defaultValue: "New Folder", bundle: .module, comment: ""), isPresented: $showNewFolderPrompt) {
+            TextField(String(localized: "meeting_list_item.folder_name.placeholder", defaultValue: "Folder name", bundle: .module, comment: ""), text: $newFolderName)
+            Button(String(localized: "common.create", defaultValue: "Create", bundle: .module, comment: "")) {
                 let trimmed = newFolderName.trimmingCharacters(in: .whitespacesAndNewlines)
                 if !trimmed.isEmpty {
                     onCreateFolderAndMove?(trimmed)
                 }
             }
-            Button("Cancel", role: .cancel) {}
+            Button(String(localized: "common.cancel", defaultValue: "Cancel", bundle: .module, comment: ""), role: .cancel) {}
         } message: {
-            Text("Create a new folder and move this meeting into it.")
+            Text(String(localized: "meeting_list_item.folder_menu.create_and_move.description", defaultValue: "Create a new folder and move this meeting into it.", bundle: .module, comment: ""))
         }
     }
 
@@ -274,7 +274,7 @@ struct MeetingListItemView: View {
         }
         .buttonStyle(.plain)
         .opacity(isHovering ? 1 : 0)
-        .help("Delete meeting")
+        .help(String(localized: "meeting_list_item.delete_button.help", defaultValue: "Delete meeting", bundle: .module, comment: ""))
     }
 
     // MARK: - Formatting
@@ -294,10 +294,10 @@ struct MeetingListItemView: View {
             return AnyView(SyncOriginBadge(label: label))
         }
         if isImportedAudio {
-            return AnyView(sourceBadge(icon: "square.and.arrow.down", label: "Imported", help: "Imported audio"))
+            return AnyView(sourceBadge(icon: "square.and.arrow.down", label: String(localized: "meeting_list_item.source.imported.badge", defaultValue: "Imported", bundle: .module, comment: ""), help: String(localized: "meeting_list_item.source.imported_audio.label", defaultValue: "Imported audio", bundle: .module, comment: "")))
         }
         if hasSavedRecording {
-            return AnyView(sourceBadge(icon: "waveform", label: "Recording", help: "Saved recording available"))
+            return AnyView(sourceBadge(icon: "waveform", label: String(localized: "meeting_list_item.source.recording.badge", defaultValue: "Recording", bundle: .module, comment: ""), help: String(localized: "meeting_list_item.source.saved_recording_available", defaultValue: "Saved recording available", bundle: .module, comment: "")))
         }
         return nil
     }
@@ -337,20 +337,20 @@ struct MeetingListItemView: View {
     private func formatMeta() -> String {
         let time = MeetingBrowserLogic.formatStartTime(record.startTime)
         let duration = formatDuration(record.durationSeconds)
-        return "\(time)  \u{2022}  \(duration)"
+        return String(format: String(localized: "meeting_list_item.meta.time_duration_format", defaultValue: "%@  •  %@", bundle: .module, comment: ""), "\(time)", "\(duration)")
     }
 
     private func formatDuration(_ seconds: Double) -> String {
         let rounded = Int(seconds.rounded())
         if rounded >= 3600 {
-            return "\(rounded / 3600)h \((rounded % 3600) / 60)m"
+            return String(format: String(localized: "meeting_list_item.duration.hours_minutes_format", defaultValue: "%dh %dm", bundle: .module, comment: ""), rounded / 3600, (rounded % 3600) / 60)
         }
         if rounded >= 60 {
             let m = rounded / 60
             let s = rounded % 60
-            return s == 0 ? "\(m)m" : "\(m)m \(s)s"
+            return s == 0 ? String(format: String(localized: "meeting_list_item.duration.minutes_format", defaultValue: "%dm", bundle: .module, comment: ""), m) : String(format: String(localized: "meeting_list_item.duration.minutes_seconds_format", defaultValue: "%dm %ds", bundle: .module, comment: ""), m, s)
         }
-        return "\(rounded)s"
+        return String(format: String(localized: "meeting_list_item.duration.seconds_format", defaultValue: "%ds", bundle: .module, comment: ""), rounded)
     }
 
     private func previewText() -> String {

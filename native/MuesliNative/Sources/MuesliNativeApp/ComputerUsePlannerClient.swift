@@ -10,15 +10,15 @@ enum ComputerUsePlannerError: LocalizedError, Equatable {
     var errorDescription: String? {
         switch self {
         case .notAuthenticated:
-            return "Connect ChatGPT to use model-driven computer use."
+            return String(localized: "computer_use_planner.error.connect_chatgpt_required", defaultValue: "Connect ChatGPT to use model-driven computer use.", bundle: .module, comment: "Error shown when ChatGPT connection is required for computer-use planner")
         case .invalidResponse(let message):
-            return "CUA planner returned an invalid tool call. \(message)"
+            return String(format: String(localized: "computer_use_planner.error.invalid_tool_call", defaultValue: "CUA planner returned an invalid tool call. %@", bundle: .module, comment: "Error shown when planner returns an invalid tool call with message"), "\(message)")
         case .invalidToolCall(let name, let arguments, let message):
-            return "CUA planner returned an invalid tool call. \(message) Raw native tool call: \(name) \(String(arguments.prefix(800)))"
+            return String(format: String(localized: "computer_use_planner.error.invalid_tool_call_with_raw", defaultValue: "CUA planner returned an invalid tool call. %@ Raw native tool call: %@ %@", bundle: .module, comment: "Error shown when planner returns invalid tool call and includes raw tool call details"), "\(message)", "\(name)", String(arguments.prefix(800)))
         case .backendFailed(let statusCode, let message):
-            return "CUA planner failed with status \(statusCode). \(message)"
+            return String(format: String(localized: "computer_use_planner.error.http_status_failed", defaultValue: "CUA planner failed with status %d. %@", bundle: .module, comment: "Error shown when planner request fails with HTTP status and message"), statusCode, "\(message)")
         case .requestFailed(let message):
-            return "CUA planner could not be reached. \(message)"
+            return String(format: String(localized: "computer_use_planner.error.unreachable", defaultValue: "CUA planner could not be reached. %@", bundle: .module, comment: "Error shown when planner service is unreachable"), "\(message)")
         }
     }
 }
@@ -168,8 +168,8 @@ enum ComputerUsePlannerClient {
         let trimmedText = fullText.trimmingCharacters(in: .whitespacesAndNewlines)
         throw ComputerUsePlannerError.invalidResponse(
             trimmedText.isEmpty
-                ? "The model did not return a native tool call."
-                : "The model returned text instead of a native tool call: \(String(trimmedText.prefix(800)))"
+                ? String(localized: "computer_use_planner.error.no_native_tool_call", defaultValue: "The model did not return a native tool call.", bundle: .module, comment: "Error shown when model response lacks required native tool call")
+                : String(format: String(localized: "computer_use_planner.error.text_returned_instead_of_tool_call", defaultValue: "The model returned text instead of a native tool call: %@", bundle: .module, comment: "Error shown when model returns text output instead of native tool call payload"), String(trimmedText.prefix(800)))
         )
     }
 

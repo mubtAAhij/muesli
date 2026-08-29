@@ -458,7 +458,7 @@ public struct MeetingRecord: Identifiable, Codable, Sendable {
 
     public var appliedTemplateName: String {
         let trimmed = selectedTemplateName?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        return trimmed.isEmpty ? "Auto" : trimmed
+        return trimmed.isEmpty ? String(localized: "storage_models.template_name.auto", defaultValue: "Auto", comment: "Template name fallback label for automatic selection") : trimmed
     }
 
     public var appliedTemplateKind: MeetingTemplateKind {

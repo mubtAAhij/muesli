@@ -39,11 +39,11 @@ enum DictationBackendReadiness: Equatable {
     func blockingMessage(backendLabel: String) -> String? {
         switch self {
         case .preparing:
-            return "Warming up \(backendLabel)..."
+            return String(format: String(localized: "status.backend_warmup.message", defaultValue: "Warming up %@...", bundle: .module, comment: "Status text while backend is warming up"), "\(backendLabel)")
         case .ready:
             return nil
         case .failed:
-            return "\(backendLabel) unavailable"
+            return String(format: String(localized: "status.backend_unavailable.message", defaultValue: "%@ unavailable", bundle: .module, comment: "Status text when backend is unavailable"), "\(backendLabel)")
         }
     }
 }
@@ -123,7 +123,7 @@ struct MeetingResummarizationPlan: Equatable {
 enum MeetingResummarizationPolicy {
     static func plan(for meeting: MeetingRecord) -> MeetingResummarizationPlan {
         let trimmed = meeting.title.trimmingCharacters(in: .whitespacesAndNewlines)
-        let promptTitle = trimmed.isEmpty ? "Meeting" : trimmed
+        let promptTitle = trimmed.isEmpty ? String(localized: "prompt.meeting.title", defaultValue: "Meeting", bundle: .module, comment: "Title for meeting prompt") : trimmed
         return MeetingResummarizationPlan(
             promptTitle: promptTitle,
             persistedTitle: meeting.title
@@ -139,9 +139,9 @@ enum MeetingSummaryPersistenceError: Error, LocalizedError {
         case .failedToSaveSummary(let underlying):
             let detail = underlying.localizedDescription.trimmingCharacters(in: .whitespacesAndNewlines)
             if detail.isEmpty {
-                return "The updated meeting notes could not be saved."
+                return String(localized: "error.meeting_notes.save_failed.message", defaultValue: "The updated meeting notes could not be saved.", bundle: .module, comment: "Error message when updated meeting notes fail to save")
             }
-            return "The updated meeting notes could not be saved. \(detail)"
+            return String(format: String(localized: "error.meeting_notes.save_failed_with_detail.message", defaultValue: "The updated meeting notes could not be saved. %@", bundle: .module, comment: "Error message when updated meeting notes fail to save with details"), "\(detail)")
         }
     }
 }
@@ -152,7 +152,7 @@ enum MeetingTemplateSelectionError: Error, LocalizedError {
     var errorDescription: String? {
         switch self {
         case .templateNoLongerExists:
-            return "That template no longer exists. Choose another template and try again."
+            return String(localized: "error.meeting_template.missing.message", defaultValue: "That template no longer exists. Choose another template and try again.", bundle: .module, comment: "Error message when selected meeting template is missing")
         }
     }
 }
@@ -208,15 +208,15 @@ enum MeetingRetranscriptionError: Error, LocalizedError {
     var errorDescription: String? {
         switch self {
         case .controllerUnavailable:
-            return "Meeting re-transcription could not continue because Muesli is no longer available."
+            return String(localized: "error.retranscription.controller_unavailable.message", defaultValue: "Meeting re-transcription could not continue because Muesli is no longer available.", bundle: .module, comment: "Error message when retranscription cannot continue because controller is unavailable")
         case .recordingUnavailable:
-            return "The saved meeting recording is no longer available on disk."
+            return String(localized: "error.retranscription.recording_missing_on_disk.message", defaultValue: "The saved meeting recording is no longer available on disk.", bundle: .module, comment: "Error message when saved recording file is missing on disk")
         case .noDownloadedTranscriptionModel:
-            return "Download a transcription model before re-transcribing this meeting."
+            return String(localized: "error.retranscription.model_required.message", defaultValue: "Download a transcription model before re-transcribing this meeting.", bundle: .module, comment: "Error message when retranscription requires a downloaded model")
         case .emptyTranscript:
-            return "Re-transcription finished, but no speech was detected in the saved recording."
+            return String(localized: "error.retranscription.no_speech_detected.message", defaultValue: "Re-transcription finished, but no speech was detected in the saved recording.", bundle: .module, comment: "Error message when retranscription detects no speech")
         case .failedToSave(let underlying):
-            return "The re-transcribed meeting could not be saved. \(underlying.localizedDescription)"
+            return String(format: String(localized: "error.retranscription.save_failed_with_detail.message", defaultValue: "The re-transcribed meeting could not be saved. %@", bundle: .module, comment: "Error message when retranscribed meeting fails to save with details"), "\(underlying.localizedDescription)")
         }
     }
 }
@@ -229,11 +229,11 @@ enum MeetingLifecycleError: Error, LocalizedError {
     var errorDescription: String? {
         switch self {
         case .failedToSaveRecording(let underlying):
-            return "The meeting finished transcribing, but the recording could not be saved. \(underlying.localizedDescription)"
+            return String(format: String(localized: "error.meeting_recording.save_failed_with_detail.message", defaultValue: "The meeting finished transcribing, but the recording could not be saved. %@", bundle: .module, comment: "Error message when meeting recording fails to save with details"), "\(underlying.localizedDescription)")
         case .failedToDeleteRecording(let underlying):
-            return "The saved meeting recording could not be deleted, so the meeting was left in place. \(underlying.localizedDescription)"
+            return String(format: String(localized: "error.meeting_recording.delete_failed_with_detail.message", defaultValue: "The saved meeting recording could not be deleted, so the meeting was left in place. %@", bundle: .module, comment: "Error message when deleting saved meeting recording fails with details"), "\(underlying.localizedDescription)")
         case .failedToDeleteMeeting(let underlying):
-            return "The meeting could not be deleted. \(underlying.localizedDescription)"
+            return String(format: String(localized: "error.delete_meeting.failed_with_detail.message", defaultValue: "The meeting could not be deleted. %@", bundle: .module, comment: "Error message when deleting a meeting fails with details"), "\(underlying.localizedDescription)")
         }
     }
 }
@@ -1184,7 +1184,7 @@ public final class MuesliController: NSObject {
     func truncate(_ text: String, limit: Int) -> String {
         let compact = text.split(whereSeparator: \.isWhitespace).joined(separator: " ")
         guard compact.count > limit else { return compact }
-        return String(compact.prefix(limit - 3)).trimmingCharacters(in: .whitespacesAndNewlines) + "..."
+        return String(compact.prefix(limit - 3)).trimmingCharacters(in: .whitespacesAndNewlines) + String(localized: "common.ellipsis", defaultValue: "...", bundle: .module, comment: "Common ellipsis text")
     }
 
     func refreshIndicatorVisibility() {
@@ -1197,7 +1197,7 @@ public final class MuesliController: NSObject {
     }
 
     func refreshUI() {
-        statusBarController?.setStatus("Idle")
+        statusBarController?.setStatus(String(localized: "status.idle", defaultValue: "Idle", bundle: .module, comment: "Status text when system is idle"))
         statusBarController?.refresh()
         historyWindowController?.updateBackendLabel()
         historyWindowController?.reload()
@@ -1747,7 +1747,7 @@ public final class MuesliController: NSObject {
 
         bridgeActivationPending = true
         appState.isICloudBridgeActivationPending = true
-        appState.iCloudSyncStatus = "Checking iCloud..."
+        appState.iCloudSyncStatus = String(localized: "sync.icloud.checking", defaultValue: "Checking iCloud...", bundle: .module, comment: "Status text while checking iCloud sync")
         appState.iCloudBridgeState = .checkingICloud
         appState.iCloudBridgeMessage = nil
         TelemetryDeck.signal("bridge_enable_started", parameters: ["platform": "macos"])
@@ -1763,7 +1763,7 @@ public final class MuesliController: NSObject {
                     guard let self, self.iCloudSyncGeneration == generation else { return }
                     self.iCloudSubscriptionTask = nil
                     self.hasEnsuredICloudSubscription = true
-                    self.appState.iCloudSyncStatus = "Setting up private iCloud sync..."
+                    self.appState.iCloudSyncStatus = String(localized: "sync.icloud.setup_private", defaultValue: "Setting up private iCloud sync...", bundle: .module, comment: "Status text while setting up private iCloud sync")
                     self.appState.iCloudBridgeState = .syncing
                     self.appState.iCloudBridgeMessage = nil
                     self.updateConfig { $0.iCloudSyncEnabled = true }
@@ -1783,7 +1783,7 @@ public final class MuesliController: NSObject {
                     self.bridgeActivationPending = false
                     self.appState.isICloudBridgeActivationPending = false
                     let message = error.localizedDescription
-                    self.appState.iCloudSyncStatus = "Sync needs iCloud: \(message)"
+                    self.appState.iCloudSyncStatus = String(format: String(localized: "sync.icloud.required_message", defaultValue: "Sync needs iCloud: %@", bundle: .module, comment: "Message indicating iCloud requirement with detail"), "\(message)")
                     if MuesliICloudSyncEngine.isICloudAccountAvailabilityError(error) {
                         self.appState.iCloudBridgeState = .needsICloud
                     } else {
@@ -1920,7 +1920,7 @@ public final class MuesliController: NSObject {
         let userInitiated = pendingICloudSyncRequests.isUserInitiated
         guard config.iCloudSyncEnabled else {
             if userInitiated {
-                appState.iCloudSyncStatus = "Turn on iCloud sync first."
+                appState.iCloudSyncStatus = String(localized: "sync.icloud.turn_on_first", defaultValue: "Turn on iCloud sync first.", bundle: .module, comment: "Instruction to enable iCloud sync before continuing")
             }
             appState.iCloudBridgeState = .notConfigured
             appState.iCloudBridgeMessage = nil
@@ -1935,7 +1935,7 @@ public final class MuesliController: NSObject {
             appState.iCloudBridgeState = .syncing
             appState.iCloudBridgeMessage = nil
             if userInitiated {
-                appState.iCloudSyncStatus = "Sync already in progress."
+                appState.iCloudSyncStatus = String(localized: "sync.already_in_progress", defaultValue: "Sync already in progress.", bundle: .module, comment: "Status text when a sync is already running")
             }
             if bridgeDiscoveryPending {
                 bridgeDiscoveryFollowUpPending = true
@@ -1950,7 +1950,7 @@ public final class MuesliController: NSObject {
         }
         enableICloudPersistentSync()
         appState.isICloudSyncInProgress = true
-        appState.iCloudSyncStatus = "Syncing with private iCloud..."
+        appState.iCloudSyncStatus = String(localized: "sync.icloud.syncing_private", defaultValue: "Syncing with private iCloud...", bundle: .module, comment: "Status text while syncing with private iCloud")
         appState.iCloudBridgeState = .syncing
         appState.iCloudBridgeMessage = nil
         let store = dictationStore
@@ -1997,10 +1997,10 @@ public final class MuesliController: NSObject {
                     self.appState.isICloudSyncInProgress = false
                     let summary = self.formatICloudSyncSummary(result)
                     self.refreshICloudBridgeDeviceState()
-                    let remoteDeviceName = MuesliBridgeDeviceIdentity.remoteDeviceDisplayName ?? "iPhone"
+                    let remoteDeviceName = MuesliBridgeDeviceIdentity.remoteDeviceDisplayName ?? String(localized: "device.iphone.default_name", defaultValue: "iPhone", bundle: .module, comment: "Default remote device name when none is provided")
                     self.appState.iCloudSyncStatus = result.downloaded.total > 0
-                        ? "Synced with \(remoteDeviceName)."
-                        : "All text is up to date."
+                        ? String(format: String(localized: "sync.icloud.synced_with_device", defaultValue: "Synced with %@.", bundle: .module, comment: "Status text showing the remote device used for sync"), "\(remoteDeviceName)")
+                        : String(localized: "sync.icloud.all_text_up_to_date", defaultValue: "All text is up to date.", bundle: .module, comment: "Status text when all synced text is current")
                     self.appState.iCloudBridgeState = .active
                     self.appState.iCloudBridgeMessage = nil
                     self.appState.iCloudLastSyncSummary = summary
@@ -2069,7 +2069,7 @@ public final class MuesliController: NSObject {
                     let shouldRunBridgeDiscoveryFollowUp = self.bridgeDiscoveryFollowUpPending
                     self.bridgeDiscoveryFollowUpPending = false
                     let message = error.localizedDescription
-                    self.appState.iCloudSyncStatus = "Sync failed: \(message)"
+                    self.appState.iCloudSyncStatus = String(format: String(localized: "sync.failed_with_reason", defaultValue: "Sync failed: %@", bundle: .module, comment: "Error status when sync fails with a detailed reason"), "\(message)")
                     if MuesliICloudSyncEngine.isICloudAccountAvailabilityError(error) {
                         self.appState.iCloudBridgeState = .needsICloud
                     } else {
@@ -2156,7 +2156,7 @@ public final class MuesliController: NSObject {
         let cancellationTask = retireCKSyncEngine()
         resetICloudSubscriptionState()
         resetBridgeDiscoveryRuntimeState()
-        appState.iCloudSyncStatus = "Turning off iCloud sync..."
+        appState.iCloudSyncStatus = String(localized: "sync.icloud.turning_off", defaultValue: "Turning off iCloud sync...", bundle: .module, comment: "Status text while disabling iCloud sync")
         appState.iCloudBridgeState = .syncing
         appState.iCloudBridgeMessage = nil
         Task { [weak self] in
@@ -2164,7 +2164,7 @@ public final class MuesliController: NSObject {
             guard let self,
                   self.iCloudSyncGeneration == generation,
                   self.ckSyncEngine == nil else { return }
-            self.appState.iCloudSyncStatus = "iCloud sync is off."
+            self.appState.iCloudSyncStatus = String(localized: "sync.icloud.off", defaultValue: "iCloud sync is off.", bundle: .module, comment: "Status text when iCloud sync is disabled")
             self.appState.iCloudBridgeState = .notConfigured
         }
     }
@@ -2179,7 +2179,7 @@ public final class MuesliController: NSObject {
         let cancellationTask = retireCKSyncEngine()
         resetICloudSubscriptionState()
         resetBridgeDiscoveryRuntimeState()
-        appState.iCloudSyncStatus = "Stopping unavailable iCloud sync..."
+        appState.iCloudSyncStatus = String(localized: "sync.icloud.stopping_unavailable", defaultValue: "Stopping unavailable iCloud sync...", bundle: .module, comment: "Status text while stopping unavailable iCloud sync")
         appState.iCloudBridgeState = .syncing
         appState.iCloudBridgeMessage = nil
         Task { [weak self] in
@@ -2187,7 +2187,7 @@ public final class MuesliController: NSObject {
             guard let self,
                   self.iCloudSyncGeneration == generation,
                   self.ckSyncEngine == nil else { return }
-            self.appState.iCloudSyncStatus = "iCloud sync is unavailable in this local-only build."
+            self.appState.iCloudSyncStatus = String(localized: "sync.icloud.unavailable_local_build", defaultValue: "iCloud sync is unavailable in this local-only build.", bundle: .module, comment: "Message when iCloud sync is unavailable in local-only builds")
             self.appState.iCloudBridgeState = .notConfigured
         }
     }
@@ -2234,17 +2234,17 @@ public final class MuesliController: NSObject {
     }
 
     private func formatICloudSyncSummary(_ result: ICloudSyncResult) -> String {
-        "\(formatICloudSyncCounts(result.uploaded)) up, \(formatICloudSyncCounts(result.downloaded)) down"
+        String(format: String(localized: "sync.icloud.summary.up_down", defaultValue: "%@ up, %@ down", bundle: .module, comment: "Summary of uploaded and downloaded iCloud sync counts"), "\(formatICloudSyncCounts(result.uploaded))", "\(formatICloudSyncCounts(result.downloaded))")
     }
 
     private func formatICloudSyncCounts(_ counts: ICloudSyncKindCounts) -> String {
         guard counts.total > 0 else { return "0" }
         var parts: [String] = []
         if counts.dictations > 0 {
-            parts.append("\(counts.dictations) \(counts.dictations == 1 ? "dictation" : "dictations")")
+            parts.append("\(counts.dictations) \(counts.dictations == 1 ? String(localized: "sync.icloud.count.item.dictation.singular", defaultValue: "dictation", bundle: .module, comment: "Singular item label for iCloud dictation count") : String(localized: "sync.icloud.count.item.dictation.plural", defaultValue: "dictations", bundle: .module, comment: "Plural item label for iCloud dictation count"))")
         }
         if counts.meetings > 0 {
-            parts.append("\(counts.meetings) \(counts.meetings == 1 ? "meeting" : "meetings")")
+            parts.append("\(counts.meetings) \(counts.meetings == 1 ? "meeting" : String(localized: "sync.icloud.count.item.meeting.plural", defaultValue: "meetings", bundle: .module, comment: "Plural item label for iCloud meeting count"))")
         }
         return "\(counts.total) (\(parts.joined(separator: ", ")))"
     }
@@ -2338,7 +2338,7 @@ public final class MuesliController: NSObject {
             let needsWarmup = option.backend == "whisper"
             if needsWarmup {
                 await MainActor.run {
-                    self.indicator.showLoading("Warming up...")
+                    self.indicator.showLoading(String(localized: "status.warming_up", defaultValue: "Warming up...", bundle: .module, comment: "Status text while system is warming up"))
                 }
             }
             let ppOption = self.runtimePostProcessorOption()
@@ -2407,16 +2407,16 @@ public final class MuesliController: NSObject {
     func selectMeetingTranscriptionBackend(_ option: BackendOption, requireDownloaded: Bool = true) {
         guard option.supportsMeetingTranscription else {
             presentErrorAlert(
-                title: "Meeting model unavailable",
-                message: "\(option.label) is optimized for dictation and cannot be used for meeting transcription."
+                title: String(localized: "error.meeting_transcription.model_unavailable", defaultValue: "Meeting model unavailable", bundle: .module, comment: "Title for meeting transcription model unavailable error"),
+                message: String(format: String(localized: "error.meeting_transcription.option_not_supported.message", defaultValue: "%@ is optimized for dictation and cannot be used for meeting transcription.", bundle: .module, comment: "Message when selected model option cannot be used for meeting transcription"), "\(option.label)")
             )
             normalizeMeetingTranscriptionSelectionForAvailability()
             return
         }
         guard !requireDownloaded || option.isDownloaded else {
             presentErrorAlert(
-                title: "Meeting model unavailable",
-                message: "Download \(option.label) before using it for meeting transcription."
+                title: String(localized: "error.meeting_transcription.model_unavailable", defaultValue: "Meeting model unavailable", bundle: .module, comment: "Title for meeting transcription model unavailable error"),
+                message: String(format: String(localized: "error.meeting_transcription.download_required.message", defaultValue: "Download %@ before using it for meeting transcription.", bundle: .module, comment: "Message prompting model download for meeting transcription"), "\(option.label)")
             )
             normalizeMeetingTranscriptionSelectionForAvailability()
             return
@@ -2593,8 +2593,8 @@ public final class MuesliController: NSObject {
     func selectPostProcessorBackend(_ option: TranscriptCleanupBackendOption) {
         guard option.isCompatible(with: selectedBackend) else {
             presentErrorAlert(
-                title: "Cleanup model unavailable",
-                message: "Gemma 4 cannot clean up a transcription produced by the same Gemma 4 backend."
+                title: String(localized: "error.cleanup_model.unavailable.title", defaultValue: "Cleanup model unavailable", bundle: .module, comment: "Title for cleanup model unavailable error"),
+                message: String(localized: "error.cleanup_model.gemma4_same_backend.message", defaultValue: "Gemma 4 cannot clean up a transcription produced by the same Gemma 4 backend.", bundle: .module, comment: "Message explaining Gemma 4 cleanup restriction for same backend")
             )
             return
         }
@@ -2843,7 +2843,7 @@ public final class MuesliController: NSObject {
             fputs("[muesli-native] Google Calendar token invalid while loading calendar list, signed out\n", stderr)
         } catch GoogleCalendarAuthError.refreshFailed(let message) {
             fputs("[muesli-native] Google Calendar token refresh failed while loading calendar list: \(message)\n", stderr)
-            appState.googleCalendarListLoadState = .failed("Token refresh failed: \(message)")
+            appState.googleCalendarListLoadState = .failed(String(format: String(localized: "calendar.google.token_refresh_failed", defaultValue: "Token refresh failed: %@", bundle: .module, comment: "Error message when Google calendar token refresh fails"), "\(message)"))
         } catch {
             fputs("[muesli-native] Google calendarList fetch failed: \(error)\n", stderr)
             appState.googleCalendarListLoadState = .failed(error.localizedDescription)
@@ -3193,7 +3193,7 @@ public final class MuesliController: NSObject {
         let autoStopSource = meetingURL.flatMap { MeetingAutoStopSource(meetingURL: $0) }
 
         meetingNotification.show(
-            title: "Meeting starting now",
+            title: String(localized: "notifications.meeting_starting_now.title", defaultValue: "Meeting starting now", bundle: .module, comment: "Notification title for meeting starting now"),
             subtitle: title,
             meetingURL: meetingURL,
             dismissAfter: 30,
@@ -3711,8 +3711,8 @@ public final class MuesliController: NSObject {
     ) {
         onboardingModelPreparationTask?.cancel()
         updateModelPreparationStatus(
-            title: "Preparing \(backend.label)",
-            detail: initialStatus ?? "Preparing \(backend.label)...",
+            title: String(format: String(localized: "model_preparation.preparing_backend", defaultValue: "Preparing %@", bundle: .module, comment: "Status text while preparing selected backend"), "\(backend.label)"),
+            detail: initialStatus ?? String(format: String(localized: "model_preparation.preparing_backend_ellipsis", defaultValue: "Preparing %@...", bundle: .module, comment: "Status text while preparing selected backend with ellipsis"), "\(backend.label)"),
             progress: initialProgress,
             isPreparing: isPreparing,
             isComplete: false
@@ -3737,8 +3737,8 @@ public final class MuesliController: NSObject {
                 await MainActor.run {
                     self.onboardingModelPreparationTask = nil
                     self.updateModelPreparationStatus(
-                        title: "\(backend.label) ready",
-                        detail: "Ready for transcription",
+                        title: String(format: String(localized: "model_preparation.backend_ready", defaultValue: "%@ ready", bundle: .module, comment: "Status text when selected backend is ready"), "\(backend.label)"),
+                        detail: String(localized: "model_preparation.ready_for_transcription", defaultValue: "Ready for transcription", bundle: .module, comment: "Status text when model is ready for transcription"),
                         progress: 1.0,
                         isPreparing: false,
                         isComplete: true
@@ -3754,7 +3754,7 @@ public final class MuesliController: NSObject {
                 await MainActor.run {
                     self.onboardingModelPreparationTask = nil
                     self.updateModelPreparationStatus(
-                        title: backend.isDownloaded ? "Model setup paused" : "Download paused",
+                        title: backend.isDownloaded ? String(localized: "model_preparation.paused", defaultValue: "Model setup paused", bundle: .module, comment: "Status text when model setup is paused") : String(localized: "model_preparation.download_paused", defaultValue: "Download paused", bundle: .module, comment: "Status text when model download is paused"),
                         detail: self.modelPreparationFailureMessage(for: backend),
                         progress: nil,
                         isPreparing: false,
@@ -3834,7 +3834,7 @@ public final class MuesliController: NSObject {
         let wasDownloaded = backend.isDownloaded
         progress(
             wasDownloaded ? 0.75 : 0.0,
-            wasDownloaded ? "Warming up \(backend.label)..." : "Downloading \(backend.label)..."
+            wasDownloaded ? String(format: String(localized: "onboarding.model_download.warming_up_backend", defaultValue: "Warming up %@...", bundle: .module, comment: "Onboarding status while warming up backend"), "\(backend.label)") : String(format: String(localized: "onboarding.model_download.downloading_backend", defaultValue: "Downloading %@...", bundle: .module, comment: "Onboarding status while downloading backend"), "\(backend.label)")
         )
         try await transcriptionCoordinator.preloadRequired(
             backend: backend,
@@ -3849,11 +3849,11 @@ public final class MuesliController: NSObject {
                     return
                 }
                 if status?.localizedCaseInsensitiveContains("download") == true {
-                    progress(value, "\(status ?? "Downloading \(backend.label)...")")
+                    progress(value, "\(status ?? String(format: String(localized: "onboarding.model_download.downloading_backend", defaultValue: "Downloading %@...", bundle: .module, comment: "Onboarding status while downloading backend"), "\(backend.label)"))")
                 } else if value >= 0.9 {
-                    progress(value, status ?? "Warming up \(backend.label)...")
+                    progress(value, status ?? String(format: String(localized: "onboarding.model_download.warming_up_backend", defaultValue: "Warming up %@...", bundle: .module, comment: "Onboarding status while warming up backend"), "\(backend.label)"))
                 } else {
-                    progress(value, status ?? "Preparing \(backend.label)...")
+                    progress(value, status ?? String(format: String(localized: "onboarding.model_download.preparing_backend_ellipsis", defaultValue: "Preparing %@...", bundle: .module, comment: "Onboarding status while preparing backend with ellipsis"), "\(backend.label)"))
                 }
             },
             progressSnapshot: progressSnapshot
@@ -3865,11 +3865,11 @@ public final class MuesliController: NSObject {
                 userInfo: [NSLocalizedDescriptionKey: "\(backend.label) was not downloaded successfully."]
             )
         }
-        progress(1.0, "\(backend.label) ready")
+        progress(1.0, String(format: String(localized: "onboarding.model_download.backend_ready", defaultValue: "%@ ready", bundle: .module, comment: "Onboarding status when backend is ready"), "\(backend.label)"))
     }
 
     private func applyModelPreparationProgress(_ progress: Double, status: String?, backend: BackendOption) {
-        let detail = status ?? "Preparing \(backend.label)..."
+        let detail = status ?? String(format: String(localized: "onboarding.model_download.preparing_backend_ellipsis", defaultValue: "Preparing %@...", bundle: .module, comment: "Onboarding status while preparing backend with ellipsis"), "\(backend.label)")
         let lowercasedDetail = detail.lowercased()
         let isPreparing = lowercasedDetail.contains("compiling")
             || lowercasedDetail.contains("warming")
@@ -3877,8 +3877,8 @@ public final class MuesliController: NSObject {
 
         if isPreparing {
             updateModelPreparationStatus(
-                title: "Preparing \(backend.label)",
-                detail: "Optimizing \(backend.label) for this Mac...",
+                title: String(format: String(localized: "onboarding.model_download.preparing_backend", defaultValue: "Preparing %@", bundle: .module, comment: "Onboarding status while preparing backend"), "\(backend.label)"),
+                detail: String(format: String(localized: "model_preparation.status.optimizing_backend_for_mac", defaultValue: "Optimizing %@ for this Mac...", bundle: .module, comment: "Status text while optimizing backend for current Mac"), "\(backend.label)"),
                 progress: nil,
                 isPreparing: true,
                 isComplete: false
@@ -3887,7 +3887,7 @@ public final class MuesliController: NSObject {
         }
 
         updateModelPreparationStatus(
-            title: "Preparing \(backend.label)",
+            title: String(format: String(localized: "onboarding.model_download.preparing_backend", defaultValue: "Preparing %@", bundle: .module, comment: "Onboarding status while preparing backend"), "\(backend.label)"),
             detail: detail,
             progress: progress,
             isPreparing: false,
@@ -3933,8 +3933,8 @@ public final class MuesliController: NSObject {
 
     private func modelPreparationFailureMessage(for backend: BackendOption) -> String {
         backend.isDownloaded
-            ? "Model setup failed. Restart Muesli or retry from Models."
-            : "Download failed. Check your connection and retry."
+            ? String(localized: "model_preparation.failure.setup_failed_restart_or_retry", defaultValue: "Model setup failed. Restart Muesli or retry from Models.", bundle: .module, comment: "Error message when model setup fails with recovery guidance")
+            : String(localized: "model_preparation.failure.download_failed_check_connection", defaultValue: "Download failed. Check your connection and retry.", bundle: .module, comment: "Error message when model download fails due to connection issues")
     }
 
     func completeOnboarding(
@@ -4176,7 +4176,7 @@ public final class MuesliController: NSObject {
 
     private func presentStandardUpdateCheck() {
         guard let updaterController else {
-            appState.sparkleUpdateStatus = .disabled(message: "Update checks are disabled for this build.")
+            appState.sparkleUpdateStatus = .disabled(message: String(localized: "updates.disabled_for_build", defaultValue: "Update checks are disabled for this build.", bundle: .module, comment: "Status message when update checks are disabled in current build"))
             return
         }
         let existingWindows = Set(NSApplication.shared.windows.map(ObjectIdentifier.init))
@@ -4404,7 +4404,7 @@ public final class MuesliController: NSObject {
                 do {
                     formattedNotes = try await MeetingSummaryClient.summarize(
                         transcript: rawTranscript,
-                        meetingTitle: meeting.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "Meeting" : meeting.title,
+                        meetingTitle: meeting.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? String(localized: "meeting.title", defaultValue: "Meeting", bundle: .module, comment: "Title used for meeting context") : meeting.title,
                         config: self.config,
                         template: templateSnapshot,
                         existingNotes: self.notesContextForResummary(meeting),
@@ -4616,12 +4616,12 @@ public final class MuesliController: NSObject {
 
     static func stripManualNotesSection(from notes: String) -> String {
         let markers = [
-            "\n\n### Written notes\n\n",
-            "\n### Written notes\n\n",
-            "### Written notes\n\n",
-            "\n\n## Manual Notes\n\n",
-            "\n## Manual Notes\n\n",
-            "## Manual Notes\n\n"
+            "\n\n" + String(localized: "notes.section.written_notes.h3_spaced", defaultValue: "### Written notes", bundle: .module, comment: "Markdown section heading block for written notes with surrounding spacing") + "\n\n",
+            "\n" + String(localized: "notes.section.written_notes.h3_leading_newline", defaultValue: "### Written notes", bundle: .module, comment: "Markdown section heading block for written notes with leading newline") + "\n\n",
+            String(localized: "notes.section.written_notes.h3", defaultValue: "### Written notes", bundle: .module, comment: "Markdown section heading block for written notes") + "\n\n",
+            "\n\n" + String(localized: "notes.section.manual_notes.h2_spaced", defaultValue: "## Manual Notes", bundle: .module, comment: "Markdown section heading block for manual notes with surrounding spacing") + "\n\n",
+            "\n" + String(localized: "notes.section.manual_notes.h2_leading_newline", defaultValue: "## Manual Notes", bundle: .module, comment: "Markdown section heading block for manual notes with leading newline") + "\n\n",
+            String(localized: "notes.section.manual_notes.h2", defaultValue: "## Manual Notes", bundle: .module, comment: "Markdown section heading block for manual notes") + "\n\n"
         ]
         for marker in markers {
             if let range = notes.range(of: marker, options: [.backwards]) {
@@ -5026,11 +5026,11 @@ public final class MuesliController: NSObject {
             cleanupOrphanedMeetingWaveformCacheFiles()
             scheduleICloudSyncAfterLocalChange()
         } catch let error as MeetingLifecycleError {
-            presentErrorAlert(title: "Couldn't Delete Meeting", message: error.localizedDescription)
+            presentErrorAlert(title: String(localized: "error.delete_meeting.failed.title", defaultValue: "Couldn't Delete Meeting", bundle: .module, comment: "Alert title when deleting a meeting fails"), message: error.localizedDescription)
             return
         } catch {
             presentErrorAlert(
-                title: "Couldn't Delete Meeting",
+                title: String(localized: "error.delete_meeting.failed.title", defaultValue: "Couldn't Delete Meeting", bundle: .module, comment: "Alert title when deleting a meeting fails"),
                 message: MeetingLifecycleError.failedToDeleteMeeting(underlying: error).localizedDescription
             )
             return
@@ -5084,8 +5084,8 @@ public final class MuesliController: NSObject {
     func clearMeetingHistory() {
         guard !isMeetingRecording(), !isStartingMeetingRecording, backgroundMeetingProcessingCount == 0 else {
             presentErrorAlert(
-                title: "Couldn't Clear Meeting History",
-                message: "A meeting is recording or still being processed. Please wait before clearing saved meetings."
+                title: String(localized: "error.clear_meeting_history.failed.title", defaultValue: "Couldn't Clear Meeting History", bundle: .module, comment: "Alert title when clearing meeting history fails"),
+                message: String(localized: "error.clear_meeting_history.active_meeting.message", defaultValue: "A meeting is recording or still being processed. Please wait before clearing saved meetings.", bundle: .module, comment: "Error message when clearing history is blocked by active meeting processing")
             )
             return
         }
@@ -5095,8 +5095,8 @@ public final class MuesliController: NSObject {
             try clearSavedMeetingRecordingsDirectory()
         } catch {
             presentErrorAlert(
-                title: "Couldn't Clear Meeting History",
-                message: "Saved meeting audio files could not be deleted, so meeting history was left in place. \(error.localizedDescription)"
+                title: String(localized: "error.clear_meeting_history.failed.title", defaultValue: "Couldn't Clear Meeting History", bundle: .module, comment: "Alert title when clearing meeting history fails"),
+                message: String(format: String(localized: "error.clear_meeting_history.audio_delete_failed.message", defaultValue: "Saved meeting audio files could not be deleted, so meeting history was left in place. %@", bundle: .module, comment: "Error message when meeting audio deletion fails during history clear"), "\(error.localizedDescription)")
             )
             return
         }
@@ -5145,14 +5145,14 @@ public final class MuesliController: NSObject {
         case .none:
             return true
         case .starting:
-            messageText = "Meeting recording is starting"
-            informativeText = "Quitting now will cancel the meeting recording before it has been saved."
+            messageText = String(localized: "meeting_recording.starting_message", defaultValue: "Meeting recording is starting", bundle: .module, comment: "Termination prompt title while meeting recording is starting")
+            informativeText = String(localized: "termination.meeting_recording_starting.warning", defaultValue: "Quitting now will cancel the meeting recording before it has been saved.", bundle: .module, comment: "Termination warning while meeting recording is starting")
         case .recording:
-            messageText = "Meeting recording in progress"
-            informativeText = "Quitting now will stop the meeting recording and the current transcript may be lost. Stop the recording first if you want Muesli to save notes."
+            messageText = String(localized: "termination.meeting_recording_in_progress.title", defaultValue: "Meeting recording in progress", bundle: .module, comment: "Termination prompt title when meeting recording is in progress")
+            informativeText = String(localized: "termination.meeting_recording_in_progress.warning", defaultValue: "Quitting now will stop the meeting recording and the current transcript may be lost. Stop the recording first if you want Muesli to save notes.", bundle: .module, comment: "Termination warning when meeting recording is in progress")
         case .processing:
-            messageText = "Meeting transcription in progress"
-            informativeText = "Quitting now will interrupt transcription and the meeting notes may not be saved."
+            messageText = String(localized: "termination.meeting_transcription_in_progress.title", defaultValue: "Meeting transcription in progress", bundle: .module, comment: "Termination prompt title when meeting transcription is in progress")
+            informativeText = String(localized: "termination.meeting_transcription_in_progress.warning", defaultValue: "Quitting now will interrupt transcription and the meeting notes may not be saved.", bundle: .module, comment: "Termination warning when meeting transcription is in progress")
         }
 
         guard !isPresentingMeetingTerminationConfirmation else {
@@ -5163,8 +5163,8 @@ public final class MuesliController: NSObject {
         alert.alertStyle = .warning
         alert.messageText = messageText
         alert.informativeText = informativeText
-        alert.addButton(withTitle: "Keep Muesli Running")
-        alert.addButton(withTitle: "Quit Anyway")
+        alert.addButton(withTitle: String(localized: "termination.action.keep_muesli_running", defaultValue: "Keep Muesli Running", bundle: .module, comment: "Termination dialog action to keep app running"))
+        alert.addButton(withTitle: String(localized: "termination.action.quit_anyway", defaultValue: "Quit Anyway", bundle: .module, comment: "Termination dialog action to quit despite warning"))
 
         isPresentingMeetingTerminationConfirmation = true
         let didPresent = presentAlert(alert, fallbackLogContext: "meeting termination confirmation") { [weak self] response in
@@ -5233,7 +5233,7 @@ public final class MuesliController: NSObject {
               !isStoppingMeetingRecording else { return }
         activeMeetingSession.pause()
         indicator.setMeetingRecordingPaused(true, config: config)
-        statusBarController?.setStatus("Meeting paused")
+        statusBarController?.setStatus(String(localized: "meeting.status.paused", defaultValue: "Meeting paused", bundle: .module, comment: "Status text when meeting is paused"))
         statusBarController?.refresh()
         syncAppState()
     }
@@ -5245,7 +5245,7 @@ public final class MuesliController: NSObject {
               !isStoppingMeetingRecording else { return }
         activeMeetingSession.resume()
         indicator.setMeetingRecordingPaused(false, config: config)
-        statusBarController?.setStatus("Meeting: \(activeMeetingDisplayTitle())")
+        statusBarController?.setStatus(String(format: String(localized: "meeting.status.with_title", defaultValue: "Meeting: %@", bundle: .module, comment: "Status text showing active meeting title"), "\(activeMeetingDisplayTitle())"))
         statusBarController?.refresh()
         syncAppState()
     }
@@ -5268,7 +5268,7 @@ public final class MuesliController: NSObject {
 
     @discardableResult
     func startMeetingRecordingFromEntryPoint(
-        title: String = "Meeting",
+        title: String = String(localized: "meeting.title", defaultValue: "Meeting", bundle: .module, comment: "Default title for meeting"),
         calendarEventID: String? = nil,
         calendarOccurrence: CalendarOccurrenceReference? = nil,
         endDate: Date? = nil,
@@ -5302,7 +5302,7 @@ public final class MuesliController: NSObject {
 
     @discardableResult
     func startMeetingRecording(
-        title: String = "Meeting",
+        title: String = String(localized: "meeting.title", defaultValue: "Meeting", bundle: .module, comment: "Default title for meeting"),
         calendarEventID: String? = nil,
         calendarOccurrence: CalendarOccurrenceReference? = nil,
         openDocument: Bool = false,
@@ -5316,8 +5316,8 @@ public final class MuesliController: NSObject {
         guard !isMeetingRecording(), !isStartingMeetingRecording else { return false }
         guard let meetingBackend = normalizeMeetingTranscriptionSelectionForAvailability() else {
             presentErrorAlert(
-                title: "Meeting failed to start",
-                message: "Download a transcription model before recording a meeting."
+                title: String(localized: "error.meeting_start.failed.title", defaultValue: "Meeting failed to start", bundle: .module, comment: "Error title when starting meeting fails"),
+                message: String(localized: "error.meeting_start.model_required.message", defaultValue: "Download a transcription model before recording a meeting.", bundle: .module, comment: "Error message when meeting start requires a transcription model")
             )
             return false
         }
@@ -5352,7 +5352,7 @@ public final class MuesliController: NSObject {
                 backend: meetingBackend,
                 error: error
             )
-            presentErrorAlert(title: "Meeting failed to start", message: error.localizedDescription)
+            presentErrorAlert(title: String(localized: "error.meeting_start.failed.title", defaultValue: "Meeting failed to start", bundle: .module, comment: "Error title when starting meeting fails"), message: error.localizedDescription)
             return false
         }
         armMeetingAutoStop(
@@ -5368,9 +5368,9 @@ public final class MuesliController: NSObject {
         cancelDictationAudioSessionForMeetingRecordingIfNeeded()
         syncDictationRecorderWarmup(intent: .idlePrewarm(.meetingStateChanged))
         meetingStartMeetingID = meetingID
-        updateMeetingStartStatus("Meeting transcription will start shortly.")
+        updateMeetingStartStatus(String(localized: "meeting.start_status.transcription_starting_soon", defaultValue: "Meeting transcription will start shortly.", bundle: .module, comment: "Status text indicating meeting transcription will start soon"))
         indicator.setState(.preparing, config: config)
-        beginMeetingActivity(reason: "Recording and transcribing a meeting")
+        beginMeetingActivity(reason: String(localized: "meeting.activity.recording_and_transcribing", defaultValue: "Recording and transcribing a meeting", bundle: .module, comment: "Activity description while recording and transcribing meeting"))
         meetingMonitor.suppressWhileActive()
         meetingMonitor.refreshState()
         updateMeetingNotificationVisibility()
@@ -5395,7 +5395,7 @@ public final class MuesliController: NSObject {
                     self.cancelMeetingRecordingHotkeyToggleAfterFailedStart(meetingID: meetingID)
                     self.meetingMonitor.resumeAfterCooldown()
                     self.meetingMonitor.refreshState()
-                    self.statusBarController?.setStatus("Idle")
+                    self.statusBarController?.setStatus(String(localized: "status.idle", defaultValue: "Idle", bundle: .module, comment: "Idle status text"))
                     self.statusBarController?.refresh()
                     self.setState(.idle)
                     self.endMeetingActivity()
@@ -5415,7 +5415,7 @@ public final class MuesliController: NSObject {
                     self.cancelMeetingRecordingHotkeyToggleAfterFailedStart(meetingID: meetingID)
                     self.meetingMonitor.resumeAfterCooldown()
                     self.meetingMonitor.refreshState()
-                    self.statusBarController?.setStatus("Idle")
+                    self.statusBarController?.setStatus(String(localized: "status.idle", defaultValue: "Idle", bundle: .module, comment: "Idle status text"))
                     self.statusBarController?.refresh()
                     self.setState(.idle)
                     self.endMeetingActivity()
@@ -5430,7 +5430,7 @@ public final class MuesliController: NSObject {
     }
 
     func startQuickNoteMeeting() {
-        startMeetingRecordingFromEntryPoint(title: "Meeting")
+        startMeetingRecordingFromEntryPoint(title: String(localized: "meeting.title", defaultValue: "Meeting", bundle: .module, comment: "Default title for meeting"))
     }
 
     /// Whether a finished meeting can be resumed right now (used to gate the UI control too).
@@ -5487,8 +5487,8 @@ public final class MuesliController: NSObject {
         guard let meeting = meeting(id: meetingID), canResumeFinishedMeeting(meeting) else { return }
         guard let meetingBackend = normalizeMeetingTranscriptionSelectionForAvailability() else {
             presentErrorAlert(
-                title: "Resume failed",
-                message: "Download a transcription model before recording."
+                title: String(localized: "error.resume_meeting.failed.title", defaultValue: "Resume failed", bundle: .module, comment: "Error title when meeting resume fails"),
+                message: String(localized: "error.resume_meeting.model_required.message", defaultValue: "Download a transcription model before recording.", bundle: .module, comment: "Error message when resuming meeting requires transcription model")
             )
             return
         }
@@ -5498,7 +5498,7 @@ public final class MuesliController: NSObject {
             priorTranscript = try dictationStore.prepareMeetingForResume(id: meetingID)
         } catch {
             fputs("[muesli-native] failed to prepare meeting resume \(meetingID): \(error)\n", stderr)
-            presentErrorAlert(title: "Resume failed", message: error.localizedDescription)
+            presentErrorAlert(title: String(localized: "error.resume_meeting.failed.title", defaultValue: "Resume failed", bundle: .module, comment: "Error title when meeting resume fails"), message: error.localizedDescription)
             return
         }
         pendingResumePriorTranscript[meetingID] = priorTranscript
@@ -5522,9 +5522,9 @@ public final class MuesliController: NSObject {
         cancelDictationAudioSessionForMeetingRecordingIfNeeded()
         syncDictationRecorderWarmup(intent: .idlePrewarm(.meetingStateChanged))
         meetingStartMeetingID = meetingID
-        updateMeetingStartStatus("Resuming meeting recording…")
+        updateMeetingStartStatus(String(localized: "meeting.resume.status.resuming_recording", defaultValue: "Resuming meeting recording…", bundle: .module, comment: "Status text while resuming meeting recording"))
         indicator.setState(.preparing, config: config)
-        beginMeetingActivity(reason: "Recording and transcribing a meeting")
+        beginMeetingActivity(reason: String(localized: "meeting.activity.recording_and_transcribing", defaultValue: "Recording and transcribing a meeting", bundle: .module, comment: "Activity description while recording and transcribing meeting"))
         meetingMonitor.suppressWhileActive()
         meetingMonitor.refreshState()
         updateMeetingNotificationVisibility()
@@ -5549,7 +5549,7 @@ public final class MuesliController: NSObject {
                     self.cancelMeetingRecordingHotkeyToggleAfterFailedStart(meetingID: meetingID)
                     self.meetingMonitor.resumeAfterCooldown()
                     self.meetingMonitor.refreshState()
-                    self.statusBarController?.setStatus("Idle")
+                    self.statusBarController?.setStatus(String(localized: "status.idle", defaultValue: "Idle", bundle: .module, comment: "Idle status text"))
                     self.statusBarController?.refresh()
                     self.setState(.idle)
                     self.endMeetingActivity()
@@ -5563,7 +5563,7 @@ public final class MuesliController: NSObject {
                     self.cancelMeetingRecordingHotkeyToggleAfterFailedStart(meetingID: meetingID)
                     self.meetingMonitor.resumeAfterCooldown()
                     self.meetingMonitor.refreshState()
-                    self.statusBarController?.setStatus("Idle")
+                    self.statusBarController?.setStatus(String(localized: "status.idle", defaultValue: "Idle", bundle: .module, comment: "Idle status text"))
                     self.statusBarController?.refresh()
                     self.setState(.idle)
                     self.endMeetingActivity()
@@ -5582,8 +5582,8 @@ public final class MuesliController: NSObject {
         guard !isMeetingRecording(), !isStartingMeetingRecording else { return }
         guard normalizeMeetingTranscriptionSelectionForAvailability() != nil else {
             presentErrorAlert(
-                title: "Import Failed",
-                message: "Download a transcription model before importing audio files."
+                title: String(localized: "error.import_audio.failed.title", defaultValue: "Import Failed", bundle: .module, comment: "Error title when importing audio fails"),
+                message: String(localized: "error.import_audio.model_required.message", defaultValue: "Download a transcription model before importing audio files.", bundle: .module, comment: "Error message when importing audio requires a transcription model")
             )
             return
         }
@@ -5610,15 +5610,15 @@ public final class MuesliController: NSObject {
         guard !isMeetingRecording(), !isStartingMeetingRecording else { return }
         guard AudioFileImportController.isSupportedFileURL(url) else {
             presentErrorAlert(
-                title: "Import Failed",
-                message: "This audio file format is not supported."
+                title: String(localized: "error.import_audio.failed.title", defaultValue: "Import Failed", bundle: .module, comment: "Error title when importing audio fails"),
+                message: String(localized: "error.import_audio.unsupported_format.message", defaultValue: "This audio file format is not supported.", bundle: .module, comment: "Error message when imported audio format is unsupported")
             )
             return
         }
         guard normalizeMeetingTranscriptionSelectionForAvailability() != nil else {
             presentErrorAlert(
-                title: "Import Failed",
-                message: "Download a transcription model before importing audio files."
+                title: String(localized: "error.import_audio.failed.title", defaultValue: "Import Failed", bundle: .module, comment: "Error title when importing audio fails"),
+                message: String(localized: "error.import_audio.model_required.message", defaultValue: "Download a transcription model before importing audio files.", bundle: .module, comment: "Error message when importing audio requires a transcription model")
             )
             return
         }
@@ -5635,10 +5635,10 @@ public final class MuesliController: NSObject {
 
     private func importAudioFile(from sourceURL: URL, sessionID: UUID) async {
         let filename = sourceURL.deletingPathExtension().lastPathComponent
-        let title = filename.isEmpty ? "Imported Recording" : filename
+        let title = filename.isEmpty ? String(localized: "import.recording.title", defaultValue: "Imported Recording", bundle: .module, comment: "Default title for newly imported recording") : filename
 
-        self.updateImportProgressStatus("Importing audio file...", sessionID: sessionID)
-        self.beginMeetingActivity(reason: "Importing audio file for transcription")
+        self.updateImportProgressStatus(String(localized: "import.audio.progress.importing_file", defaultValue: "Importing audio file...", bundle: .module, comment: "Progress status while importing audio file"), sessionID: sessionID)
+        self.beginMeetingActivity(reason: String(localized: "import.audio.activity.importing_for_transcription", defaultValue: "Importing audio file for transcription", bundle: .module, comment: "Activity description while importing audio file for transcription"))
 
         do {
             let result = try await AudioFileImportController.importAudioFile(
@@ -5661,7 +5661,7 @@ public final class MuesliController: NSObject {
                 self.updateMeetingStartStatus(nil)
                 self.indicator.hideLoading()
                 self.endMeetingActivity()
-                self.statusBarController?.setStatus("Idle")
+                self.statusBarController?.setStatus(String(localized: "status.idle", defaultValue: "Idle", bundle: .module, comment: "Idle status text"))
                 self.statusBarController?.refresh()
                 self.syncAppState()
                 self.historyWindowController?.reload()
@@ -5676,7 +5676,7 @@ public final class MuesliController: NSObject {
                 self.updateMeetingStartStatus(nil)
                 self.indicator.hideLoading()
                 self.endMeetingActivity()
-                self.statusBarController?.setStatus("Idle")
+                self.statusBarController?.setStatus(String(localized: "status.idle", defaultValue: "Idle", bundle: .module, comment: "Idle status text"))
                 self.statusBarController?.refresh()
                 self.syncAppState()
             }
@@ -5688,11 +5688,11 @@ public final class MuesliController: NSObject {
                 self.updateMeetingStartStatus(nil)
                 self.indicator.hideLoading()
                 self.endMeetingActivity()
-                self.statusBarController?.setStatus("Idle")
+                self.statusBarController?.setStatus(String(localized: "status.idle", defaultValue: "Idle", bundle: .module, comment: "Idle status text"))
                 self.statusBarController?.refresh()
                 self.syncAppState()
                 self.presentErrorAlert(
-                    title: "Import Failed",
+                    title: String(localized: "error.import_audio.failed.title", defaultValue: "Import Failed", bundle: .module, comment: "Error title when importing audio fails"),
                     message: error.localizedDescription
                 )
             }
@@ -5772,7 +5772,7 @@ public final class MuesliController: NSObject {
             indicator.hideLoading()
         }
 
-        statusBarController?.setStatus("Idle")
+        statusBarController?.setStatus(String(localized: "status.idle", defaultValue: "Idle", bundle: .module, comment: "Idle status text"))
         statusBarController?.refresh()
         setState(.idle)
         endMeetingActivity()
@@ -5817,7 +5817,7 @@ public final class MuesliController: NSObject {
         previousMeetingNotes: String? = nil
     ) async throws {
         var shouldRetryAfterPermissionRequest = config.useCoreAudioTap
-        statusBarController?.setStatus("Meeting transcription will start shortly.")
+        statusBarController?.setStatus(String(localized: "meeting.start_status.transcription_starting_soon", defaultValue: "Meeting transcription will start shortly.", bundle: .module, comment: "Status text indicating meeting transcription will start soon"))
         statusBarController?.refresh()
         try Task.checkCancellation()
         try await transcriptionCoordinator.preloadRequired(
@@ -6055,7 +6055,7 @@ public final class MuesliController: NSObject {
                 activeMeetingAutoStop.markRecordingStarted(now: Date())
                 meetingMonitor.suppressWhileActive()
                 meetingMonitor.refreshState()
-                statusBarController?.setStatus("Meeting: \(title)")
+                statusBarController?.setStatus(String(format: String(localized: "meeting.status.with_title", defaultValue: "Meeting: %@", bundle: .module, comment: "Status text showing active meeting title"), "\(title)"))
                 indicator.powerProvider = { [weak meetingSession] in
                     meetingSession?.currentPower() ?? -160
                 }
@@ -6075,15 +6075,15 @@ public final class MuesliController: NSObject {
                 shouldRetryAfterPermissionRequest = false
                 try Task.checkCancellation()
                 try checkMeetingStartStillCurrent(meetingID)
-                updateMeetingStartStatus("Requesting system audio permission...")
-                statusBarController?.setStatus("Requesting system audio permission...")
+                updateMeetingStartStatus(String(localized: "meeting.start_status.requesting_system_audio_permission", defaultValue: "Requesting system audio permission...", bundle: .module, comment: "Status text while requesting system audio permission before meeting start"))
+                statusBarController?.setStatus(String(localized: "meeting.start_status.requesting_system_audio_permission", defaultValue: "Requesting system audio permission...", bundle: .module, comment: "Status text while requesting system audio permission before meeting start"))
                 statusBarController?.refresh()
                 let granted = await CoreAudioSystemRecorder.requestSystemAudioAccess()
                 try Task.checkCancellation()
                 try checkMeetingStartStillCurrent(meetingID)
                 if granted {
-                    updateMeetingStartStatus("Retrying meeting start...")
-                    statusBarController?.setStatus("Retrying meeting start...")
+                    updateMeetingStartStatus(String(localized: "meeting.start_status.retrying", defaultValue: "Retrying meeting start...", bundle: .module, comment: "Status text while retrying meeting start"))
+                    statusBarController?.setStatus(String(localized: "meeting.start_status.retrying", defaultValue: "Retrying meeting start...", bundle: .module, comment: "Status text while retrying meeting start"))
                     statusBarController?.refresh()
                     continue
                 }
@@ -6150,7 +6150,7 @@ public final class MuesliController: NSObject {
         }
 
         @MainActor @objc func manualNotesCheckboxChanged(_ sender: NSButton) {
-            discardButton?.title = sender.state == .on ? "Discard" : "Discard Recording"
+            discardButton?.title = sender.state == .on ? String(localized: "common.discard", defaultValue: "Discard", bundle: .module, comment: "Common destructive discard action title") : String(localized: "meeting.discard_recording.action", defaultValue: "Discard Recording", bundle: .module, comment: "Action title for discarding current meeting recording")
         }
     }
 
@@ -6161,40 +6161,40 @@ public final class MuesliController: NSObject {
         let hasManualNotes = activeMeetingID.map { id in
             !manualNotesForLiveMeeting(id: id).trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         } ?? false
-        alert.messageText = "Discard recording?"
+        alert.messageText = String(localized: "meeting.discard_recording.confirmation_title", defaultValue: "Discard recording?", bundle: .module, comment: "Confirmation title asking whether to discard recording")
         alert.alertStyle = .warning
         var manualNotesCheckbox: NSButton?
         if hasManualNotes {
-            alert.informativeText = "This will stop the meeting. Choose whether to delete the written notes too."
+            alert.informativeText = String(localized: "meeting.discard_recording.message_with_notes_choice", defaultValue: "This will stop the meeting. Choose whether to delete the written notes too.", bundle: .module, comment: "Confirmation message when discarding recording with written notes choice")
             let accessory = Self.makeDiscardMeetingAccessoryView()
             manualNotesCheckbox = accessory.manualNotesCheckbox
             alert.accessoryView = accessory.view
-            alert.addButton(withTitle: "Discard Recording")
-            alert.addButton(withTitle: "Cancel")
+            alert.addButton(withTitle: String(localized: "meeting.discard_recording.action", defaultValue: "Discard Recording", bundle: .module, comment: "Action title for discarding current meeting recording"))
+            alert.addButton(withTitle: String(localized: "common.cancel", defaultValue: "Cancel", bundle: .module, comment: "Common cancel action title"))
             alert.buttons.first?.hasDestructiveAction = true
             let titleUpdater = MeetingDiscardButtonTitleUpdater(discardButton: alert.buttons.first)
             manualNotesCheckbox?.target = titleUpdater
             manualNotesCheckbox?.action = #selector(MeetingDiscardButtonTitleUpdater.manualNotesCheckboxChanged(_:))
             (accessory.view as? MeetingDiscardAccessoryView)?.titleUpdater = titleUpdater
         } else {
-            alert.informativeText = "This will stop the meeting recording and delete all captured audio. This cannot be undone."
-            alert.addButton(withTitle: "Discard")
-            alert.addButton(withTitle: "Cancel")
+            alert.informativeText = String(localized: "meeting.discard_recording.destructive_warning", defaultValue: "This will stop the meeting recording and delete all captured audio. This cannot be undone.", bundle: .module, comment: "Destructive warning message for discarding meeting recording")
+            alert.addButton(withTitle: String(localized: "common.discard", defaultValue: "Discard", bundle: .module, comment: "Common destructive discard action title"))
+            alert.addButton(withTitle: String(localized: "common.cancel", defaultValue: "Cancel", bundle: .module, comment: "Common cancel action title"))
             alert.buttons.first?.hasDestructiveAction = true
         }
         presentDiscardMeetingAlert(alert, manualNotesCheckbox: manualNotesCheckbox)
     }
 
     private static func makeDiscardMeetingAccessoryView() -> MeetingDiscardAccessory {
-        let label = NSTextField(labelWithString: "Will delete:")
+        let label = NSTextField(labelWithString: String(localized: "meeting.discard_recording.will_delete_label", defaultValue: "Will delete:", bundle: .module, comment: "Label introducing list of items that will be deleted"))
         label.font = .systemFont(ofSize: NSFont.systemFontSize)
         label.textColor = .secondaryLabelColor
 
-        let recordingCheckbox = NSButton(checkboxWithTitle: "Recording audio", target: nil, action: nil)
+        let recordingCheckbox = NSButton(checkboxWithTitle: String(localized: "meeting.discard_recording.item.recording_audio", defaultValue: "Recording audio", bundle: .module, comment: "List item label for recording audio to be deleted"), target: nil, action: nil)
         recordingCheckbox.state = .on
         recordingCheckbox.isEnabled = false
 
-        let notesCheckbox = NSButton(checkboxWithTitle: "Manual notes", target: nil, action: nil)
+        let notesCheckbox = NSButton(checkboxWithTitle: String(localized: "meeting.discard_recording.item.manual_notes", defaultValue: "Manual notes", bundle: .module, comment: "List item label for manual notes to be deleted"), target: nil, action: nil)
         notesCheckbox.state = .off
 
         let container = MeetingDiscardAccessoryView(frame: NSRect(x: 0, y: 0, width: 230, height: 76))
@@ -6593,7 +6593,7 @@ public final class MuesliController: NSObject {
 
         Task { [weak self] in
             guard let self else { return }
-            var meetingTitle = "Meeting"
+            var meetingTitle = String(localized: "meeting.title", defaultValue: "Meeting", bundle: .module, comment: "Default title for meeting")
             var completedMeetingID: Int64?
             var meetingResult: MeetingSessionResult?
             var failedLiveMeetingID: Int64?
@@ -6603,7 +6603,7 @@ public final class MuesliController: NSObject {
                 meetingResult = result
                 meetingTitle = result.title
                 await MainActor.run {
-                    self.setMeetingProcessingStatus("Finalizing")
+                    self.setMeetingProcessingStatus(String(localized: "meeting.processing.finalizing", defaultValue: "Finalizing", bundle: .module, comment: "Status text while finalizing meeting processing"))
                 }
                 let recordingSaveDecision = await self.recordingSaveDecision(for: result)
                 let preparedRecordingSave = await self.prepareMeetingRecordingSave(
@@ -6626,7 +6626,7 @@ public final class MuesliController: NSObject {
                             backend: self.selectedMeetingTranscriptionBackend,
                             error: recordingSaveError
                         )
-                        self.presentErrorAlert(title: "Meeting Recording", message: recordingSaveError.localizedDescription)
+                        self.presentErrorAlert(title: String(localized: "meeting.recording.title", defaultValue: "Meeting Recording", bundle: .module, comment: "Title for meeting recording item"), message: recordingSaveError.localizedDescription)
                     }
                 }
             } catch {
@@ -6647,7 +6647,7 @@ public final class MuesliController: NSObject {
                 }
                 failedLiveMeetingID = liveMeetingID
                 await MainActor.run {
-                    self.presentErrorAlert(title: "Meeting Recording", message: message)
+                    self.presentErrorAlert(title: String(localized: "meeting.recording.title", defaultValue: "Meeting Recording", bundle: .module, comment: "Title for meeting recording item"), message: message)
                 }
             }
             await MainActor.run {
@@ -6663,7 +6663,7 @@ public final class MuesliController: NSObject {
                     && !self.isStartingMeetingRecording
                     && self.backgroundMeetingProcessingCount == 0
                     && !self.isDictationActivityInProgress {
-                    self.statusBarController?.setStatus("Idle")
+                    self.statusBarController?.setStatus(String(localized: "status.idle", defaultValue: "Idle", bundle: .module, comment: "Idle status text"))
                     self.statusBarController?.refresh()
                     if !self.isDictationTestMode {
                         self.indicator.setState(.idle, config: self.config)
@@ -6691,8 +6691,8 @@ public final class MuesliController: NSObject {
         let url = URL(fileURLWithPath: path)
         guard FileManager.default.fileExists(atPath: url.path) else {
             presentErrorAlert(
-                title: "Recording Not Found",
-                message: "The saved meeting recording is no longer available on disk."
+                title: String(localized: "error.meeting_recording.not_found.title", defaultValue: "Recording Not Found", bundle: .module, comment: "Error title when meeting recording file cannot be found"),
+                message: String(localized: "error.meeting_recording.not_found.message", defaultValue: "The saved meeting recording is no longer available on disk.", bundle: .module, comment: "Error message when saved meeting recording file is missing on disk")
             )
             return
         }
@@ -6765,7 +6765,7 @@ public final class MuesliController: NSObject {
         guard let activeMeetingID,
               let title = liveMeetingTitle(id: activeMeetingID)?.trimmingCharacters(in: .whitespacesAndNewlines),
               !title.isEmpty else {
-            return "Meeting"
+            return String(localized: "meeting.title", defaultValue: "Meeting", bundle: .module, comment: "Default title for meeting")
         }
         return title
     }
@@ -7079,11 +7079,11 @@ public final class MuesliController: NSObject {
     private func promptToSaveMeetingRecording(for title: String) async -> Bool {
         NSApp.activate(ignoringOtherApps: true)
         let alert = NSAlert()
-        alert.messageText = "Save meeting recording?"
-        alert.informativeText = "Keep a merged audio file for \"\(title)\" so you can inspect it later in Finder."
+        alert.messageText = String(localized: "meeting.recording.save_prompt.title", defaultValue: "Save meeting recording?", bundle: .module, comment: "Prompt title asking whether to save meeting recording")
+        alert.informativeText = String(format: String(localized: "meeting.recording.save_prompt.message", defaultValue: "Keep a merged audio file for \"%@\" so you can inspect it later in Finder.", bundle: .module, comment: "Prompt message explaining saved merged audio file for a meeting title"), "\(title)")
         alert.alertStyle = .informational
-        alert.addButton(withTitle: "Save Recording")
-        alert.addButton(withTitle: "Don't Save")
+        alert.addButton(withTitle: String(localized: "meeting.recording.save_prompt.action.save_recording", defaultValue: "Save Recording", bundle: .module, comment: "Action title to save meeting recording"))
+        alert.addButton(withTitle: String(localized: "meeting.recording.save_prompt.action.dont_save", defaultValue: "Don't Save", bundle: .module, comment: "Action title to discard meeting recording without saving"))
         guard let window = alertPresentationWindow(showHistoryIfNeeded: true) else {
             fputs("[muesli-native] no window available for recording save prompt; saving recording by default\n", stderr)
             return true
@@ -7148,14 +7148,14 @@ public final class MuesliController: NSObject {
         let alert = NSAlert()
         alert.alertStyle = .warning
         if isSystemAudioError {
-            alert.messageText = "System audio capture failed"
-            alert.informativeText = "Could not start system audio recording. Open System Settings > Privacy & Security > Screen & System Audio Recording and enable \(AppIdentity.displayName) under \"System Audio Recording Only\".\n\nError: \(error.localizedDescription)"
-            alert.addButton(withTitle: "Open System Settings")
-            alert.addButton(withTitle: "OK")
+            alert.messageText = String(localized: "meeting.start_failure.system_audio_capture_failed.title", defaultValue: "System audio capture failed", bundle: .module, comment: "Alert title when system audio capture fails at meeting start")
+            alert.informativeText = String(format: String(localized: "meeting.start_failure.system_audio_capture_failed.message", defaultValue: "Could not start system audio recording. Open System Settings > Privacy & Security > Screen & System Audio Recording and enable %@ under \"System Audio Recording Only\".\n\nError: %@", bundle: .module, comment: "Alert message with steps and error details when system audio capture fails"), "\(AppIdentity.displayName)", "\(error.localizedDescription)")
+            alert.addButton(withTitle: String(localized: "alert.meeting_start_failure.open_system_settings", defaultValue: "Open System Settings", bundle: .module, comment: "Alert action title to open System Settings"))
+            alert.addButton(withTitle: String(localized: "common.ok", defaultValue: "OK", bundle: .module, comment: "Common confirmation action title"))
         } else {
-            alert.messageText = "Meeting failed to start"
+            alert.messageText = String(localized: "meeting.start_failure.generic.title", defaultValue: "Meeting failed to start", bundle: .module, comment: "Generic alert title when meeting fails to start")
             alert.informativeText = error.localizedDescription
-            alert.addButton(withTitle: "OK")
+            alert.addButton(withTitle: String(localized: "common.ok", defaultValue: "OK", bundle: .module, comment: "Common confirmation action title"))
         }
 
         presentAlert(alert, fallbackLogContext: "meeting start failure") { response in
@@ -7169,7 +7169,7 @@ public final class MuesliController: NSObject {
         alert.messageText = title
         alert.informativeText = message
         alert.alertStyle = .warning
-        alert.addButton(withTitle: "OK")
+        alert.addButton(withTitle: String(localized: "common.ok", defaultValue: "OK", bundle: .module, comment: "Common confirmation action title"))
         presentAlert(alert, fallbackLogContext: title)
     }
 
@@ -7201,10 +7201,10 @@ public final class MuesliController: NSObject {
         appState.dictationState = state
         let status: String
         switch state {
-        case .idle: status = "Idle"
-        case .preparing: status = "Preparing"
-        case .recording: status = "Recording"
-        case .transcribing: status = "Transcribing"
+        case .idle: status = String(localized: "status.idle", defaultValue: "Idle", bundle: .module, comment: "Idle status text")
+        case .preparing: status = String(localized: "meeting.state.preparing", defaultValue: "Preparing", bundle: .module, comment: "Meeting state label when preparing")
+        case .recording: status = String(localized: "meeting.state.recording", defaultValue: "Recording", bundle: .module, comment: "Meeting state label when recording")
+        case .transcribing: status = String(localized: "meeting.state.transcribing", defaultValue: "Transcribing", bundle: .module, comment: "Meeting state label when transcribing")
         }
         statusBarController?.setStatus(status)
         if !isDictationTestMode {
@@ -7338,7 +7338,7 @@ public final class MuesliController: NSObject {
 
     private func blockDictationForMeetingActivityIfNeeded() -> Bool {
         guard isStartingMeetingRecording else { return false }
-        let status = meetingStartStatus ?? "Preparing meeting..."
+        let status = meetingStartStatus ?? String(localized: "meeting.status.preparing", defaultValue: "Preparing meeting...", bundle: .module, comment: "Status text while preparing a meeting")
         indicator.showLoading(status)
         statusBarController?.setStatus(status)
         statusBarController?.refresh()
@@ -7395,9 +7395,9 @@ public final class MuesliController: NSObject {
 
     private func showMeetingCompletionNotification(_ notification: PendingMeetingCompletionNotification) {
         meetingNotification.show(
-            title: "Transcription complete",
+            title: String(localized: "meeting.notification.transcription_complete.title", defaultValue: "Transcription complete", bundle: .module, comment: "Notification title when meeting transcription is complete"),
             subtitle: notification.title,
-            actionLabel: "View Notes",
+            actionLabel: String(localized: "meeting.notification.view_notes.action", defaultValue: "View Notes", bundle: .module, comment: "Notification action title to open meeting notes"),
             onStartRecording: { [weak self] in
                 guard let self else { return }
                 if let meetingID = notification.meetingID {
@@ -7529,9 +7529,9 @@ public final class MuesliController: NSObject {
         let response = activeMeetingSignalLossResponse
         let didShow = meetingNotification.show(
             promptID: promptID,
-            title: "Meeting signal lost",
-            subtitle: "Still recording. Stop if the meeting ended.",
-            actionLabel: "Stop Recording",
+            title: String(localized: "meeting.signal_lost.title", defaultValue: "Meeting signal lost", bundle: .module, comment: "Alert title when meeting signal is no longer detected"),
+            subtitle: String(localized: "meeting.signal_lost.message", defaultValue: "Still recording. Stop if the meeting ended.", bundle: .module, comment: "Alert message shown when meeting signal is lost but recording continues"),
+            actionLabel: String(localized: "meeting.signal_lost.stop_recording_action", defaultValue: "Stop Recording", bundle: .module, comment: "Action button title to stop recording after signal loss"),
             dismissAfter: 30,
             // MeetingNotificationController uses onStartRecording as its generic
             // primary-action slot; here the primary action is stopping recording.
@@ -7575,7 +7575,7 @@ public final class MuesliController: NSObject {
         let preferredScreen = meetingSourceWindowLocator.screen(for: candidate)
         let didShow = meetingNotification.show(
             promptID: candidate.id,
-            title: "Meeting detected",
+            title: String(localized: "meeting.detected.title", defaultValue: "Meeting detected", bundle: .module, comment: "Notification title when a meeting is auto-detected"),
             subtitle: title,
             preferredScreen: preferredScreen,
             platform: MeetingPlatform(candidate.platform),
@@ -7660,13 +7660,13 @@ public final class MuesliController: NSObject {
 
         switch stage {
         case .transcribingAudio:
-            setMeetingProcessingStatus("Transcribing")
+            setMeetingProcessingStatus(String(localized: "meeting.processing.transcribing", defaultValue: "Transcribing", bundle: .module, comment: "Meeting processing stage label while transcribing"))
         case .cleaningAudio:
-            setMeetingProcessingStatus("Cleaning")
+            setMeetingProcessingStatus(String(localized: "meeting.processing.cleaning", defaultValue: "Cleaning", bundle: .module, comment: "Meeting processing stage label while cleaning transcript"))
         case .generatingTitle:
-            setMeetingProcessingStatus("Titling")
+            setMeetingProcessingStatus(String(localized: "meeting.processing.titling", defaultValue: "Titling", bundle: .module, comment: "Meeting processing stage label while generating title"))
         case .summarizingNotes:
-            setMeetingProcessingStatus("Summarizing")
+            setMeetingProcessingStatus(String(localized: "meeting.processing.summarizing", defaultValue: "Summarizing", bundle: .module, comment: "Meeting processing stage label while generating summary"))
         }
     }
 
@@ -7786,7 +7786,7 @@ public final class MuesliController: NSObject {
             return
         }
 
-        indicator.setTranscribingTitle("Parsing command", config: config)
+        indicator.setTranscribingTitle(String(localized: "computer_use.transcribing_title.parsing_command", defaultValue: "Parsing command", bundle: .module, comment: "Computer use status while parsing voice command"), config: config)
         setState(.transcribing)
         computerUseCommandTask?.cancel()
         let taskID = UUID()
@@ -7869,7 +7869,7 @@ public final class MuesliController: NSObject {
                     self.computerUseCommandTask = nil
                     self.computerUseCommandTaskID = nil
                     self.setState(.idle)
-                    self.indicator.showWarning("CUA command failed", icon: "!")
+                    self.indicator.showWarning(String(localized: "computer_use.command_failed.warning", defaultValue: "CUA command failed", bundle: .module, comment: "Warning text when computer use automation command fails"), icon: "!")
                     self.meetingMonitor.resumeAfterCooldown()
                     self.meetingMonitor.refreshState()
                 }
@@ -7994,21 +7994,21 @@ public final class MuesliController: NSObject {
     }
 
     @MainActor
-    private func presentComputerUseFloatingStatus(_ status: String) {
-        let trimmed = status.trimmingCharacters(in: .whitespacesAndNewlines)
+    private func presentComputerUseFloatingStatus(_ status: ComputerUseStatusIdentity) {
+        let trimmed = status.localizedTitle.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
 
         statusBarController?.setStatus(trimmed)
         guard dictationState == .transcribing else { return }
-        guard let floatingStatus = computerUseFloatingStatusLabel(for: trimmed) else { return }
-        if computerUseTranscriptVisible && !shouldReplaceComputerUseTranscript(with: floatingStatus) {
+        guard let floatingStatus = computerUseFloatingStatusLabel(for: status) else { return }
+        if computerUseTranscriptVisible && !shouldReplaceComputerUseTranscript(with: status) {
             return
         }
         guard floatingStatus != computerUseLastFloatingStatus else { return }
 
         let now = Date()
         let elapsed = now.timeIntervalSince(computerUseLastFloatingStatusAt)
-        if shouldShowComputerUseStatusImmediately(floatingStatus, elapsed: elapsed) {
+        if shouldShowComputerUseStatusImmediately(status, elapsed: elapsed) {
             computerUseFloatingStatusWorkItem?.cancel()
             computerUseFloatingStatusWorkItem = nil
             applyComputerUseFloatingStatus(floatingStatus, at: now)
@@ -8030,59 +8030,53 @@ public final class MuesliController: NSObject {
     }
 
     @MainActor
-    private func computerUseFloatingStatusLabel(for status: String) -> String? {
-        if status.hasPrefix("Planning step") {
+    private func computerUseFloatingStatusLabel(for status: ComputerUseStatusIdentity) -> String? {
+        if case .planningStep = status {
             return computerUseLastFloatingStatus.isEmpty ? "Thinking..." : nil
         }
-        if status == "Observing screen" {
-            return "Reading screen"
+        if status == .observingScreen {
+            return String(localized: "computer_use.floating_status.reading_screen", defaultValue: "Reading screen", bundle: .module, comment: "Floating status text while reading screen contents")
         }
-        if status == "Screen fallback" {
-            return "Using screen"
+        if status == .screenFallback {
+            return String(localized: "computer_use.floating_status.using_screen", defaultValue: "Using screen", bundle: .module, comment: "Floating status text while interacting with screen")
         }
-        if status == "Retrying planner" {
-            return "Retrying"
+        if status == .retryingPlanner {
+            return String(localized: "computer_use.floating_status.retrying", defaultValue: "Retrying", bundle: .module, comment: "Floating status text while retrying operation")
         }
-        return status
+        return status.localizedTitle
     }
 
     @MainActor
-    private func shouldShowComputerUseStatusImmediately(_ status: String, elapsed: TimeInterval) -> Bool {
+    private func shouldShowComputerUseStatusImmediately(_ status: ComputerUseStatusIdentity, elapsed: TimeInterval) -> Bool {
         guard !computerUseLastFloatingStatus.isEmpty else { return true }
         if elapsed >= computerUseFloatingStatusMinimumDwell { return true }
-        if status == "Done" || status == "Failed" || status == "Confirm" { return true }
-        if computerUseLastFloatingStatus == "Thinking...", elapsed >= 0.25 {
+        switch status {
+        case .done, .failed, .cancelled:
+            return true
+        default:
+            break
+        }
+        if computerUseLastFloatingStatus == ComputerUseStatusIdentity.runningAction("Thinking...").localizedTitle, elapsed >= 0.25 {
             return true
         }
-        if isConcreteComputerUseFloatingStatus(status) {
+        switch status {
+        case .planningStep, .runningAction:
             return elapsed >= 0.2
+        default:
+            break
         }
         return false
     }
 
     @MainActor
-    private func shouldReplaceComputerUseTranscript(with status: String) -> Bool {
-        if status == "Thinking..." || status == "Reading screen" {
+    private func shouldReplaceComputerUseTranscript(with status: ComputerUseStatusIdentity) -> Bool {
+        switch status {
+        case .done, .failed, .cancelled:
             return false
+        default:
+            break
         }
         return true
-    }
-
-    @MainActor
-    private func isConcreteComputerUseFloatingStatus(_ status: String) -> Bool {
-        status.hasPrefix("Opening")
-            || status.hasPrefix("Opened")
-            || status.hasPrefix("Clicked")
-            || status.hasPrefix("Typed")
-            || status.hasPrefix("Navigated")
-            || status == "Navigating"
-            || status == "Typing"
-            || status == "Moving cursor"
-            || status.hasPrefix("Moving to")
-            || status == "Clicking"
-            || status == "Scrolling"
-            || status == "Pressing key"
-            || status == "Using screen"
     }
 
     @MainActor
@@ -8141,24 +8135,24 @@ public final class MuesliController: NSObject {
         let icon: String
         switch result.status {
         case .done:
-            message = result.message.hasPrefix("Done") ? result.message : "Done: \(result.message)"
+            message = result.message.hasPrefix("Done") ? result.message : String(format: String(localized: "computer_use.runtime_result.done_with_message", defaultValue: "Done: %@", bundle: .module, comment: "Runtime result text when computer use command completes with message"), "\(result.message)")
             floatingMessage = "Done"
             icon = ""
         case .timedOut:
             message = result.message
-            floatingMessage = "Timed out"
+            floatingMessage = String(localized: "computer_use.runtime_result.timed_out", defaultValue: "Timed out", bundle: .module, comment: "Runtime result text when computer use command times out")
             icon = "!"
         case .needsConfirmation:
-            message = result.message.hasPrefix("Confirm") ? result.message : "Confirm: \(result.message)"
+            message = result.message.hasPrefix("Confirm") ? result.message : String(format: String(localized: "computer_use.runtime_result.confirm_with_message", defaultValue: "Confirm: %@", bundle: .module, comment: "Runtime result text requesting confirmation with message"), "\(result.message)")
             floatingMessage = "Confirm"
             icon = "!"
         case .failed:
             message = result.message
-            floatingMessage = "Failed"
+            floatingMessage = String(localized: "computer_use.runtime_result.failed", defaultValue: "Failed", bundle: .module, comment: "Runtime result text when computer use command fails")
             icon = "!"
         case .cancelled:
             message = result.message
-            floatingMessage = "Cancelled"
+            floatingMessage = String(localized: "computer_use.runtime_result.cancelled", defaultValue: "Cancelled", bundle: .module, comment: "Runtime result text when computer use command is cancelled")
             icon = ""
         }
         statusBarController?.setStatus(message)
@@ -8365,7 +8359,7 @@ public final class MuesliController: NSObject {
             break
         case .noAudioTimeout(let sessionID, _):
             guard activeComputerUseAudioSessionID == sessionID else { break }
-            statusBarController?.setStatus("Mic waiting for speech")
+            statusBarController?.setStatus(String(localized: "dictation.mic_waiting_for_speech", defaultValue: "Mic waiting for speech", bundle: .module, comment: "Dictation status text while microphone waits for speech"))
         case .stopped(let eventSessionID, let wavURL):
             guard pendingComputerUseStopSessionID == eventSessionID else {
                 fputs("[cua] ignoring stale stopped event\n", stderr)
@@ -8418,7 +8412,7 @@ public final class MuesliController: NSObject {
         case .speechDetected(_, let capturedAt):
             handleDictationSpeechDetected(capturedAt: capturedAt)
         case .noAudioTimeout:
-            statusBarController?.setStatus("Mic waiting for speech")
+            statusBarController?.setStatus(String(localized: "dictation.mic_waiting_for_speech", defaultValue: "Mic waiting for speech", bundle: .module, comment: "Dictation status text while microphone waits for speech"))
         case .stopped(let eventSessionID, let wavURL):
             guard pendingDictationStopSessionID == eventSessionID else {
                 fputs("[muesli-native] ignoring stale stopped event\n", stderr)
@@ -8868,11 +8862,18 @@ public final class MuesliController: NSObject {
     /// around `startMeetingRecording` so that method's internal enum-typed
     /// parameters don't need to become part of the public API surface.
     @discardableResult
-    public func startMeetingRecordingForShortcuts(title: String = "Meeting") -> Bool {
+    public func startMeetingRecordingForShortcuts(title: String) -> Bool {
         guard config.hasCompletedOnboarding else { return false }
         return startMeetingRecordingFromEntryPoint(
             title: title,
             presentation: .backgroundPill
+        )
+    }
+
+    @discardableResult
+    public func startMeetingRecordingForShortcuts() -> Bool {
+        startMeetingRecordingForShortcuts(
+            title: String(localized: "meeting.title", defaultValue: "Meeting", bundle: .module, comment: "Default title for meeting")
         )
     }
 
@@ -9290,13 +9291,13 @@ public final class MuesliController: NSObject {
         if nsError.domain == "MuesliTranscriptionRuntime" {
             switch nsError.code {
             case 1:
-                return "Nemotron requires macOS 15 or later. Choose another model to test dictation."
+                return String(localized: "dictation.test_error.nemotron_requires_macos15", defaultValue: "Nemotron requires macOS 15 or later. Choose another model to test dictation.", bundle: .module, comment: "Error shown when Nemotron model requires newer macOS for dictation test")
             case 2:
-                return "Qwen3 ASR requires macOS 15 or later. Choose another model to test dictation."
+                return String(localized: "dictation.test_error.qwen3_requires_macos15", defaultValue: "Qwen3 ASR requires macOS 15 or later. Choose another model to test dictation.", bundle: .module, comment: "Error shown when Qwen3 ASR model requires newer macOS for dictation test")
             case 4:
-                return "Cohere Transcribe requires macOS 15 or later. Choose another model to test dictation."
+                return String(localized: "dictation.test_error.cohere_requires_macos15", defaultValue: "Cohere Transcribe requires macOS 15 or later. Choose another model to test dictation.", bundle: .module, comment: "Error shown when Cohere Transcribe model requires newer macOS for dictation test")
             default:
-                return "The selected model is not available. Choose another model and try again."
+                return String(localized: "dictation.test_error.model_unavailable", defaultValue: "The selected model is not available. Choose another model and try again.", bundle: .module, comment: "Error shown when selected dictation test model is unavailable")
             }
         }
 
@@ -9304,15 +9305,15 @@ public final class MuesliController: NSObject {
         let lowercasedMessage = rawMessage.lowercased()
 
         if lowercasedMessage.contains("not loaded") || lowercasedMessage.contains("loadmodels") {
-            return "The model was not ready yet. We are preparing it again, then try once more."
+            return String(localized: "dictation.test_error.model_not_ready_retry", defaultValue: "The model was not ready yet. We are preparing it again, then try once more.", bundle: .module, comment: "Error shown when dictation test model was not ready and is being prepared again")
         }
         if lowercasedMessage.contains("network") || lowercasedMessage.contains("internet") || lowercasedMessage.contains("timed out") {
-            return "The model could not finish downloading. Check your connection and retry."
+            return String(localized: "dictation.test_error.download_incomplete", defaultValue: "The model could not finish downloading. Check your connection and retry.", bundle: .module, comment: "Error shown when dictation test model download does not complete")
         }
         if lowercasedMessage.contains("permission") || lowercasedMessage.contains("microphone") {
-            return "Muesli could not access the microphone. Check Microphone permission and try again."
+            return String(localized: "dictation.test_error.microphone_permission_denied", defaultValue: "Muesli could not access the microphone. Check Microphone permission and try again.", bundle: .module, comment: "Error shown when microphone permission is denied during dictation test")
         }
-        return "Dictation could not start. Try again in a moment."
+        return String(localized: "dictation.test_error.could_not_start", defaultValue: "Dictation could not start. Try again in a moment.", bundle: .module, comment: "Error shown when dictation test cannot start")
     }
 
     // MARK: - Marauder's Map
@@ -9324,7 +9325,7 @@ public final class MuesliController: NSObject {
         fputs("[muesli-native] Marauder's Map unlocked!\n", stderr)
         updateConfig { $0.maraudersMapUnlocked = true }
         SoundController.playMaraudersMapUnlock()
-        indicator.showWarning("Mischief Managed", icon: "\u{26A1}", duration: 3.0)
+        indicator.showWarning(String(localized: "marauders_map.activation_title", defaultValue: "Mischief Managed", bundle: .module, comment: "Title shown when Marauder's Map mode activates"), icon: "\u{26A1}", duration: 3.0)
         startMaraudersMapMonitoring()
     }
 
@@ -9415,15 +9416,15 @@ public final class MuesliController: NSObject {
         let minutesUntil = Int(ceil(event.startDate.timeIntervalSinceNow / 60))
         let timeLabel: String
         if minutesUntil > 0 {
-            timeLabel = "starts in \(minutesUntil) min"
+            timeLabel = String(format: String(localized: "meeting.upcoming.time.starts_in_minutes", defaultValue: "starts in %d min", bundle: .module, comment: "Upcoming meeting relative time label in minutes"), minutesUntil)
         } else if minutesUntil == 0 {
-            timeLabel = "starting now"
+            timeLabel = String(localized: "meeting.upcoming.time.starting_now", defaultValue: "starting now", bundle: .module, comment: "Relative time text for an upcoming meeting starting immediately")
         } else {
-            timeLabel = "started \(abs(minutesUntil)) min ago"
+            timeLabel = String(format: String(localized: "meeting.upcoming.time.started_minutes_ago", defaultValue: "started %d min ago", bundle: .module, comment: "Relative time text for an upcoming meeting that started minutes ago"), abs(minutesUntil))
         }
 
         let title = event.title
-        let notificationTitle = minutesUntil <= 0 ? "Meeting starting now" : "Upcoming meeting"
+        let notificationTitle = minutesUntil <= 0 ? String(localized: "meeting.upcoming.notification_title.starting_now", defaultValue: "Meeting starting now", bundle: .module, comment: "Notification title when an upcoming meeting is starting now") : String(localized: "meeting.upcoming.notification_title.default", defaultValue: "Upcoming meeting", bundle: .module, comment: "Default notification title for upcoming meeting reminder")
         meetingNotification.show(
             title: notificationTitle,
             subtitle: "\(title) · \(timeLabel)",
@@ -9492,9 +9493,9 @@ public final class MuesliController: NSObject {
     private func showMeetingEndNotification(title: String) {
         guard isMeetingRecording() else { return }
         meetingNotification.show(
-            title: "Meeting ended",
-            subtitle: "\(title) · scheduled time is over",
-            actionLabel: "Stop Recording",
+            title: String(localized: "meeting.end_notification.title", defaultValue: "Meeting ended", bundle: .module, comment: "Notification title when a meeting should be stopped because scheduled time ended"),
+            subtitle: String(format: String(localized: "meeting.end_notification.body.scheduled_time_over", defaultValue: "%@ · scheduled time is over", bundle: .module, comment: "Notification body showing meeting title when scheduled time has ended"), "\(title)"),
+            actionLabel: String(localized: "meeting.end_notification.action.stop_recording", defaultValue: "Stop Recording", bundle: .module, comment: "Notification action title to stop meeting recording"),
             dismissAfter: 45,
             onStartRecording: { [weak self] in
                 self?.stopMeetingRecording()

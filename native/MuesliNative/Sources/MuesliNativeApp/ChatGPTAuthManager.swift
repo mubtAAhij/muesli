@@ -1,3 +1,4 @@
+ import Dispatch
 import AppKit
 import CryptoKit
 import Foundation
@@ -15,13 +16,13 @@ enum ChatGPTAuthError: Error, LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .notAuthenticated: return "Not signed in to ChatGPT"
-        case .callbackTimeout: return "Sign-in timed out — no response from browser"
-        case .callbackMissingCode: return "OAuth callback missing authorization code"
-        case .callbackStateMismatch: return "OAuth state mismatch — possible CSRF attack"
-        case .tokenExchangeFailed(let msg): return "Token exchange failed: \(msg)"
-        case .refreshFailed(let msg): return "Token refresh failed: \(msg)"
-        case .portInUse: return "Callback port 1455 is already in use"
+        case .notAuthenticated: return String(localized: "chatgpt_auth.error.not_signed_in", defaultValue: "Not signed in to ChatGPT", bundle: .module, comment: "Authentication error shown when user is not signed in to ChatGPT")
+        case .callbackTimeout: return String(localized: "chatgpt_auth.error.signin_timed_out", defaultValue: "Sign-in timed out — no response from browser", bundle: .module, comment: "Authentication error shown when browser sign-in flow times out")
+        case .callbackMissingCode: return String(localized: "chatgpt_auth.error.callback_missing_code", defaultValue: "OAuth callback missing authorization code", bundle: .module, comment: "Authentication error shown when OAuth callback lacks authorization code")
+        case .callbackStateMismatch: return String(localized: "chatgpt_auth.error.state_mismatch", defaultValue: "OAuth state mismatch — possible CSRF attack", bundle: .module, comment: "Authentication error shown when OAuth state validation fails")
+        case .tokenExchangeFailed(let msg): return String(format: String(localized: "chatgpt_auth.error.token_exchange_failed", defaultValue: "Token exchange failed: %@", bundle: .module, comment: "Authentication error shown when OAuth token exchange fails"), "\(msg)")
+        case .refreshFailed(let msg): return String(format: String(localized: "chatgpt_auth.error.token_refresh_failed", defaultValue: "Token refresh failed: %@", bundle: .module, comment: "Authentication error shown when OAuth token refresh fails"), "\(msg)")
+        case .portInUse: return String(localized: "chatgpt_auth.error.callback_port_in_use", defaultValue: "Callback port 1455 is already in use", bundle: .module, comment: "Authentication error shown when local OAuth callback port is unavailable")
         }
     }
 }
@@ -142,9 +143,12 @@ final class ChatGPTAuthManager {
                 continuation.resume(throwing: ChatGPTAuthError.portInUse)
                 return
             }
+            let resumedLock = NSLock()
             var resumed = false
 
             let timeoutWork = DispatchWorkItem { [weak listener] in
+                resumedLock.lock()
+                defer { resumedLock.unlock() }
                 guard !resumed else { return }
                 resumed = true
                 listener?.cancel()
@@ -157,8 +161,15 @@ final class ChatGPTAuthManager {
 
             listener.stateUpdateHandler = { state in
                 if case .failed = state {
-                    guard !resumed else { return }
+                    resumedLock.lock()
+                    defer { resumedLock.unlock() }
+                    resumedLock.lock()
+                    guard !resumed else {
+                        resumedLock.unlock()
+                        return
+                    }
                     resumed = true
+                    resumedLock.unlock()
                     timeoutWork.cancel()
                     continuation.resume(throwing: ChatGPTAuthError.portInUse)
                 }
@@ -183,8 +194,8 @@ final class ChatGPTAuthManager {
                     }
 
                     // Parse code + state from: GET /callback?code=XXX&state=YYY HTTP/1.1
-                    let code = self.extractCode(from: request)
-                    let callbackState = self.extractParam(named: "state", from: request)
+                    let code = Self.extractCode(from: request)
+                    let callbackState = Self.extractParam(named: "state", from: request)
 
                     // Validate state before sending success page to prevent CSRF
                     guard callbackState == expectedState else {
@@ -238,7 +249,7 @@ final class ChatGPTAuthManager {
         }
     }
 
-    func extractCode(from httpRequest: String) -> String? {
+    static func extractCode(from httpRequest: String) -> String? {
         // Parse "GET /callback?code=XXX&... HTTP/1.1"
         guard let pathLine = httpRequest.split(separator: "\r\n").first ?? httpRequest.split(separator: "\n").first,
               let pathPart = pathLine.split(separator: " ").dropFirst().first else {
@@ -249,7 +260,7 @@ final class ChatGPTAuthManager {
         return components.queryItems?.first(where: { $0.name == "code" })?.value
     }
 
-    func extractParam(named name: String, from httpRequest: String) -> String? {
+    static func extractParam(named name: String, from httpRequest: String) -> String? {
         guard let pathLine = httpRequest.split(separator: "\r\n").first ?? httpRequest.split(separator: "\n").first,
               let pathPart = pathLine.split(separator: " ").dropFirst().first else {
             return nil

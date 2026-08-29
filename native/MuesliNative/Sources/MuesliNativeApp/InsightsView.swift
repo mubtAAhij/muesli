@@ -101,11 +101,11 @@ struct InsightsView: View {
                 .frame(width: 1, height: 18)
 
             VStack(alignment: .leading, spacing: 2) {
-                Text("INSIGHTS")
+                Text(String(localized: "insights.header.title", defaultValue: "INSIGHTS", bundle: .module, comment: "Main title for insights screen header"))
                     .font(.system(size: 11, weight: .bold))
                     .tracking(1.8)
                     .foregroundStyle(MuesliTheme.accent)
-                Text("Private and on-device")
+                Text(String(localized: "insights.header.subtitle_privacy", defaultValue: "Private and on-device", bundle: .module, comment: "Subtitle indicating privacy characteristics of insights data"))
                     .font(.system(size: 13, weight: .medium))
                     .foregroundStyle(InsightsPalette.secondaryText)
             }
@@ -114,7 +114,7 @@ struct InsightsView: View {
 
     private var rangeControls: some View {
         HStack(spacing: 12) {
-            Picker("Time range", selection: Binding(
+            Picker(String(localized: "insights.controls.time_range.label", defaultValue: "Time range", bundle: .module, comment: "Label for time range control in insights screen"), selection: Binding(
                 get: { range },
                 set: { newValue in range = newValue; loadGeneration += 1 }
             )) {
@@ -124,7 +124,7 @@ struct InsightsView: View {
             }
             .pickerStyle(.segmented)
             .labelsHidden()
-            .accessibilityLabel("Time range")
+            .accessibilityLabel(String(localized: "insights.controls.time_range.accessibility_label", defaultValue: "Time range", bundle: .module, comment: "Accessibility label for time range selector"))
             .frame(width: 340)
 
             Button {
@@ -135,25 +135,25 @@ struct InsightsView: View {
             }
             .buttonStyle(.plain)
             .foregroundStyle(InsightsPalette.secondaryText)
-            .help("Refresh local insights")
-            .accessibilityLabel("Refresh local insights")
+            .help(String(localized: "insights.actions.refresh_local_insights", defaultValue: "Refresh local insights", bundle: .module, comment: "Action title to refresh locally computed insights"))
+            .accessibilityLabel(String(localized: "insights.actions.refresh_local_insights.help", defaultValue: "Refresh local insights", bundle: .module, comment: "Help/accessibility label for refresh local insights action"))
 
             Button {
                 isSharing = true
             } label: {
-                Label("Share", systemImage: "square.and.arrow.up")
+                Label(String(localized: "insights.share.button", defaultValue: "Share", bundle: .module, comment: "Button title to share insights activity image"), systemImage: "square.and.arrow.up")
             }
             .buttonStyle(.bordered)
             .disabled(snapshot == nil)
-            .help("Share an anonymous activity image")
-            .accessibilityLabel("Share your activity")
+            .help(String(localized: "insights.share.help", defaultValue: "Share an anonymous activity image", bundle: .module, comment: "Help/accessibility text describing share action output"))
+            .accessibilityLabel(String(localized: "insights.share_activity.accessibility_label", defaultValue: "Share your activity", bundle: .module, comment: "Accessibility label for sharing activity control"))
         }
     }
 
     private func hero(_ data: InsightsSnapshot) -> some View {
         VStack(alignment: .leading, spacing: 22) {
             VStack(alignment: .leading, spacing: 6) {
-                    Text("Your time with Muesli")
+                    Text(String(localized: "insights.hero.title", defaultValue: "Your time with Muesli", bundle: .module, comment: "Hero section title summarizing user's activity with app"))
                         .font(.system(size: 18, weight: .semibold))
                         .tracking(-0.4)
                         .foregroundStyle(MuesliTheme.textPrimary)
@@ -162,19 +162,19 @@ struct InsightsView: View {
                         .tracking(-2.4)
                         .monospacedDigit()
                         .foregroundStyle(MuesliTheme.textPrimary)
-                    Text("Total words dictated")
+                    Text(String(localized: "insights.hero.total_words_dictated", defaultValue: "Total words dictated", bundle: .module, comment: "Hero metric label for total dictated words"))
                         .font(.system(size: 15, weight: .medium))
                         .foregroundStyle(InsightsPalette.secondaryText)
             }
 
             HStack(spacing: 0) {
-                heroDatum("Meetings", value: format(data.lifetime.meetings))
+                heroDatum(String(localized: "insights.hero.meetings", defaultValue: "Meetings", bundle: .module, comment: "Hero metric label for meetings count"), value: format(data.lifetime.meetings))
                 divider
-                heroDatum("Average pace", value: "\(Int(data.lifetime.averageWPM.rounded())) WPM")
+                heroDatum(String(localized: "insights.hero.average_pace", defaultValue: "Average pace", bundle: .module, comment: "Hero metric label for average dictation pace"), value: String(format: String(localized: "insights.hero.average_pace_value_wpm", defaultValue: "%d WPM", bundle: .module, comment: "Hero metric value showing rounded average words per minute"), Int(data.lifetime.averageWPM.rounded())))
                 divider
-                heroDatum("Current streak", value: dayCount(data.currentStreakDays))
+                heroDatum(String(localized: "insights.hero.current_streak", defaultValue: "Current streak", bundle: .module, comment: "Hero metric label for current usage streak"), value: dayCount(data.currentStreakDays))
                 divider
-                heroDatum("Longest streak", value: dayCount(data.longestStreakDays))
+                heroDatum(String(localized: "insights.hero.longest_streak", defaultValue: "Longest streak", bundle: .module, comment: "Hero metric label for longest usage streak"), value: dayCount(data.longestStreakDays))
             }
         }
         .padding(26)
@@ -196,26 +196,26 @@ struct InsightsView: View {
     private func activityPanel(_ data: InsightsSnapshot) -> some View {
         VStack(alignment: .leading, spacing: 18) {
             HStack(alignment: .firstTextBaseline) {
-                panelTitle("DAILY ACTIVITY", subtitle: "Words and meetings by day")
+                panelTitle(String(localized: "insights.activity_panel.title", defaultValue: "DAILY ACTIVITY", bundle: .module, comment: "Section title for daily activity panel"), subtitle: String(localized: "insights.activity_panel.subtitle", defaultValue: "Words and meetings by day", bundle: .module, comment: "Subtitle for daily activity panel"))
                 Spacer()
-                Picker("Activity metric", selection: $metric) {
+                Picker(String(localized: "insights.activity_metric.label", defaultValue: "Activity metric", bundle: .module, comment: "Label for activity metric selector"), selection: $metric) {
                     ForEach(InsightsMetric.allCases, id: \.self) { Text($0.label).tag($0) }
                 }
                 .pickerStyle(.segmented)
                 .labelsHidden()
-                .accessibilityLabel("Activity metric")
+                .accessibilityLabel(String(localized: "insights.activity_metric.accessibility_label", defaultValue: "Activity metric", bundle: .module, comment: "Accessibility label for activity metric selector"))
                 .frame(width: 190)
             }
             ActivityHeatmap(activity: data.dailyActivity, metric: metric)
                 .frame(minHeight: 156)
             HStack(spacing: 8) {
-                Text("QUIET")
+                Text(String(localized: "insights.activity_level.quiet", defaultValue: "QUIET", bundle: .module, comment: "Lower bound label for activity intensity scale"))
                 ForEach(0..<5, id: \.self) { level in
                     RoundedRectangle(cornerRadius: 3)
                         .fill(InsightsPalette.intensity(level))
                         .frame(width: 15, height: 15)
                 }
-                Text("LOUD")
+                Text(String(localized: "insights.activity_level.loud", defaultValue: "LOUD", bundle: .module, comment: "Upper bound label for activity intensity scale"))
             }
             .font(.system(size: 9, weight: .bold))
             .tracking(1.2)
@@ -229,13 +229,13 @@ struct InsightsView: View {
         let dictationShare = Double(data.selected.dictationWords) / Double(total)
         return HStack(spacing: 20) {
             VStack(alignment: .leading, spacing: 20) {
-                panelTitle("DICTATIONS AND MEETINGS", subtitle: "Activity for the selected time period")
+                panelTitle(String(localized: "insights.usage_panel.title", defaultValue: "DICTATIONS AND MEETINGS", bundle: .module, comment: "Title for dictations and meetings activity panel"), subtitle: String(localized: "insights.usage_panel.subtitle", defaultValue: "Activity for the selected time period", bundle: .module, comment: "Subtitle describing selected-period activity panel"))
                 HStack(alignment: .lastTextBaseline, spacing: 8) {
                     Text(format(data.selected.totalWords))
                         .font(.system(size: 40, weight: .bold, design: .rounded))
                         .tracking(-1.5)
                         .monospacedDigit()
-                    Text("words")
+                    Text(String(localized: "insights.words_unit", defaultValue: "words", bundle: .module, comment: "Unit label for word counts in insights charts"))
                         .foregroundStyle(InsightsPalette.tertiaryText)
                 }
                 GeometryReader { geometry in
@@ -249,21 +249,21 @@ struct InsightsView: View {
                 }
                 .frame(height: 12)
                 HStack {
-                    usageLegend("Dictation", data.selected.dictationWords, MuesliTheme.accent)
+                    usageLegend(String(localized: "insights.usage_legend.dictation", defaultValue: "Dictation", bundle: .module, comment: "Legend label for dictation activity"), data.selected.dictationWords, MuesliTheme.accent)
                     Spacer()
-                    usageLegend("Meetings", data.selected.meetingWords, .cyan)
+                    usageLegend(String(localized: "insights.usage_legend.meetings", defaultValue: "Meetings", bundle: .module, comment: "Legend label for meetings activity"), data.selected.meetingWords, .cyan)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
             VStack(alignment: .leading, spacing: 16) {
-                Text("OVERVIEW")
+                Text(String(localized: "insights.usage.overview_heading", defaultValue: "OVERVIEW", bundle: .module, comment: "Heading for usage overview metrics section"))
                     .font(.system(size: 10, weight: .bold)).tracking(1.5)
                     .foregroundStyle(InsightsPalette.tertiaryText)
-                readout("Dictation sessions", format(data.selected.dictationSessions))
-                readout("Completed meetings", format(data.selected.meetings))
-                readout("Average pace", "\(Int(data.selected.averageWPM.rounded())) WPM")
-                readout("Active days", format(data.activeDaysInRange))
+                readout(String(localized: "insights.usage_readout.dictation_sessions", defaultValue: "Dictation sessions", bundle: .module, comment: "Usage readout label for number of dictation sessions"), format(data.selected.dictationSessions))
+                readout(String(localized: "insights.usage_readout.completed_meetings", defaultValue: "Completed meetings", bundle: .module, comment: "Usage readout label for completed meetings count"), format(data.selected.meetings))
+                readout(String(localized: "insights.usage_readout.average_pace", defaultValue: "Average pace", bundle: .module, comment: "Usage readout label for average dictation pace"), String(format: String(localized: "insights.usage_readout.average_pace_value_wpm", defaultValue: "%d WPM", bundle: .module, comment: "Usage readout value for rounded average words per minute"), Int(data.selected.averageWPM.rounded())))
+                readout(String(localized: "insights.usage_readout.active_days", defaultValue: "Active days", bundle: .module, comment: "Usage readout label for active days count"), format(data.activeDaysInRange))
             }
             .padding(20)
             .frame(width: 300, alignment: .leading)
@@ -281,19 +281,19 @@ struct InsightsView: View {
                     .font(.system(size: 70, weight: .bold, design: .rounded))
                     .tracking(-3)
                     .monospacedDigit()
-                Text("CURRENT STREAK")
+                Text(String(localized: "insights.streak.current_heading", defaultValue: "CURRENT STREAK", bundle: .module, comment: "Heading for current streak metric"))
                     .font(.system(size: 11, weight: .bold)).tracking(1.8)
                     .foregroundStyle(MuesliTheme.accent)
             }
             VStack(alignment: .leading, spacing: 14) {
-                panelTitle("STREAKS", subtitle: "Your consecutive dictation days")
+                panelTitle(String(localized: "insights.streak_panel.title", defaultValue: "STREAKS", bundle: .module, comment: "Title for streaks panel"), subtitle: String(localized: "insights.streak_panel.subtitle", defaultValue: "Your consecutive dictation days", bundle: .module, comment: "Subtitle describing streaks panel metric meaning"))
                 Text(streakMessage(data))
                     .font(.system(size: 17, weight: .medium))
                     .foregroundStyle(InsightsPalette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
                 HStack(spacing: 18) {
-                    Label("Best: \(data.longestStreakDays) days", systemImage: "flag.checkered")
-                    Label("\(data.activeDaysInRange) active days", systemImage: "calendar.badge.checkmark")
+                    Label(String(format: String(localized: "insights.streak.best_days", defaultValue: "Best: %d days", bundle: .module, comment: "Streak metric showing longest streak in days"), data.longestStreakDays), systemImage: "flag.checkered")
+                    Label(String(format: String(localized: "insights.streak.active_days_in_range", defaultValue: "%d active days", bundle: .module, comment: "Streak panel metric showing active days in selected range"), data.activeDaysInRange), systemImage: "calendar.badge.checkmark")
                 }
                 .font(.system(size: 12, weight: .semibold))
                 .foregroundStyle(InsightsPalette.tertiaryText)
@@ -304,10 +304,10 @@ struct InsightsView: View {
 
     private func wordClouds(_ data: InsightsSnapshot) -> some View {
         VStack(alignment: .leading, spacing: 16) {
-            panelTitle("MOST-USED WORDS", subtitle: "Common words from your dictations and meetings")
+            panelTitle(String(localized: "insights.word_cloud.title", defaultValue: "MOST-USED WORDS", bundle: .module, comment: "Title for most-used words panel"), subtitle: String(localized: "insights.word_cloud.subtitle", defaultValue: "Common words from your dictations and meetings", bundle: .module, comment: "Subtitle describing most-used words panel content"))
             HStack(alignment: .top, spacing: 16) {
-                WordCloudPanel(title: "DICTATIONS", icon: "waveform", words: data.dictationWords)
-                WordCloudPanel(title: "MEETINGS", icon: "person.2.wave.2", words: data.meetingWords)
+                WordCloudPanel(title: String(localized: "insights.word_cloud.dictations.title", defaultValue: "DICTATIONS", bundle: .module, comment: "Title for dictations word cloud subsection"), icon: "waveform", words: data.dictationWords)
+                WordCloudPanel(title: String(localized: "insights.word_cloud.meetings.title", defaultValue: "MEETINGS", bundle: .module, comment: "Title for meetings word cloud subsection"), icon: "person.2.wave.2", words: data.meetingWords)
             }
         }
     }
@@ -329,7 +329,7 @@ struct InsightsView: View {
             }
         }
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Calculating local insights")
+        .accessibilityLabel(String(localized: "insights.loading.accessibility_label", defaultValue: "Calculating local insights", bundle: .module, comment: "Accessibility label shown while insights are being computed"))
     }
 
     private func errorState(_ message: String) -> some View {
@@ -337,12 +337,12 @@ struct InsightsView: View {
             Image(systemName: "waveform.badge.exclamationmark")
                 .font(.system(size: 34, weight: .light))
                 .foregroundStyle(MuesliTheme.accent)
-            Text("Insights could not be calculated")
+            Text(String(localized: "insights.error.calculation_failed", defaultValue: "Insights could not be calculated", bundle: .module, comment: "Error message when insights calculation fails"))
                 .font(MuesliTheme.title3())
             Text(message)
                 .font(MuesliTheme.callout())
                 .foregroundStyle(InsightsPalette.secondaryText)
-            Button("Try Again") { loadGeneration += 1 }
+            Button(String(localized: "insights.error.retry_button", defaultValue: "Try Again", bundle: .module, comment: "Retry action title for insights calculation error")) { loadGeneration += 1 }
         }
         .frame(maxWidth: .infinity, minHeight: 320)
         .insightsPanel()
@@ -415,22 +415,22 @@ struct InsightsView: View {
     }
 
     private func streakMessage(_ data: InsightsSnapshot) -> String {
-        guard data.currentStreakDays > 0 else { return "Dictate today to start a new streak." }
-        if data.currentStreakDays == data.longestStreakDays { return "This is your longest streak so far." }
-        return "Your longest streak is \(dayCount(data.longestStreakDays))."
+        guard data.currentStreakDays > 0 else { return String(localized: "insights.streak.message.start_new_streak", defaultValue: "Dictate today to start a new streak.", bundle: .module, comment: "Streak helper message when there is no current streak") }
+        if data.currentStreakDays == data.longestStreakDays { return String(localized: "insights.streak.message.longest_so_far", defaultValue: "This is your longest streak so far.", bundle: .module, comment: "Streak helper message when current streak equals longest streak") }
+        return String(format: String(localized: "insights.streak.message.longest_streak_value", defaultValue: "Your longest streak is %@.", bundle: .module, comment: "Streak helper message showing longest streak text value"), "\(dayCount(data.longestStreakDays))")
     }
 
     private func format(_ value: Int) -> String { value.formatted(.number.notation(.compactName)) }
 
-    private func dayCount(_ value: Int) -> String { "\(value) \(value == 1 ? "day" : "days")" }
+    private func dayCount(_ value: Int) -> String { "\(value) \(value == 1 ? String(localized: "insights.streak.unit.day_singular", defaultValue: "day", bundle: .module, comment: "Singular day unit used in streak text") : String(localized: "insights.streak.unit.day_plural", defaultValue: "days", bundle: .module, comment: "Plural day unit used in streak text"))" }
 }
 
 enum InsightsLoadingCopy {
     static let messages = [
-        "Calculating your private activity history",
-        "Insights are computed on this Mac and never uploaded",
-        "Your transcripts and statistics stay under your control",
-        "Hybrid AI works best when you choose what stays local",
+        String(localized: "insights.loading.message.calculating_history", defaultValue: "Calculating your private activity history", bundle: .module, comment: "Loading message about computing private activity history"),
+        String(localized: "insights.loading.message.on_device_not_uploaded", defaultValue: "Insights are computed on this Mac and never uploaded", bundle: .module, comment: "Loading message emphasizing on-device processing and no upload"),
+        String(localized: "insights.loading.message.user_control", defaultValue: "Your transcripts and statistics stay under your control", bundle: .module, comment: "Loading message emphasizing user control over data"),
+        String(localized: "insights.loading.message.hybrid_ai_local_choice", defaultValue: "Hybrid AI works best when you choose what stays local", bundle: .module, comment: "Loading message about hybrid AI and local-data choice"),
     ]
 }
 
@@ -445,7 +445,7 @@ private struct InsightsLoadingStatus: View {
                 .tint(MuesliTheme.accent)
 
             VStack(alignment: .leading, spacing: 4) {
-                Text("Building your Insights")
+                Text(String(localized: "insights.loading.title", defaultValue: "Building your Insights", bundle: .module, comment: "Primary loading title while insights are being built"))
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundStyle(MuesliTheme.textPrimary)
                 ZStack(alignment: .leading) {
@@ -491,7 +491,7 @@ struct InsightsInitialScrollGate {
 
 private enum InsightsMetric: CaseIterable {
     case words, meetings
-    var label: String { self == .words ? "Words" : "Meetings" }
+    var label: String { self == .words ? String(localized: "insights.metric.words", defaultValue: "Words", bundle: .module, comment: "Metric picker option for words") : String(localized: "insights.metric.meetings", defaultValue: "Meetings", bundle: .module, comment: "Metric picker option for meetings") }
 }
 
 private enum InsightsPalette {
@@ -547,7 +547,7 @@ private struct ActivityHeatmap: View {
     private let cell: CGFloat = 14
     private let gap: CGFloat = 4
     private let monthLabelHeight: CGFloat = 14
-    private let weekdayLabels = ["", "Mon", "", "Wed", "", "Fri", ""]
+    private let weekdayLabels = ["", String(localized: "insights.weekday.mon_short", defaultValue: "Mon", bundle: .module, comment: "Short weekday label for Monday in chart axis"), "", String(localized: "insights.weekday.wed_short", defaultValue: "Wed", bundle: .module, comment: "Short weekday label for Wednesday in chart axis"), "", String(localized: "insights.weekday.fri_short", defaultValue: "Fri", bundle: .module, comment: "Short weekday label for Friday in chart axis"), ""]
 
     var body: some View {
         ScrollViewReader { proxy in
@@ -600,7 +600,7 @@ private struct ActivityHeatmap: View {
             }
             .onAppear { scrollToLatest(proxy) }
             .onChange(of: activity.last?.date) { _, _ in scrollToLatest(proxy) }
-            .accessibilityLabel("Daily \(metric.label.lowercased()) activity")
+            .accessibilityLabel(String(format: String(localized: "insights.activity.daily_metric", defaultValue: "Daily %@ activity", bundle: .module, comment: "Chart accessibility label describing daily activity for selected metric"), "\(metric.label.lowercased())"))
         }
     }
 
@@ -658,9 +658,9 @@ private struct ActivityHeatmapCell: View {
     private var countText: String {
         switch metric {
         case .words:
-            return count == 1 ? "1 word dictated" : "\(count.formatted()) words dictated"
+            return count == 1 ? String(localized: "insights.count.word_dictated_one", defaultValue: "1 word dictated", bundle: .module, comment: "Singular count label for dictated words") : String(format: String(localized: "insights.count.word_dictated_many", defaultValue: "%@ words dictated", bundle: .module, comment: "Plural count label for dictated words"), "\(count.formatted())")
         case .meetings:
-            return count == 1 ? "1 meeting" : "\(count.formatted()) meetings"
+            return count == 1 ? String(localized: "insights.count.meeting_one", defaultValue: "1 meeting", bundle: .module, comment: "Singular count label for meetings") : String(format: String(localized: "insights.count.meeting_many", defaultValue: "%@ meetings", bundle: .module, comment: "Plural count label for meetings"), "\(count.formatted())")
         }
     }
 
@@ -712,7 +712,7 @@ private struct WordCloudPanel: View {
                 .tracking(1.5)
                 .foregroundStyle(InsightsPalette.tertiaryText)
             if words.isEmpty {
-                Text("No words to show for this time period.")
+                Text(String(localized: "insights.empty.no_words_for_period", defaultValue: "No words to show for this time period.", bundle: .module, comment: "Empty state message when no words are available for selected period"))
                     .font(.system(size: 13))
                     .foregroundStyle(InsightsPalette.tertiaryText)
                     .frame(maxWidth: .infinity, minHeight: 120, alignment: .center)
@@ -726,8 +726,8 @@ private struct WordCloudPanel: View {
                                 design: .rounded
                             ))
                             .foregroundStyle(wordColor(item))
-                            .help("Used \(item.count.formatted()) times")
-                            .accessibilityLabel("\(item.word), used \(item.count.formatted()) times")
+                            .help(String(format: String(localized: "insights.words.used_count", defaultValue: "Used %@ times", bundle: .module, comment: "Word cloud metadata showing number of uses"), "\(item.count.formatted())"))
+                            .accessibilityLabel(String(format: String(localized: "insights.words.used_count_with_word", defaultValue: "%@, used %@ times", bundle: .module, comment: "Accessibility label combining word text and usage count"), "\(item.word)", "\(item.count.formatted())"))
                     }
                 }
                 .frame(maxWidth: .infinity, minHeight: 150, alignment: .topLeading)
@@ -800,10 +800,10 @@ struct WordFlowLayout: Layout {
 private extension InsightsRange {
     var label: String {
         switch self {
-        case .thirtyDays: return "30 days"
-        case .ninetyDays: return "90 days"
-        case .twelveMonths: return "12 months"
-        case .allTime: return "All time"
+        case .thirtyDays: return String(localized: "insights.time_range.30_days", defaultValue: "30 days", bundle: .module, comment: "Time range option for last 30 days")
+        case .ninetyDays: return String(localized: "insights.time_range.90_days", defaultValue: "90 days", bundle: .module, comment: "Time range option for last 90 days")
+        case .twelveMonths: return String(localized: "insights.time_range.12_months", defaultValue: "12 months", bundle: .module, comment: "Time range option for last 12 months")
+        case .allTime: return String(localized: "insights.time_range.all_time", defaultValue: "All time", bundle: .module, comment: "Time range option for all available history")
         }
     }
 }

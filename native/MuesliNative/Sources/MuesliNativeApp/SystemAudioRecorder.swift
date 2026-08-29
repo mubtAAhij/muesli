@@ -64,7 +64,7 @@ final class SystemAudioRecorder: NSObject, SCStreamOutput, SystemAudioCapturing,
         FileManager.default.createFile(atPath: url.path, contents: nil)
         guard let file = FileHandle(forWritingAtPath: url.path) else {
             throw NSError(domain: "SystemAudio", code: 1, userInfo: [
-                NSLocalizedDescriptionKey: "Could not open output file",
+                NSLocalizedDescriptionKey: String(localized: "system_audio_recorder.error.could_not_open_output_file", defaultValue: "Could not open output file", bundle: .module, comment: "Error shown when system audio recorder cannot open output file"),
             ])
         }
         file.write(WavWriter.header(dataSize: 0))
@@ -84,13 +84,13 @@ final class SystemAudioRecorder: NSObject, SCStreamOutput, SystemAudioCapturing,
                 group.addTask {
                     try await Task.sleep(for: .seconds(5))
                     throw NSError(domain: "SystemAudio", code: 3, userInfo: [
-                        NSLocalizedDescriptionKey: "Timed out while starting system audio capture",
+                        NSLocalizedDescriptionKey: String(localized: "system_audio_recorder.error.start_timeout", defaultValue: "Timed out while starting system audio capture", bundle: .module, comment: "Error shown when system audio capture startup times out"),
                     ])
                 }
 
                 guard let _ = try await group.next() else {
                     throw NSError(domain: "SystemAudio", code: 4, userInfo: [
-                        NSLocalizedDescriptionKey: "System audio startup ended unexpectedly",
+                        NSLocalizedDescriptionKey: String(localized: "system_audio_recorder.error.startup_ended_unexpectedly", defaultValue: "System audio startup ended unexpectedly", bundle: .module, comment: "Error shown when system audio startup ends unexpectedly"),
                     ])
                 }
                 group.cancelAll()
@@ -154,7 +154,7 @@ final class SystemAudioRecorder: NSObject, SCStreamOutput, SystemAudioCapturing,
         // Create a filter that captures all audio — use a display filter with audio only
         guard let display = content.displays.first else {
             throw NSError(domain: "SystemAudio", code: 2, userInfo: [
-                NSLocalizedDescriptionKey: "No display found for SCStream",
+                NSLocalizedDescriptionKey: String(localized: "system_audio_recorder.error.no_display_for_scstream", defaultValue: "No display found for SCStream", bundle: .module, comment: "Error shown when no display is available for SCStream capture"),
             ])
         }
 

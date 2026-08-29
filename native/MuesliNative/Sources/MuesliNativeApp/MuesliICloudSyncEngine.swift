@@ -231,7 +231,7 @@ enum MuesliBridgeDeviceIdentity {
             return name
         }
         let hostName = ProcessInfo.processInfo.hostName.trimmingCharacters(in: .whitespacesAndNewlines)
-        return hostName.isEmpty ? "This Mac" : hostName
+        return hostName.isEmpty ? String(localized: "sync.device.this_mac", defaultValue: "This Mac", bundle: .module, comment: "Display name used for the current Mac device in sync UI") : hostName
     }
 
     private static func appVersion() -> String {
@@ -251,13 +251,13 @@ private enum ICloudSyncAccountError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .noAccount:
-            return "Sign in to iCloud on this Mac to sync text records."
+            return String(localized: "sync.error.account_unavailable", defaultValue: "Sign in to iCloud on this Mac to sync text records.", bundle: .module, comment: "Sync error shown when user is not signed into iCloud")
         case .restricted:
-            return "iCloud is restricted for this Mac."
+            return String(localized: "sync.error.restricted", defaultValue: "iCloud is restricted for this Mac.", bundle: .module, comment: "Sync error shown when iCloud is restricted on current Mac")
         case .temporarilyUnavailable:
-            return "iCloud is temporarily unavailable. Try syncing again shortly."
+            return String(localized: "sync.error.temporarily_unavailable", defaultValue: "iCloud is temporarily unavailable. Try syncing again shortly.", bundle: .module, comment: "Sync error shown when iCloud service is temporarily unavailable")
         case .couldNotDetermine:
-            return "Couldn't determine iCloud account status."
+            return String(localized: "sync.error.cannot_determine_account_status", defaultValue: "Couldn't determine iCloud account status.", bundle: .module, comment: "Sync error shown when iCloud account status check fails")
         }
     }
 }
@@ -266,7 +266,7 @@ enum ICloudSyncDeadlineError: LocalizedError, Equatable {
     case operationTimedOut
 
     var errorDescription: String? {
-        "iCloud did not respond in time. Your text is safe and will be retried."
+        String(localized: "sync.error.timeout_retry", defaultValue: "iCloud did not respond in time. Your text is safe and will be retried.", bundle: .module, comment: "Sync timeout error reassuring user that retry will occur")
     }
 }
 
